@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/plugins/biblizou">
+    <file>icon.png</file>
+    <file>iconUi.png</file>
+    <file>misc/arrowDown.png</file>
+    <file>misc/INPN_logo.png</file>
+</qresource>
+</RCC>

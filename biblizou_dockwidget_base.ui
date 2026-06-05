@@ -1,0 +1,1261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BiblizouDockWidgetBase</class>
+ <widget class="QDockWidget" name="BiblizouDockWidgetBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>502</width>
+    <height>827</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* --- 1. CONFIGURATIONS GÉNÉRALES --- */
+
+/* Champs texte */
+QLineEdit {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3D8C70;
+}
+
+/* Tableaux */
+QTableWidget {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    selection-background-color: #3D8C70;
+    selection-color: #ffffff;
+}
+
+QHeaderView::section {
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    font-weight: bold;
+}
+
+/* Onglets */
+QTabWidget::pane {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    top: -1px;
+}
+
+QTabBar::tab {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom-color: transparent;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 8px 16px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    color: #3D8C70;
+    border-top: 2px solid #3D8C70;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: rgba(61, 140, 112, 0.1);
+}
+
+
+/* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
+
+QComboBox {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+
+QComboBox:hover {
+    border: 1px solid #3D8C70;
+}
+
+QComboBox QAbstractItemView {
+    selection-background-color: #3D8C70;
+    selection-color: #ffffff;
+}
+
+/* Bouton contenant la flèche (Cadre arrondi avec fond vert émeraude) */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-top-right-radius: 5px;   
+    border-bottom-right-radius: 5px;
+    background-color: #3D8C70;      
+}
+
+QComboBox::drop-down:hover {
+    background-color: #43997b;      
+}
+
+/* Flèche utilisant le fichier de ressources QRC */
+QComboBox::down-arrow {
+    image: url(:/plugins/biblizou/misc/arrowDown.png);
+    width: 12px;
+    height: 12px;
+}
+
+/* --- 3. BOUTONS PAR DÉFAUT --- */
+
+QPushButton {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    color: #000000;
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #50b08f,
+        stop:1 #43997b
+    );
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #2f6d57,
+        stop:1 #357a62
+    );
+    padding-top: 9px;
+    padding-bottom: 7px;
+}
+
+QPushButton:disabled {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- 4. CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
+
+/* Conteneur de l'en-tête */
+QFrame#headerFrame {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Bouton Info (Style &quot;Ghost&quot; Émeraude - Outrepasse le style QPushButton général) */
+QPushButton#btnInfo {
+    font-weight: bold;
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    border-radius: 6px;
+    color: #10b981;
+    padding: 6px 14px;
+    min-height: 24px;
+}
+
+QPushButton#btnInfo:hover {
+    background-color: rgba(16, 185, 129, 0.25);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+
+QPushButton#btnInfo:pressed {
+    background-color: rgba(16, 185, 129, 0.4);
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+/* Composants spécifiques QGIS */
+QgsFileWidget QPushButton,
+QgsMapLayerComboBox QPushButton,
+QgsMapLayerComboBox QToolButton {
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: inherit;
+    font-weight: normal;
+}
+
+QgsFileWidget QPushButton:hover,
+QgsMapLayerComboBox QPushButton:hover,
+QgsMapLayerComboBox QToolButton:hover {
+    border-color: #3D8C70;
+    color: #3D8C70;
+    background-color: rgba(61, 140, 112, 0.05);
+}
+
+/* Messages d'alerte (QMessageBox) */
+QMessageBox QPushButton {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    color: #ffffff;
+    padding: 4px 14px;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #50b08f,
+        stop:1 #43997b
+    );
+}</string>
+  </property>
+  <property name="windowTitle">
+   <string>Biblizou</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QLabel" name="labelDirectory">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+        <underline>false</underline>
+        <kerning>false</kerning>
+       </font>
+      </property>
+      <property name="text">
+       <string>Sélectionner un dossier de travail</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QFrame" name="frameBandeau">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0" rowspan="2">
+          <widget class="QLabel" name="labelIcon">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>80</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/plugins/biblizou/iconUi.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="labelTitle">
+           <property name="palette">
+            <palette>
+             <active>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="PlaceholderText">
+               <brush brushstyle="NoBrush">
+                <color alpha="128">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </active>
+             <inactive>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="PlaceholderText">
+               <brush brushstyle="NoBrush">
+                <color alpha="128">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </inactive>
+             <disabled>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="PlaceholderText">
+               <brush brushstyle="NoBrush">
+                <color alpha="128">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </disabled>
+            </palette>
+           </property>
+           <property name="font">
+            <font>
+             <family>MS Shell Dlg 2</family>
+             <pointsize>36</pointsize>
+             <weight>50</weight>
+             <bold>false</bold>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>Biblizou</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="labelSubtitle">
+           <property name="palette">
+            <palette>
+             <active>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </active>
+             <inactive>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>61</red>
+                 <green>140</green>
+                 <blue>112</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </inactive>
+             <disabled>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>120</red>
+                 <green>120</green>
+                 <blue>120</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </disabled>
+            </palette>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Générateur de bases de données bibliographique naturalistes</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="labelDonneesFourniesPar">
+        <property name="maximumSize">
+         <size>
+          <width>177</width>
+          <height>118</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Données fournies par :</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelInpn">
+        <property name="maximumSize">
+         <size>
+          <width>177</width>
+          <height>118</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resources.qrc">:/plugins/biblizou/misc/INPN_logo.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>17</width>
+        <height>17</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="3" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QgsFileWidget" name="mQgsFileWidget"/>
+      </item>
+     </layout>
+    </item>
+    <item row="7" column="0">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>37</width>
+        <height>50</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="4" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="TabFSD">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="title">
+        <string>Moissonnage des FSD</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_fsd">
+        <item>
+         <layout class="QGridLayout" name="gridLayoutFsd">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <property name="verticalSpacing">
+           <number>6</number>
+          </property>
+          <item row="0" column="1">
+           <widget class="QgsMapLayerComboBox" name="mapLayerN2k"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelZnieff">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Aire d'étude pour les ZNIEFF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QgsMapLayerComboBox" name="mapLayerZnieff"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelN2k">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Aire d'étude pour les sites Natura 2000</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="btnRunFsd">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Lancer le moissonage</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Expanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>25</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>50</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="TabTaxref">
+       <attribute name="title">
+        <string>Associer à TAXREF</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_taxref">
+        <item>
+         <layout class="QGridLayout" name="gridLayoutTaxref">
+          <item row="1" column="0" colspan="2">
+           <widget class="QTableWidget" name="tableTaxref">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <property name="sortingEnabled">
+             <bool>false</bool>
+            </property>
+            <column>
+             <property name="text">
+              <string>Couche source</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Attribut (CD_Nom/Ref)</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Action</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="btnRunTaxref">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Associer à TAXREF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="btnAddLayerRowTaxtef">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>misc/data-add.png</normaloff>misc/data-add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelAddDataTaxref">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Ajouter une source personnalisée</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="TabStat">
+       <attribute name="title">
+        <string>Associer à la BDC</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_stat">
+        <item>
+         <layout class="QGridLayout" name="gridLayoutStat">
+          <item row="2" column="0" colspan="2">
+           <widget class="QTableWidget" name="tableStat">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <column>
+             <property name="text">
+              <string>Couche source</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Attribut (CD_Nom/Ref)</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Action</string>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="btnAddLayerRowStat">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>misc/data-add.png</normaloff>misc/data-add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelDpt">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Département de référence</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::AutoText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboBoxDpt">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="btnRunStat">
+            <property name="palette">
+             <palette>
+              <active>
+               <colorrole role="WindowText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="Text">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="ButtonText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="128">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </active>
+              <inactive>
+               <colorrole role="WindowText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="Text">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="ButtonText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="LinearGradientPattern">
+                 <gradient startx="0.000000000000000" starty="0.000000000000000" endx="0.000000000000000" endy="1.000000000000000" type="LinearGradient" spread="PadSpread" coordinatemode="ObjectBoundingMode">
+                  <gradientstop position="0.000000000000000">
+                   <color alpha="255">
+                    <red>71</red>
+                    <green>158</green>
+                    <blue>128</blue>
+                   </color>
+                  </gradientstop>
+                  <gradientstop position="1.000000000000000">
+                   <color alpha="255">
+                    <red>61</red>
+                    <green>140</green>
+                    <blue>112</blue>
+                   </color>
+                  </gradientstop>
+                 </gradient>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="128">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </inactive>
+              <disabled>
+               <colorrole role="WindowText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="76">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="12">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Text">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="76">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="ButtonText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="76">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="12">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="12">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="38">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </disabled>
+             </palette>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>Associer à la BDC</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelAddDataStat">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Ajouter une source personnalisée</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QPushButton" name="btnInfo">
+      <property name="minimumSize">
+       <size>
+        <width>10</width>
+        <height>38</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>150</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>[i] Aide</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsFileWidget</class>
+   <extends>QWidget</extends>
+   <header>qgsfilewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
