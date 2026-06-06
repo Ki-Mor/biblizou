@@ -1,0 +1,146 @@
+{
+  "L": {
+    "nom": "Lumière",
+    "valeurs": {
+      "1": "hypersciaphiles",
+      "2": "persciaphiles",
+      "3": "sciaphiles",
+      "4": "hémisciaphiles",
+      "5": "hélioclines à sciaclines",
+      "6": "hémihéliophiles",
+      "7": "héliophiles",
+      "8": "perhéliophiles",
+      "9": "hyperhéliophiles"
+    }
+  },
+  "T": {
+    "nom": "Température",
+    "valeurs": {
+      "1": "alpines à nivales, altiméditerranéennes",
+      "2": "subalpines, oroméditerranéennes",
+      "3": "montagnardes",
+      "4": "collinéennes, planitiaires psychrophiles",
+      "5": "planitiaires à montagnardes",
+      "6": "planitiaires thermophiles et sub- à supraméditerranéennes",
+      "7": "euryméditerranéennes, méditerranéo-atlantiques",
+      "8": "mésoméditerranéennes",
+      "9": "thermoméditerranéennes à subdésertiques"
+    }
+  },
+  "C": {
+    "nom": "Continentalité",
+    "valeurs": {
+      "1": "marines à maritimes",
+      "2": "hyperocéaniques",
+      "3": "océaniques",
+      "4": "subocéaniques",
+      "5": "intermédiaires",
+      "6": "précontinentales",
+      "7": "subcontinentales",
+      "8": "continentales",
+      "9": "hypercontinentales"
+    }
+  },
+  "HA": {
+    "nom": "Humidité atmosphérique",
+    "valeurs": {
+      "1": "aéropérxérophiles",
+      "2": "aéroxérophiles",
+      "3": "aéromésoxérophiles",
+      "4": "aéromésoxéroclines",
+      "5": "aéromésohydriques",
+      "6": "aéromésohygroclines",
+      "7": "aéromésohygrophiles",
+      "8": "aérohygrophiles",
+      "9": "aérohydrophiles"
+    }
+  },
+  "HE": {
+    "nom": "Humidité édaphique",
+    "valeurs": {
+      "1": "hyperxérophiles",
+      "2": "perxérophiles",
+      "3": "xérophiles",
+      "4": "mésoxérophiles",
+      "5": "mésophiles",
+      "6": "mésohygroclines, mésohygrophiles",
+      "7": "hygrophiles",
+      "8": "hydrophiles",
+      "9": "amphibies saisonnières",
+      "10": "amphibies permanentes",
+      "11": "aquatiques superficielles",
+      "12": "aquatiques profondes ou intra-aquatiques"
+    }
+  },
+  "R": {
+    "nom": "Réaction du sol",
+    "valeurs": {
+      "1": "hyperacidophiles",
+      "2": "peracidophiles",
+      "3": "acidophiles",
+      "4": "acidoclines",
+      "5": "neutroclines",
+      "6": "basoclines",
+      "7": "basophiles",
+      "8": "perbasophiles",
+      "9": "hyperbasophiles"
+    }
+  },
+  "N": {
+    "nom": "Nutriments du sol",
+    "valeurs": {
+      "1": "hyperoligotrophes",
+      "2": "peroligotrophes",
+      "3": "oligotrophes",
+      "4": "méso-oligotrophes",
+      "5": "mésotrophes",
+      "6": "méso-eutrophes",
+      "7": "eutrophes",
+      "8": "pereutrophes",
+      "9": "hypereutrophes"
+    }
+  },
+  "S": {
+    "nom": "Salinité",
+    "valeurs": {
+      "0": "ne supportant pas le sel",
+      "1": "hyperoligohalines",
+      "2": "peroligohalines",
+      "3": "oligohalines",
+      "4": "méso-oligohalines",
+      "5": "mésohalines",
+      "6": "méso-euhalines",
+      "7": "euhalines",
+      "8": "pereuhalines",
+      "9": "hypereuhalines"
+    }
+  },
+  "Tx": {
+    "nom": "Texture du sol",
+    "valeurs": {
+      "1": "argile",
+      "2": "intermédiaire",
+      "3": "limon",
+      "4": "sable fin",
+      "5": "sable grossier",
+      "6": "graviers",
+      "7": "galets, rocailles",
+      "8": "blocs, dalles, replats rocheux",
+      "9": "fissures verticales des parois"
+    }
+  },
+  "MO": {
+    "nom": "Matière organique du sol et type d'humus",
+    "valeurs": {
+      "1": "lithosol, peyrosol, régosol",
+      "2": "mull carbonaté",
+      "3": "mull actif",
+      "4": "mull acide",
+      "5": "moder",
+      "6": "mor, hydromor, xéromor",
+      "7": "ranker, tangel",
+      "8": "anmoor, gyttja",
+      "9": "tourbe"
+    }
+  }
+}

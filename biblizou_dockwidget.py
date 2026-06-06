@@ -105,7 +105,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def setup_department_combo(self):
         """Remplit le combo Département depuis dept_fr.csv (nom_officiel affiché, code_insee stocké). Liste filtrable."""
         import csv
-        csv_path = os.path.join(os.path.dirname(__file__), "dept_fr.csv")
+        csv_path = os.path.join(os.path.dirname(__file__), "config", "dept_fr.csv")
         self.comboBoxDpt.clear()
         if not os.path.isfile(csv_path):
             QgsMessageLog.logMessage("Biblizou: dept_fr.csv introuvable", "Biblizou", level=Qgis.Warning)
