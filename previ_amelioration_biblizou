@@ -2,3 +2,100 @@
 2. Un moyen facile de répéter une couche sur tous les champs dans le thread FSD ;
 3. Si les couches Natura_2000_especes et ZNIEFF_especes sont déjà dans le projet, les ajouter par défaut dans les onglets TAXREF et BDC ;
 4. Fuzzy AFM sur les habitat d'espèces (HABREF) et les indices de Julces (basflore)
+
+5. traitement des cluster especes x habitats - workflow
+
+
+Habitats en format long dans la base de donnée (G1.A1 )
++-----------+-----------+---------------+
+|	espece	|	code	|	typologie	|
++-----------+-----------+---------------+
+|	sp1		| cd1		|	eunis		|
+|	sp1		| cd2		|	Corine		|
+|	sp2		| cd1		|	eunis		|
++-----------+-----------+---------------+
+        ↓
+les codes G1A1 (EUNIS) et 37.31 (Corine) ne sont pas comparables hiérarchiquement — 
+il faudrait les traiter dans des blocs séparés (→ AFM multi-tableaux)
+		↙				↓					↘
+Bloc EUNIS          Bloc Corine          Bloc autre …
+    ↓                    ↓                   ↓
+Nettoyage codes     Nettoyage codes     Nettoyage codes
+    ↓                    ↓                   ↓
+Matrice             Matrice             Matrice
+présence/absence    présence/absence    présence/absence
+[esp × hab_eunis]   [esp × hab_corine]  [esp × hab_cbc]
+    ↓                    ↓                   ↓
+Distances LCP       Distances LCP       Distances LCP
+inter-habitats      inter-habitats      inter-habitats
+    ↓                    ↓                   ↓
+Distances Jaccard   Distances Jaccard   Distances Jaccard
+pondérées           pondérées           pondérées
+[esp × esp]         [esp × esp]         [esp × esp]
+    ↓                    ↓                   ↓
+PCoA_eunis          PCoA_corine         PCoA_cbc
+(k axes)            (k axes)            (k axes)
+    ↘					↓					↙
+						...
+
+
+     [DESCRIPTION FINE PIPELINE PAR TYPOLOGIE]
+             ↓
+     Nettoyage des codes (suppression ".", normalisation)
+      | #r Supprimer les points pour EUNIS, normaliser la casse, etc.
+      | codes <- gsub("\\.", "", codes)  # "G1.A1" → "G1A1"
+             ↓
+     Matrice présence/absence  [espèces × codes habitats]
+             ↓
+     Matrice de distances inter-habitats  [codes × codes]  ← LCP
+     
+      | d(G1A1, G1A2) → LCP = "G1A" (3 cars) → distance faible
+      | d(G1A1, G1B)  → LCP = "G1"  (2 cars) → distance moyenne
+      | d(G1A1, C3)   → LCP = ""    (0 car)  → distance maximale
+      | sim(a, b)  = |LCP(a,b)| / max(|a|, |b|)
+      | d(a, b)    = 1 - sim(a, b)
+      L
+             ↓
+     Matrice de distances inter-espèces  [espèces × espèces]  ← Jaccard pondérée
+      | 
+      | 		Σ  min(poids_a_i, poids_a_j)        ← habitats partagés (pondérés)
+      | d = 1 - ————————————————————————————————
+      |         Σ  max(poids_a_i, poids_a_j)        ← union des habitats
+      L
+             ↓
+     PCO (Analyse en Coordonnées Principales / PCoA)
+             ↓
+			...
+
+
+
+Indices Ellenberg/Julve
+Tableau espèces × indices
+(valeurs entières 1-12, etc.)
++-----------+-----------+---------------+---------+
+|	espece	|	julv1	|	julv2		|	...
++-----------+-----------+---------------+---------+
+|	sp1		| n			|	n			|
+|	sp2		| n			|	n			|
+|	sp3		| n			|	n			|
++-----------+-----------+---------------+---------+
+        ↓  
+     AFC / DCA
+(package vegan : decorana)
+         ↓
+Axes = gradients écologiques
+récupérés sans distorsion
+         ↓
+...
+
+
+
+
+
+résultat des pipeline habitats		résultats de la pipeline JulveEllenberg
+              ↘                         ↙
+               AFM (FactoMineR)
+                      ↓
+         Axes synthétiques communs
+                      ↓
+         CAH ou k-medoids → groupes écologiques
