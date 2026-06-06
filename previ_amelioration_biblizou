@@ -1,7 +1,10 @@
 1. Et s'il n'y a pas de ZNIEFF / Natura 2000 dans l'aire d'étude ? - S'assurer que le plugin ne plante pas ;
 2. Un moyen facile de répéter une couche sur tous les champs dans le thread FSD ;
 3. Si les couches Natura_2000_especes et ZNIEFF_especes sont déjà dans le projet, les ajouter par défaut dans les onglets TAXREF et BDC ;
-4. Fuzzy AFM sur les habitat d'espèces (HABREF) et les indices de Julces (basflore)
+4. A VERIF : les couches description ne s'enregistrent pas encore dans le GPKG
+5. A VERIF : les colonnes des pivot HABITAT ne sont pas bien paramétrées =/= [code] - [nom site] (actuellement juste [nom site])
+
+
 
 5. traitement des cluster especes x habitats - workflow
 
