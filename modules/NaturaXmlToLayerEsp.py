@@ -1,7 +1,7 @@
 """
 Auteur : ExEco Environnement - François Botcazou
 Date : 2025/03
-Version : 1.4
+Version : 1.5
 Nom : NaturaXmlToLayerEsp.py
 Groupe : Biblizou_PatNat
 Description : Module pour extraire les données d'espèces directive des XML Natura 2000

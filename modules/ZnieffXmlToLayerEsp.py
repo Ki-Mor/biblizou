@@ -1,7 +1,7 @@
 """
 Auteur : ExEco Environnement - François Botcazou
 Date : 2025/03
-Version : 1.3
+Version : 1.4
 Nom : ZnieffXmlToLayerEsp.py
 Groupe : Biblizou_PatNat
 Description : Module pour extraire les données d'espèces à partir des XML ZNIEFF

@@ -1,7 +1,7 @@
 """
 Auteur : ExEco Environnement - François Botcazou
 Date : 2025/03
-Version : 1.3
+Version : 1.4
 Nom : NaturaXmlToLayerHab.py
 Groupe : Biblizou_PatNat
 Description : Module pour extraire des données d'habitats directive à partir de fichiers XML
