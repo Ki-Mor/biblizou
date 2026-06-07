@@ -101,7 +101,12 @@ class FsdProcessingThread(QThread):
                 ("Pivot des espèces Natura 2000", self.pivot_natura_esp),
                 ("Pivot des habitats Natura 2000", self.pivot_natura_hab),
             ]
-            
+            # Flags pour bloquer les pivots si aucune donnée en amont
+            self._has_znieff_esp = False
+            self._has_znieff_hab = False
+            self._has_natura_esp = False
+            self._has_natura_hab = False
+
             total_steps = len(steps)
             for i, (step_name, step_function) in enumerate(steps, 1):
                 self.progress.emit(i, total_steps, step_name)
@@ -176,27 +181,36 @@ class FsdProcessingThread(QThread):
         self.log.emit("Analyse des espèces ZNIEFF...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini pour process_znieff_esp")
-            return False
-        success = znieff_process_esp(self.working_folder)
-        if not success: 
+            return
+        result = znieff_process_esp(self.working_folder)
+        if result is True:
+            self._has_znieff_esp = True
+        elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les espèces ZNIEFF")
-        return success
+        # result None ou True sans données = ignoré silencieusement
 
     def process_znieff_hab(self):
         self.log.emit("Analyse des habitats ZNIEFF...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini pour process_znieff_hab")
-            return False
-        success = znieff_process_hab(self.working_folder)
-        if not success: 
+            return
+        result = znieff_process_hab(self.working_folder)
+        if result is True:
+            self._has_znieff_hab = True
+        elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les habitats ZNIEFF")
-        return success
 
     def pivot_znieff_esp(self):
+        if not self._has_znieff_esp:
+            self.log.emit("Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
+            return
         self.log.emit("Génération pivot espèces ZNIEFF...")
         znieff_pivot_esp()
 
     def pivot_znieff_hab(self):
+        if not self._has_znieff_hab:
+            self.log.emit("Pivot habitats ZNIEFF ignoré : aucune donnée disponible")
+            return        
         self.log.emit("Génération pivot habitats ZNIEFF...")
         znieff_pivot_hab()
 
@@ -224,27 +238,35 @@ class FsdProcessingThread(QThread):
         self.log.emit("Analyse des espèces Natura 2000...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini pour process_natura_esp")
-            return False
-        success = natura_process_esp(self.working_folder)
-        if not success:
+            return
+        result = natura_process_esp(self.working_folder)
+        if result is True:
+            self._has_natura_esp = True
+        elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les espèces Natura 2000")
-        return success
 
     def process_natura_hab(self):
         self.log.emit("Analyse des habitats Natura 2000...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini pour process_natura_hab")
-            return False
-        success = natura_process_hab(self.working_folder)
-        if not success:
+            return
+        result = natura_process_hab(self.working_folder)
+        if result is True:
+            self._has_natura_hab = True
+        elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les habitats Natura 2000")
-        return success
 
     def pivot_natura_esp(self):
+        if not self._has_natura_esp:
+            self.log.emit("Pivot espèces Natura 2000 ignoré : aucune donnée disponible")
+            return        
         self.log.emit("Génération pivot espèces Natura...")
         natura_pivot_esp()
 
     def pivot_natura_hab(self):
+        if not self._has_natura_hab:
+            self.log.emit("Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
+            return 
         self.log.emit("Génération pivot habitats Natura...")
         natura_pivot_hab()
 

@@ -494,11 +494,19 @@ QMessageBox QPushButton:hover {
           <height>118</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Données fournies par :</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -1230,6 +1238,7 @@ QMessageBox QPushButton:hover {
       </property>
       <property name="font">
        <font>
+        <pointsize>8</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>

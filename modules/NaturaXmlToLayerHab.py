@@ -104,7 +104,7 @@ class NaturaXmlToLayerHab:
             if not habitats_data:
                 self.log_message(f"Aucun habitat trouvé dans {folder_path}", Qgis.Warning)
                 # Ce n'est pas une erreur fatale, on retourne True quand même
-                return True
+                return None
                 
             # 2. Création de la couche temporaire
             temp_layer = self.create_temp_layer(habitats_data)

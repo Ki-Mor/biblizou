@@ -116,7 +116,7 @@ class NaturaXmlToLayerEsp:
                     "Biblizou", 
                     level=Qgis.Warning
                 )
-                return False
+                return None
                 
             # 2. Création de la couche temporaire
             temp_layer = self.create_temp_layer(species_data)
