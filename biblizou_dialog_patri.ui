@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>449</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QRadioButton" name="radioButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Protection france</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Protection régionale</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>270</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Liste Rouge mondiale</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_4">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>290</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Liste Rouge européenne</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_5">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>310</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Liste Rouge france</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>330</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Liste Rouge régionale</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>151</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>CITES</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_8">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>70</y>
+     <width>151</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Berne</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_9">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>151</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Bonn</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_10">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>380</y>
+     <width>83</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Déterminante de ZNIEFF</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_11">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>400</y>
+     <width>83</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Rareté régionale</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>270</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>8</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider_2">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>290</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider_3">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>310</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider_4">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>330</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="radioButton_12">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>150</y>
+     <width>141</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Directive Habitats</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>180</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>250</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>360</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>30</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
