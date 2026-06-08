@@ -1253,14 +1253,32 @@ QMessageBox QPushButton:hover {
        <widget class="QWidget" name="">
         <property name="geometry">
          <rect>
-          <x>16</x>
-          <y>10</y>
-          <width>387</width>
+          <x>20</x>
+          <y>0</y>
+          <width>410</width>
           <height>382</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0" colspan="2">
+         <item row="0" column="0" colspan="3">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Baseflor. Index botanique, écologique et chorologique de la flore de France
+P Julve - Institut Catholique de Lille, Lille, 1998 (extrait du 06/06/2026)</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3" rowspan="5">
+          <widget class="QScrollBar" name="verticalScrollBar">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
           <widget class="QLabel" name="labelAddDataStat_2">
            <property name="font">
             <font>
@@ -1277,7 +1295,28 @@ QMessageBox QPushButton:hover {
            </property>
           </widget>
          </item>
-         <item row="1" column="0" colspan="4">
+         <item row="1" column="2">
+          <widget class="QPushButton" name="btnAddLayerRowStat_2">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>misc/data-add.png</normaloff>misc/data-add.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="3">
           <widget class="QTableWidget" name="tableStat_2">
            <property name="autoFillBackground">
             <bool>false</bool>
@@ -1323,45 +1362,34 @@ QMessageBox QPushButton:hover {
            </column>
           </widget>
          </item>
-         <item row="2" column="0" colspan="3">
+         <item row="3" column="0" colspan="2">
           <widget class="QRadioButton" name="radioButton">
            <property name="text">
             <string>Limiter l'analyse aux espèces patrimoniales</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
+         <item row="3" column="2">
           <widget class="QPushButton" name="pushButton_2">
            <property name="text">
             <string>Gérer patrimonialité</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>m</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="QSpinBox" name="spinBox"/>
          </item>
-         <item row="3" column="3">
+         <item row="4" column="2">
           <widget class="QPushButton" name="pushButton">
            <property name="text">
             <string>[i] paramètre m</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="4">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Baseflor. Index botanique, écologique et chorologique de la flore de France
-P Julve - Institut Catholique de Lille, Lille, 1998 (extrait du 06/06/2026)</string>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1644,27 +1672,6 @@ P Julve - Institut Catholique de Lille, Lille, 1998 (extrait du 06/06/2026)</str
            </property>
            <property name="text">
             <string>Démarrer traitement</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2" colspan="2">
-          <widget class="QPushButton" name="btnAddLayerRowStat_2">
-           <property name="font">
-            <font>
-             <pointsize>8</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>misc/data-add.png</normaloff>misc/data-add.png</iconset>
            </property>
           </widget>
          </item>
