@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2026/02
+Auteur : François Botcazou
 Nom : StatusApiToTable.py
-Groupe : Biblizou_PatNat
+Groupe : Status
 Description : Interroge l'API TaxRef Statuts (locationId=INSEED + code département),
               une ligne par statut par espèce. Enregistre la table sans géométrie
               dans biblizou.gpkg|status_data.
-Dépendances : requests, qgis.core (QgsVectorLayer, QgsVectorFileWriter, etc.)
 """
+
 import os
 import time
 import requests

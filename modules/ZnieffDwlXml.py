@@ -1,20 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date de création : 2025/02
-Dernière mise à jour : 2025/03
-Version : 1.1 (Compatibilité BiblizouMain)
+Auteur : François Botcazou
 Nom : ZnieffDwlXml.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour télécharger les xml des zonages ZNIEFF dans un périmètre donné.
               Version compatible avec BiblizouMain ou exécution indépendante.
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsMessageBar, QgsMessageLog)
-    - requests
-
-Utilisation :
-    - En mode BiblizouMain : module.run_with_params(znieff_layer, folder_path)
-    - En mode indépendant : module.run() (ouvre des boîtes de dialogue)
 """
 
 import os

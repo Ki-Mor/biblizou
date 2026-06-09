@@ -1,21 +1,12 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.5
+Auteur : François Botcazou
 Nom : NaturaXmlToLayerEsp.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour extraire les données d'espèces directive des XML Natura 2000
               et les exporter dans un GeoPackage (Mode Offline - sans API TAXREF).
               Version étendue avec extraction complète des champs SPECIES_ROW.
               Version compatible avec BiblizouMain ou exécution indépendante.
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsField, QgsFeature, QgsMessageLog)
-    - xml.etree.ElementTree
-
-Utilisation :
-    - En mode BiblizouMain : module.run_with_path(folder_path)
-    - En mode indépendant : module.run() (ouvre une boîte de dialogue)
 """
 
 import os
@@ -31,7 +22,6 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QVariant
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
-
 
 class NaturaXmlToLayerEsp:
     def __init__(self):

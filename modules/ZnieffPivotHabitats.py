@@ -1,20 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.0
+Auteur : François Botcazou
 Nom : ZnieffPivotHabitats.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour créer un tableau croisé dynamique (pivot) des habitats déterminants ZNIEFF.
               Transforme la table longue en format large avec une ZNIEFF par colonne.
-              
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsProject, QgsMessageLog)
-
-Utilisation :
-    Ce module doit être appelé depuis une extension QGIS.
-    Il nécessite qu'une couche "Znieff_Habitats" soit présente dans le projet.
-    Crée une couche virtuelle "Znieff_Habitats_Pivot" avec les ZNIEFF en colonnes.
 """
 
 import unicodedata

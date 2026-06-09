@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2026/02
+Auteur : François Botcazou
 Nom : TaxrefApiToTable.py
-Groupe : Biblizou_PatNat
+Groupe : TaxRef
 Description : Requêtage API TAXREF (taxa) et enregistrement dans biblizou.gpkg|data_taxref.
               Table sans géométrie. Anciennement TaxrefConsolidator.
 """

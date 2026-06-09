@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+Auteur : François Botcazou
+Nom : TaxrefApiToTable.py
+Groupe : TaxRef
+Description : Requêtage API TAXREF (taxa) et enregistrement dans biblizou.gpkg|data_taxref.
+              Table sans géométrie. Anciennement TaxrefConsolidator.
+"""
+
 import os
 import requests
 from qgis.core import (
