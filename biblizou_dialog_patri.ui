@@ -130,32 +130,6 @@
     <string>Bonn</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_10">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>380</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Déterminante de ZNIEFF</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_11">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>400</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Rareté régionale</string>
-   </property>
-  </widget>
   <widget class="QSlider" name="horizontalSlider">
    <property name="geometry">
     <rect>
@@ -255,19 +229,6 @@
     <rect>
      <x>20</x>
      <y>250</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>360</y>
      <width>141</width>
      <height>16</height>
     </rect>
