@@ -35,9 +35,17 @@ try:
     from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
 except ImportError:
     from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
-    
+
 import sys
 from . import resources as resources_rc
+
+# Import du dialog patrimonialité
+try:
+    from .biblizou_dialog_patri import BiblizouDialogPatri
+except ImportError:
+    from biblizou_dialog_patri import BiblizouDialogPatri
+
+
 sys.modules['resources_rc'] = resources_rc
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -92,6 +100,32 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
+
+        # Thread et dialog Botanix
+        self.botanix_thread = None
+        self.dialog_patri = None
+
+        # SpinBox flou : valeur par défaut 2, affichage "auto (2)"
+        self.spinBoxFuzzyBotanix.setMinimum(0)
+        self.spinBoxFuzzyBotanix.setMaximum(10)
+        self.spinBoxFuzzyBotanix.setValue(2)
+        self.spinBoxFuzzyBotanix.setSpecialValueText("")  # pas de texte spécial sur 0
+        self.spinBoxFuzzyBotanix.setPrefix("auto (")
+        self.spinBoxFuzzyBotanix.setSuffix(")")
+
+        # Onglet Botanix — connexions
+        self.btnAddLayerRowBotanix.clicked.connect(self.add_botanix_row)
+        self.btnRunStat_2.clicked.connect(self.run_botanix_process)
+        self.rBPatriBotanix.toggled.connect(self.on_patri_toggled)
+        self.pBPatriBotanix.clicked.connect(self.open_dialog_patri)
+        self.pBPatriBotanix.setEnabled(self.rBPatriBotanix.isChecked())
+
+        # En-têtes du tableau Botanix
+        header_botanix = self.tableBotanix.horizontalHeader()
+        if header_botanix:
+            header_botanix.setSectionResizeMode(0, QHeaderView.Stretch)
+            header_botanix.setSectionResizeMode(1, QHeaderView.Stretch)
+            header_botanix.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
@@ -390,6 +424,119 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.btnRunTaxref.setEnabled(True)
         self.btnRunStat.setEnabled(True)
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
+
+        # ------------------------------------------------------------------ #
+        #  Onglet Botanix                                                      #
+        # ------------------------------------------------------------------ #
+
+        def on_patri_toggled(self, checked):
+            """Active/désactive le bouton 'Gérer patrimonialité' selon l'état du radio."""
+            self.pBPatriBotanix.setEnabled(checked)
+
+        def open_dialog_patri(self):
+            """Ouvre le dialog de gestion de la patrimonialité."""
+            if self.dialog_patri is None:
+                self.dialog_patri = BiblizouDialogPatri(self)
+            self.dialog_patri.show()
+            self.dialog_patri.raise_()
+            self.dialog_patri.activateWindow()
+
+        def add_botanix_row(self):
+            """Ajoute une ligne au tableau Botanix (couche + champ CD_Nom/Ref)."""
+            row = self.tableBotanix.rowCount()
+            self.tableBotanix.insertRow(row)
+            lyr_cb = QgsMapLayerComboBox()
+            lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
+            fld_cb = QgsFieldComboBox()
+            fld_cb.setLayer(lyr_cb.currentLayer())
+            lyr_cb.layerChanged.connect(fld_cb.setLayer)
+            btn_del = QPushButton()
+            icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
+            btn_del.setIcon(QtGui.QIcon(icon_path))
+            btn_del.setIconSize(QtCore.QSize(16, 16))
+            btn_del.setMaximumWidth(30)
+            btn_del.clicked.connect(lambda: self.tableBotanix.removeRow(
+                self.tableBotanix.indexAt(btn_del.pos()).row()))
+            self.tableBotanix.setCellWidget(row, 0, lyr_cb)
+            self.tableBotanix.setCellWidget(row, 1, fld_cb)
+            self.tableBotanix.setCellWidget(row, 2, btn_del)
+
+        def get_botanix_config(self):
+            """Extrait les couches et champs du tableau Botanix."""
+            data = []
+            for row in range(self.tableBotanix.rowCount()):
+                lyr_widget = self.tableBotanix.cellWidget(row, 0)
+                fld_widget = self.tableBotanix.cellWidget(row, 1)
+                if lyr_widget and lyr_widget.currentLayer():
+                    data.append({
+                        "layer_id": lyr_widget.currentLayer().id(),
+                        "column": fld_widget.currentField()
+                    })
+            return data
+
+        def validate_botanix(self):
+            """Valide la saisie avant exécution du workflow Botanix."""
+            errors = []
+            working_folder = self.mQgsFileWidget.filePath()
+            if not working_folder or not os.path.isdir(working_folder):
+                errors.append("Dossier de travail invalide.")
+            if not self.get_botanix_config():
+                errors.append("Ajoutez au moins une couche source dans l'onglet Botanix.")
+            if errors:
+                QtWidgets.QMessageBox.warning(self, "Validation Botanix", "\n".join(errors))
+                return False
+            return True
+
+        def run_botanix_process(self):
+            """Lance le workflow Botanix (DCA → Membership) via le thread."""
+            if not self.validate_botanix():
+                return
+
+            working_folder = self.mQgsFileWidget.filePath()
+            only_patrimonial = self.rBPatriBotanix.isChecked()
+            fuzzy_value = self.spinBoxFuzzyBotanix.value()
+
+            params = {
+                "working_folder": working_folder,
+                "input_file": "dca_data.csv",
+                "only_patrimonial": only_patrimonial,
+                "fuzzy_threshold": fuzzy_value,
+                "consolidation_config": self.get_botanix_config()
+            }
+
+            msg = (
+                f"Lancer l'analyse Botanix ?\n\n"
+                f"Dossier : {working_folder}\n"
+                f"Couches : {len(params['consolidation_config'])}\n"
+                f"Espèces patrimoniales uniquement : {'Oui' if only_patrimonial else 'Non'}\n"
+                f"Réglage du flou : auto ({fuzzy_value})"
+            )
+            reply = QtWidgets.QMessageBox.question(
+                self, "Confirmation", msg,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+            )
+            if reply != QtWidgets.QMessageBox.Yes:
+                return
+
+            self.btnRunStat_2.setEnabled(False)
+            self.botanix_thread = BotanixProcessingThread(params, self.iface)
+            self.botanix_thread.progress.connect(self.update_status_bar)
+            self.botanix_thread.log.connect(self.log_to_qgis)
+            self.botanix_thread.finished.connect(self.on_botanix_finished)
+            self.botanix_thread.error.connect(self.on_error_botanix)
+            self.botanix_thread.start()
+            self.iface.messageBar().pushMessage("Biblizou", "Analyse Botanix démarrée...", level=Qgis.Info)
+
+        def on_botanix_finished(self, message):
+            """Action à la fin du workflow Botanix."""
+            self.btnRunStat_2.setEnabled(True)
+            QtWidgets.QMessageBox.information(self, "Succès", message)
+            self.iface.mainWindow().statusBar().clearMessage()
+
+        def on_error_botanix(self, error_message):
+            """Action en cas d'erreur du workflow Botanix."""
+            self.btnRunStat_2.setEnabled(True)
+            QtWidgets.QMessageBox.critical(self, "Erreur Botanix", error_message)
     
     def closeEvent(self, event):
         self.closingPlugin.emit()
