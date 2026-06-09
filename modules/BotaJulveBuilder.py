@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Auteur : ExEco Environnement - François Botcazou
-Date : 2026/06
 Nom : BotaJulveBuilder.py
-Groupe : Biblizou_PatNat
+Groupe : Botanix
 Description : Collecte les codes CD_NOM uniques depuis les couches sélectionnées,
               jointure avec baseflor.csv (indices Julve),
               export dans le dossier de travail sous bota_julve.csv

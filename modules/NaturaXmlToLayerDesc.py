@@ -1,20 +1,11 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.1
+Auteur : François Botcazou
 Nom : NaturaXmlToLayerDesc.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour extraire les descriptions des sites Natura 2000 des fichiers XML
               et les exporter dans une couche QGIS enrichie sans géométrie.
               Version compatible avec BiblizouMain ou exécution indépendante.
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsField, QgsFeature, QgsMessageLog)
-    - xml.etree.ElementTree
-
-Utilisation :
-    - En mode BiblizouMain : module.run_with_path(folder_path)
-    - En mode indépendant : module.run() (ouvre une boîte de dialogue)
 """
 
 import os
@@ -31,7 +22,6 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QVariant
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
-
 
 class NaturaXmlToLayerDesc:
     def __init__(self):

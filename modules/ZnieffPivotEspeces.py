@@ -1,9 +1,8 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.4
+Auteur : François Botcazou
 Nom : ZnieffPivotEspeces.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour créer un tableau croisé dynamique (pivot) unique des espèces ZNIEFF.
               Filtré uniquement sur les espèces déterminantes (FG_ESP = 'D').
               - GROUPE en première colonne

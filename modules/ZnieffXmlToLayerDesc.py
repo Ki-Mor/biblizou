@@ -1,19 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.7
+Auteur : François Botcazou
 Nom : ZnieffXmlToLayerDesc.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour extraire les descriptions des sites ZNIEFF des fichiers XML
               et les exporter dans une couche QGIS enrichie sans géométrie.
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsField, QgsFeature, QgsMessageLog)
-    - xml.etree.ElementTree
-
-Utilisation :
-    - En mode BiblizouMain : module.run_with_path(folder_path)
-    - En mode indépendant : module.run() (ouvre une boîte de dialogue)
 """
 
 import os

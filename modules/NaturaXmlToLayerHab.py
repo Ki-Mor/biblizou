@@ -1,20 +1,11 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.4
+Auteur : François Botcazou
 Nom : NaturaXmlToLayerHab.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour extraire des données d'habitats directive à partir de fichiers XML
               et les exporter dans un GeoPackage.
               Version compatible avec BiblizouMain ou exécution indépendante.
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsField, QgsFeature, QgsMessageLog)
-    - xml.etree.ElementTree
-
-Utilisation :
-    - En mode BiblizouMain : module.run_with_path(folder_path)
-    - En mode indépendant : module.run() (ouvre une boîte de dialogue)
 """
 
 import os
@@ -30,7 +21,6 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QVariant
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
-
 
 class NaturaXmlToLayerHab:
     def __init__(self):

@@ -1,20 +1,11 @@
+# -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2025/03
-Version : 1.0
+Auteur : François Botcazou
 Nom : NaturaPivotHabitats.py
-Groupe : Biblizou_PatNat
+Groupe : FSD
 Description : Module pour créer un tableau croisé dynamique (pivot) des habitats Natura 2000.
               Transforme la table longue en format large avec un site par colonne.
-              
-Dépendances :
-    - Python 3.x
-    - QGIS (QgsVectorLayer, QgsProject, QgsMessageLog)
 
-Utilisation :
-    Ce module doit être appelé depuis une extension QGIS.
-    Il nécessite qu'une couche "Natura_2000_Habitats" soit présente dans le projet.
-    Crée une couche virtuelle "Natura_2000_Habitats_Pivot" avec les sites en colonnes.
 """
 
 import unicodedata
@@ -25,7 +16,6 @@ from qgis.core import (
     Qgis
 )
 from PyQt5.QtWidgets import QMessageBox
-
 
 class NaturaPivotHabitats:
     """Classe pour créer un tableau croisé dynamique des habitats Natura 2000."""
