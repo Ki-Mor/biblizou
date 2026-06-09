@@ -4,26 +4,32 @@
 # ============================================================
 
 # 0. Librairies
-pkgs <- c("vegan", "e1071", "ggplot2")
+pkgs <- c("vegan", "e1071", "ggplot2", "jsonlite")
 for (pkg in pkgs) if (!requireNamespace(pkg, quietly = TRUE)) install.packages(pkg)
 for (pkg in pkgs) library(pkg, character.only = TRUE)
 
 # 1. Chargement des données
-data_julve <- read.csv("chemin/vers/bota_julve.csv", 
+
+args   <- commandArgs(trailingOnly = TRUE)
+params <- fromJSON(args[1])
+
+folder_path <- params$folder_path
+
+data_input <- read.csv(folder_path, "bota_julve.csv"),
                        sep = ",", 
                        encoding = "UTF-8",
                        row.names = 1)  # colonne espèce en nom de ligne
 
 # 2. Nettoyage : suppression des espèces sans aucun indice renseigné
-data_julve <- data_julve[rowSums(is.na(data_julve)) < ncol(data_julve), ]
+data_input <- data_input[rowSums(is.na(data_input)) < ncol(data_input), ]
 
 # Remplacement des NA par la moyenne de la colonne (imputation simple)
-for (col in colnames(data_julve)) {
-  data_julve[[col]][is.na(data_julve[[col]])] <- mean(data_julve[[col]], na.rm = TRUE)
+for (col in colnames(data_input)) {
+  data_input[[col]][is.na(data_input[[col]])] <- mean(data_input[[col]], na.rm = TRUE)
 }
 
 # 3. DCA
-ord      <- decorana(data_julve)
+ord      <- decorana(data_input)
 axes_DCA <- scores(ord, display = "sites", choices = 1:4)
 
 # 4. Boucle FCM k = 2 à 15
