@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QRadioButton" name="radioButton">
+  <widget class="QRadioButton" name="rBPN">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -26,7 +26,7 @@
     <string>Protection france</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_2">
+  <widget class="QRadioButton" name="rBPR">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -39,7 +39,7 @@
     <string>Protection régionale</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_3">
+  <widget class="QRadioButton" name="rBLRM">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -52,7 +52,7 @@
     <string>Liste Rouge mondiale</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_4">
+  <widget class="QRadioButton" name="rBLREU">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -65,7 +65,7 @@
     <string>Liste Rouge européenne</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_5">
+  <widget class="QRadioButton" name="rBLRF">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -78,7 +78,7 @@
     <string>Liste Rouge france</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_6">
+  <widget class="QRadioButton" name="rBLRR">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -91,7 +91,7 @@
     <string>Liste Rouge régionale</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_7">
+  <widget class="QRadioButton" name="rBCITES">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -104,7 +104,7 @@
     <string>CITES</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_8">
+  <widget class="QRadioButton" name="rBBerne">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -117,7 +117,7 @@
     <string>Berne</string>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_9">
+  <widget class="QRadioButton" name="rBBonn">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -135,7 +135,7 @@
     <rect>
      <x>20</x>
      <y>380</y>
-     <width>83</width>
+     <width>141</width>
      <height>18</height>
     </rect>
    </property>
@@ -148,7 +148,7 @@
     <rect>
      <x>20</x>
      <y>400</y>
-     <width>83</width>
+     <width>141</width>
      <height>18</height>
     </rect>
    </property>
@@ -211,7 +211,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QRadioButton" name="radioButton_12">
+  <widget class="QRadioButton" name="rBDHFF">
    <property name="geometry">
     <rect>
      <x>20</x>
