@@ -270,7 +270,6 @@ class FsdProcessingThread(QThread):
         self.log.emit("Génération pivot habitats Natura...")
         natura_pivot_hab()
 
-
 class TaxrefProcessingThread(QThread):
     """Thread gérant la consolidation avec TaxRef."""
     progress = pyqtSignal(int, int, str)
@@ -378,3 +377,69 @@ class BdStatutsProcessingThread(QThread):
         except Exception as e:
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
 
+class BotanixProcessingThread(QThread):
+    """Thread gérant le workflow d'analyse écologique via le script R DcaToMembershipDf."""
+    progress = pyqtSignal(int, int, str)
+    log      = pyqtSignal(str)
+    finished = pyqtSignal(str)
+    error    = pyqtSignal(str)
+
+    def __init__(self, params, iface):
+        super().__init__()
+        self.params = params
+        self.iface  = iface
+
+    def run(self):
+        try:
+            self.log.emit("=== Démarrage du workflow Botanix (DCA → Membership) ===")
+
+            working_folder = self.params.get("working_folder")
+            input_file     = self.params.get("input_file")
+
+            # Vérifications des paramètres
+            if not working_folder or not os.path.isdir(working_folder):
+                self.error.emit("Paramètre 'working_folder' manquant ou dossier introuvable.")
+                return
+            if not input_file:
+                self.error.emit("Paramètre 'input_file' manquant (nom du fichier CSV à analyser).")
+                return
+
+            steps = [
+                ("Vérification de l'environnement R", self.check_r_env),
+                ("Lancement de l'analyse DCA / Membership", self.run_dca_script),
+            ]
+
+            total = len(steps)
+            for i, (step_name, step_fn) in enumerate(steps, 1):
+                self.progress.emit(i, total, step_name)
+                self.log.emit(f"--- Début : {step_name} ---")
+                step_fn()
+                self.log.emit(f"--- Terminé : {step_name} ---")
+
+            self.finished.emit("Analyse Botanix terminée avec succès !")
+
+        except Exception as e:
+            self.error.emit(f"Erreur critique dans le workflow Botanix : {str(e)}")
+
+    def check_r_env(self):
+        """Vérifie que RRunner peut trouver Rscript avant de lancer le script."""
+        from .utils.RRunner import RRunner
+        runner = RRunner()
+        if not runner.rscript_path:
+            raise RuntimeError(
+                "Rscript introuvable. Configurez R dans Traitement → Options → Fournisseurs → R."
+            )
+        self.log.emit(f"Rscript trouvé : {runner.rscript_path}")
+
+    def run_dca_script(self):
+        """Lance DcaToMembershipDf.R via RRunner en passant les paramètres."""
+        from .utils.RRunner import RRunner
+        runner  = RRunner()
+        success = runner.run(
+            script_name = "DcaToMembershipDf.R",
+            folder_path = self.params["working_folder"],
+            input_file  = self.params["input_file"]
+        )
+        if not success:
+            raise RuntimeError("Échec de l'exécution du script R. Consultez le journal QGIS.")
+        self.log.emit("Script R exécuté avec succès.")
