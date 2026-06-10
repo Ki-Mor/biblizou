@@ -62,3 +62,38 @@ class RRunner:
                 level=Qgis.Warning
             )  # ← ferme logMessage(
             return False
+
+        script_r = os.path.join(self.modules_dir, script_name)
+        if not os.path.isfile(script_r):
+            QgsMessageLog.logMessage(
+                f"RRunner: Script R introuvable: {script_r}",
+                "Botanix",
+                level=Qgis.Critical
+            )
+            return False
+
+        params = {"folder_path": folder_path}
+        if input_file:
+            params["input_file"] = input_file
+
+        try:
+            result = subprocess.run(
+                [self.rscript_path, script_r, json.dumps(params)],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            QgsMessageLog.logMessage(
+                f"RRunner: {script_name} terminé.\n{result.stdout}",
+                "Botanix",
+                level=Qgis.Info
+            )
+            return True
+
+        except subprocess.CalledProcessError as e:
+            QgsMessageLog.logMessage(
+                f"RRunner: Erreur R:\n{e.stderr}",
+                "Botanix",
+                level=Qgis.Critical
+            )
+            return False
