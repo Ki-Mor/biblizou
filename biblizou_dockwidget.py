@@ -32,9 +32,9 @@ from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 
 # Importation du thread de traitement depuis le script biblizou.py
 try:
-    from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
+    from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread, BotanixProcessingThread
 except ImportError:
-    from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
+    from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread, BotanixProcessingThread
 
 import sys
 from . import resources as resources_rc
