@@ -44,7 +44,7 @@ class RRunner:
         )
         return None
 
-    def run(self, script_name, folder_path):
+    def run(self, script_name, folder_path, input_file=None):
         """
         Lance un script R en lui passant folder_path.
 
