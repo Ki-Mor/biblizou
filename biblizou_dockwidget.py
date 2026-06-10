@@ -115,7 +115,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # Onglet Botanix — connexions
         self.btnAddLayerRowBotanix.clicked.connect(self.add_botanix_row)
-        self.btnRunStat_2.clicked.connect(self.run_botanix_process)
+        self.btnRunBotanix.clicked.connect(self.run_botanix_process)
         self.rBPatriBotanix.toggled.connect(self.on_patri_toggled)
         self.pBPatriBotanix.clicked.connect(self.open_dialog_patri)
         self.pBPatriBotanix.setEnabled(self.rBPatriBotanix.isChecked())
