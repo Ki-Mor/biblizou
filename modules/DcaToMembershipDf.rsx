@@ -1,24 +1,22 @@
-# ============================================================
+##Biblizou=group
+##output_plots_to_html
+##folder_path=folder
+##input_file=string bota_julve.csv
+##julve_labels=file
+
 # Classification écologique des espèces par indices Julve
 # Auteur : François Botcazou
-# ============================================================
 
-# 0. Librairies
-pkgs <- c("vegan", "e1071", "ggplot2", "jsonlite")
-for (pkg in pkgs) if (!requireNamespace(pkg, quietly = TRUE)) install.packages(pkg)
-for (pkg in pkgs) library(pkg, character.only = TRUE)
+library(vegan)
+library(e1071)
+library(ggplot2)
+library(jsonlite)
 
 # 1. Chargement des données
-
-args   <- commandArgs(trailingOnly = TRUE)
-params <- fromJSON(args[1])
-
-folder_path <- params$folder_path
-
-data_input <- read.csv(folder_path, "bota_julve.csv"),
-                       sep = ",", 
+data_input <- read.csv(file.path(folder_path, input_file),
+                       sep = ",",
                        encoding = "UTF-8",
-                       row.names = 1)  # colonne espèce en nom de ligne
+                       row.names = 1)
 
 # 2. Nettoyage : suppression des espèces sans aucun indice renseigné
 data_input <- data_input[rowSums(is.na(data_input)) < ncol(data_input), ]
@@ -29,38 +27,33 @@ for (col in colnames(data_input)) {
 }
 
 # 3. DCA
-ord      <- decorana(data_input)
+ord <- decorana(data_input)
 axes_DCA <- scores(ord, display = "sites", choices = 1:4)
 
 # 4. Boucle FCM k = 2 à 15
-set.seed(42)  # reproductibilité
+set.seed(42)
 resultats <- lapply(2:15, function(k) {
   fcm <- cmeans(axes_DCA, centers = k, m = 2, iter.max = 500, verbose = FALSE)
-  
-  # Partition Coefficient (PC) — maximiser
+
   pc <- sum(fcm$membership^2) / nrow(axes_DCA)
-  
-  # Xie-Beni — minimiser
   separation <- min(dist(fcm$centers)^2)
   xb <- fcm$withinerror / (nrow(axes_DCA) * separation)
-  
+
   list(k = k, PC = pc, Xie_Beni = xb, modele = fcm)
 })
 
 # 5. Synthèse et choix automatique de k
 synthese <- data.frame(
-  k        = sapply(resultats, `[[`, "k"),
-  PC       = sapply(resultats, `[[`, "PC"),
+  k = sapply(resultats, `[[`, "k"),
+  PC = sapply(resultats, `[[`, "PC"),
   Xie_Beni = sapply(resultats, `[[`, "Xie_Beni")
 )
 
-# Normalisation pour combiner les deux critères
-synthese$PC_norm <- (synthese$PC - min(synthese$PC)) / 
+synthese$PC_norm <- (synthese$PC - min(synthese$PC)) /
   (max(synthese$PC) - min(synthese$PC))
-synthese$XB_norm <- (synthese$Xie_Beni - min(synthese$Xie_Beni)) / 
+synthese$XB_norm <- (synthese$Xie_Beni - min(synthese$Xie_Beni)) /
   (max(synthese$Xie_Beni) - min(synthese$Xie_Beni))
 
-# Score composite : maximiser PC, minimiser Xie-Beni
 synthese$score <- synthese$PC_norm - synthese$XB_norm
 k_optimal <- synthese$k[which.max(synthese$score)]
 cat("Nombre de groupes optimal :", k_optimal, "\n")
@@ -73,7 +66,7 @@ membership_df <- as.data.frame(modele_final$membership)
 colnames(membership_df) <- paste0("groupe_", seq_len(k_optimal))
 membership_df$espece <- rownames(axes_DCA)
 membership_df$groupe_dominant <- apply(modele_final$membership, 1, which.max)
-membership_df <- membership_df[, c("espece", "groupe_dominant", 
+membership_df <- membership_df[, c("espece", "groupe_dominant",
                                    paste0("groupe_", seq_len(k_optimal)))]
 
 print(head(membership_df))
@@ -91,36 +84,27 @@ plot(synthese$k, synthese$Xie_Beni, type = "b", pch = 19,
 abline(v = k_optimal, col = "red", lty = 2)
 
 # 9. Labellisation automatique des groupes
-library(jsonlite)
+julve_labels_data <- fromJSON(julve_labels)
 
-# Chargement du mapping ordinal
-julve_labels <- fromJSON("chemin/vers/config/julve_labels.json")
-
-# Centroïdes des groupes dans l'espace des indices Julve originaux
-# (pas dans l'espace DCA — pour que les labels soient interprétables)
 centroides <- t(sapply(seq_len(k_optimal), function(k) {
   poids <- modele_final$membership[, k]
-  apply(data_julve, 2, function(col) weighted.mean(col, poids, na.rm = TRUE))
+  apply(data_input, 2, function(col) weighted.mean(col, poids, na.rm = TRUE))
 }))
 rownames(centroides) <- paste0("groupe_", seq_len(k_optimal))
 
-# Fonction de lookup label
 get_label <- function(indice, valeur) {
   valeur_arrondie <- as.character(round(valeur))
   tryCatch(
-    julve_labels[[indice]][["valeurs"]][[valeur_arrondie]],
+    julve_labels_data[[indice]][["valeurs"]][[valeur_arrondie]],
     error = function(e) "indéterminé"
   )
 }
 
-# Identification des indices les plus discriminants
-# = ceux dont la variance inter-groupes est la plus forte
 variance_inter <- apply(centroides, 2, var)
 indices_discriminants <- names(sort(variance_inter, decreasing = TRUE)[1:2])
 
 cat("Indices les plus discriminants :", indices_discriminants, "\n")
 
-# Construction des labels
 labels_groupes <- sapply(seq_len(k_optimal), function(k) {
   parties <- sapply(indices_discriminants, function(indice) {
     if (indice %in% colnames(centroides)) {
@@ -133,14 +117,12 @@ labels_groupes <- sapply(seq_len(k_optimal), function(k) {
   paste(parties, collapse = " / ")
 })
 
-# Tableau récapitulatif des groupes
 groupes_df <- data.frame(
-  groupe    = paste0("groupe_", seq_len(k_optimal)),
-  label     = labels_groupes,
+  groupe = paste0("groupe_", seq_len(k_optimal)),
+  label = labels_groupes,
   stringsAsFactors = FALSE
 )
 
-# Ajout des valeurs centroïdes pour traçabilité
 groupes_df <- cbind(groupes_df, round(centroides, 2))
 
 cat("\nGroupes écologiques :\n")

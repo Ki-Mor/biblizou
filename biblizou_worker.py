@@ -405,8 +405,8 @@ class BotanixProcessingThread(QThread):
                 return
 
             steps = [
-                ("Vérification de l'environnement R", self.check_r_env),
-                ("Lancement de l'analyse DCA / Membership", self.run_dca_script),
+                ("Vérification du fournisseur R", self.check_r_provider),
+                ("Lancement de l'analyse DCA / Membership", self.run_dca_algorithm),
             ]
 
             total = len(steps)
@@ -421,25 +421,74 @@ class BotanixProcessingThread(QThread):
         except Exception as e:
             self.error.emit(f"Erreur critique dans le workflow Botanix : {str(e)}")
 
-    def check_r_env(self):
-        """Vérifie que RRunner peut trouver Rscript avant de lancer le script."""
-        from .utils.RRunner import RRunner
-        runner = RRunner()
-        if not runner.rscript_path:
-            raise RuntimeError(
-                "Rscript introuvable. Configurez R dans Traitement → Options → Fournisseurs → R."
-            )
-        self.log.emit(f"Rscript trouvé : {runner.rscript_path}")
+    def check_r_provider(self):
+        """Vérifie que le Processing R Provider est configuré et que le script est disponible."""
+        from qgis.core import QgsApplication
 
-    def run_dca_script(self):
-        """Lance DcaToMembershipDf.R via RRunner en passant les paramètres."""
-        from .utils.RRunner import RRunner
-        runner  = RRunner()
-        success = runner.run(
-            script_name = "DcaToMembershipDf.R",
-            folder_path = self.params["working_folder"],
-            input_file  = self.params["input_file"]
+        try:
+            from processing_r.processing.utils import RUtils
+        except ImportError:
+            raise RuntimeError(
+                "Le fournisseur R (Processing R Provider) n'est pas disponible. "
+                "Installez et activez l'extension « Processing R Provider »."
+            )
+
+        provider = QgsApplication.processingRegistry().providerById("r")
+        if not provider:
+            raise RuntimeError(
+                "Le fournisseur R n'est pas chargé. "
+                "Vérifiez que l'extension « Processing R Provider » est activée."
+            )
+
+        r_folder = RUtils.r_binary_folder()
+        if not r_folder or not os.path.isdir(r_folder):
+            raise RuntimeError(
+                "Dossier R non configuré. Allez dans Traitement → Options → Fournisseurs → R."
+            )
+
+        algorithm_id = "r:DcaToMembershipDf"
+        if not QgsApplication.processingRegistry().algorithmById(algorithm_id):
+            script_dirs = ", ".join(RUtils.script_folders())
+            raise RuntimeError(
+                "Script R « DcaToMembershipDf » introuvable. "
+                f"Dossiers de scripts consultés : {script_dirs}. "
+                "Réinstallez le plugin Biblizou ou vérifiez le dossier de scripts R."
+            )
+
+        self.log.emit(f"Fournisseur R OK — {r_folder}")
+
+    def run_dca_algorithm(self):
+        """Lance DcaToMembershipDf via le Processing R Provider de QGIS."""
+        from qgis import processing
+        from qgis.core import QgsProcessingContext, QgsProcessingFeedback
+
+        plugin_dir = os.path.dirname(__file__)
+        baseflor = os.path.join(plugin_dir, "config", "baseflor.csv")
+        julve_labels = os.path.join(plugin_dir, "config", "julve_labels.json")
+
+        if not os.path.isfile(julve_labels):
+            raise RuntimeError(f"Fichier julve_labels.json introuvable : {julve_labels}")
+        if not os.path.isfile(baseflor):
+            raise RuntimeError(f"Fichier baseflor.csv introuvable : {baseflor}")
+
+        feedback = QgsProcessingFeedback()
+        context = QgsProcessingContext()
+
+        params = {
+            "folder_path": self.params["working_folder"],
+            "input_file": baseflor,  # ← chemin complet vers config/baseflor.csv
+            "julve_labels": julve_labels,
+        }
+
+        result = processing.run(
+            "r:DcaToMembershipDf",
+            params,
+            context=context,
+            feedback=feedback,
         )
-        if not success:
-            raise RuntimeError("Échec de l'exécution du script R. Consultez le journal QGIS.")
-        self.log.emit("Script R exécuté avec succès.")
+
+        console_output = result.get("R_CONSOLE_OUTPUT", "")
+        if console_output:
+            self.log.emit(console_output)
+
+        self.log.emit("Analyse DCA / Membership exécutée avec succès.")

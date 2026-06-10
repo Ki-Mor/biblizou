@@ -1,32 +1,41 @@
-Plugin Builder Results
+Biblizou — Plugin QGIS
+======================
 
-Your plugin Biblizou was created in:
-    C:/Users/celin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins\biblizou
+Moissonnage bibliographique automatisé (FSD ZNIEFF / Natura 2000, TaxRef, BD Statuts, Botanix).
 
-Your QGIS plugin directory is located at:
-    C:/Users/celin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins
+Prérequis
+---------
 
-What's Next:
+- QGIS 3.x
+- Extension « Processing R Provider » installée et activée
+  (menu Extensions → Gérer et installer les extensions → rechercher « Processing R Provider »)
 
-  * Copy the entire directory containing your new plugin to the QGIS plugin
-    directory
+Configuration R (obligatoire pour l'onglet Botanix)
+---------------------------------------------------
 
-  * Compile the resources file using pyrcc5
+1. Ouvrir Traitement → Options (ou Paramètres → Options → onglet Traitement)
+2. Aller dans Fournisseurs → R
+3. Configurer :
+   - Dossier R : chemin vers l'installation R (ex. C:\Program Files\R\R-4.x.x sur Windows)
+   - Dossier de scripts R : dossier où QGIS charge les scripts .rsx
+     (ex. %APPDATA%\QGIS\QGIS3\profiles\default\processing\rscripts)
 
-  * Run the tests (``make test``)
+À l'activation du plugin, le script DcaToMembershipDf.rsx est copié automatiquement
+dans le(s) dossier(s) de scripts R configuré(s).
 
-  * Test the plugin by enabling it in the QGIS plugin manager
+Analyse Botanix (DCA → Membership)
+----------------------------------
 
-  * Customize it by editing the implementation file: ``biblizou.py``
+Le workflow Botanix exécute le script R via le Processing R Provider de QGIS
+(processing.run), et non plus via un appel subprocess direct à Rscript.
 
-  * Create your own custom icon, replacing the default icon.png
+Fichiers attendus dans le dossier de travail :
+- bota_julve.csv (généré par BotaJulveBuilder)
 
-  * Modify your user interface by opening Biblizou_dockwidget_base.ui in Qt Designer
+Installation
+------------
 
-  * You can use the Makefile to compile your Ui and resource files when
-    you make changes. This requires GNU make (gmake)
+Copier le dossier biblizou dans le répertoire des extensions QGIS, puis activer
+le plugin dans Extensions → Gérer et installer les extensions → Installé.
 
-For more information, see the PyQGIS Developer Cookbook at:
-http://www.qgis.org/pyqgis-cookbook/index.html
-
-(C) 2011-2018 GeoApt LLC - geoapt.com
+Auteur : François Botcazou — francois.botcazou@proton.me

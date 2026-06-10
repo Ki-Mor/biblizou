@@ -24,12 +24,15 @@
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
+from qgis.core import QgsApplication, QgsMessageLog, Qgis
 # Initialize Qt resources from file resources.py
 from . import resources
 
 # Import the code for the DockWidget
 from .biblizou_dockwidget import BiblizouDockWidget
+import os
 import os.path
+import shutil
 
 
 class Biblizou:
@@ -126,8 +129,61 @@ class Biblizou:
         return action
 
 
+    def install_r_scripts(self):
+        """Copie les scripts .rsx du plugin vers le dossier R configuré dans QGIS."""
+        source = os.path.join(self.plugin_dir, "modules", "DcaToMembershipDf.rsx")
+        if not os.path.isfile(source):
+            QgsMessageLog.logMessage(
+                f"Biblizou : script R introuvable : {source}",
+                "Biblizou",
+                level=Qgis.Warning,
+            )
+            return
+
+        try:
+            from processing.core.ProcessingConfig import ProcessingConfig
+            from processing_r.processing.utils import RUtils
+
+            scripts_folders = ProcessingConfig.getSetting(RUtils.RSCRIPTS_FOLDER)
+            if scripts_folders:
+                folders = [f.strip() for f in scripts_folders.split(";") if f.strip()]
+            else:
+                folders = [RUtils.default_scripts_folder()]
+        except ImportError:
+            QgsMessageLog.logMessage(
+                "Biblizou : Processing R Provider absent, script R non installé.",
+                "Biblizou",
+                level=Qgis.Warning,
+            )
+            return
+
+        for folder in folders:
+            folder = folder.strip()
+            if not folder:
+                continue
+            os.makedirs(folder, exist_ok=True)
+            dest = os.path.join(folder, "DcaToMembershipDf.rsx")
+            shutil.copy2(source, dest)
+            QgsMessageLog.logMessage(
+                f"Biblizou : script R installé dans {dest}",
+                "Biblizou",
+                level=Qgis.Info,
+            )
+
+        provider = QgsApplication.processingRegistry().providerById("r")
+        if provider:
+            provider.refreshAlgorithms()
+
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        try:
+            self.install_r_scripts()
+        except Exception as e:
+            QgsMessageLog.logMessage(
+                f"Biblizou : erreur lors de l'installation des scripts R : {e}",
+                "Biblizou",
+                level=Qgis.Warning
+            )
 
         icon_path = os.path.join(self.plugin_dir, 'icon.png')
         self.add_action(

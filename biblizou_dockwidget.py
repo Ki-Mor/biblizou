@@ -491,7 +491,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         params = {
             "working_folder": working_folder,
-            "input_file": "dca_data.csv",
+            "input_file": "bota_julve.csv",
             "only_patrimonial": only_patrimonial,
             "fuzzy_threshold": fuzzy_value,
             "consolidation_config": self.get_botanix_config()
