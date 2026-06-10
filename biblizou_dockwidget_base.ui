@@ -1315,7 +1315,7 @@ P Julve - Institut Catholique de Lille, Lille, 1998 (extrait du 06/06/2026)</str
          </widget>
         </item>
         <item row="6" column="2" colspan="2">
-         <widget class="QPushButton" name="btnRunStat_2">
+         <widget class="QPushButton" name="btnRunBotanix">
           <property name="palette">
            <palette>
             <active>
