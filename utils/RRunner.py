@@ -58,3 +58,7 @@ class RRunner:
         if not os.path.isdir(folder_path):
             QgsMessageLog.logMessage(
                 f"RRunner: Dossier introuvable: {folder_path}",
+                "Botanix",
+                level=Qgis.Warning
+            )  # ← ferme logMessage(
+            return False
