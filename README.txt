@@ -1,7 +1,7 @@
 Biblizou — Plugin QGIS
 ======================
 
-Moissonnage bibliographique automatisé (FSD ZNIEFF / Natura 2000, TaxRef, BD Statuts, Botanix).
+Moissonnage bibliographique automatisé (FSD ZNIEFF / Natura 2000, TaxRef, BD Statuts, Botazou).
 
 Prérequis
 ---------
@@ -10,7 +10,7 @@ Prérequis
 - Extension « Processing R Provider » installée et activée
   (menu Extensions → Gérer et installer les extensions → rechercher « Processing R Provider »)
 
-Configuration R (obligatoire pour l'onglet Botanix)
+Configuration R (obligatoire pour l'onglet Botazou)
 ---------------------------------------------------
 
 1. Ouvrir Traitement → Options (ou Paramètres → Options → onglet Traitement)
@@ -23,10 +23,10 @@ Configuration R (obligatoire pour l'onglet Botanix)
 À l'activation du plugin, le script DcaToMembershipDf.rsx est copié automatiquement
 dans le(s) dossier(s) de scripts R configuré(s).
 
-Analyse Botanix (DCA → Membership)
+Analyse Botazou (DCA → Membership)
 ----------------------------------
 
-Le workflow Botanix exécute le script R via le Processing R Provider de QGIS
+Le workflow Botazou exécute le script R via le Processing R Provider de QGIS
 (processing.run), et non plus via un appel subprocess direct à Rscript.
 
 Fichiers attendus dans le dossier de travail :

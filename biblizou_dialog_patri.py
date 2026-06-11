@@ -2,7 +2,7 @@
 """
 Auteur : François Botcazou
 Nom : biblizou_dialog_patri.py
-Groupe : Botanix
+Groupe : Botazou
 Description : Dialog de gestion des espèces patrimoniales
 """
 
