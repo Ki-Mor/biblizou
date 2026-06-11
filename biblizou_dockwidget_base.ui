@@ -493,33 +493,7 @@ QMessageBox QPushButton:hover {
       </item>
      </layout>
     </item>
-    <item row="7" column="0">
-     <widget class="QPushButton" name="btnInfo">
-      <property name="minimumSize">
-       <size>
-        <width>10</width>
-        <height>38</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>150</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>[i] Aide</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
+    <item row="5" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="labelDonneesFourniesPar">
@@ -549,8 +523,8 @@ QMessageBox QPushButton:hover {
        <widget class="QLabel" name="labelInpn">
         <property name="maximumSize">
          <size>
-          <width>177</width>
-          <height>118</height>
+          <width>117</width>
+          <height>78</height>
          </size>
         </property>
         <property name="text">
@@ -568,22 +542,6 @@ QMessageBox QPushButton:hover {
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="6" column="0">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Expanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>37</width>
-        <height>50</height>
-       </size>
-      </property>
-     </spacer>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="labelDirectory">
@@ -1256,21 +1214,41 @@ QMessageBox QPushButton:hover {
         <string>Botanix</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="4" column="3">
+        <item row="3" column="3">
          <widget class="QPushButton" name="pBPatriBotanix">
           <property name="text">
            <string>Gérer patrimonialité</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="2">
+        <item row="3" column="0" colspan="2">
          <widget class="QRadioButton" name="rBPatriBotanix">
           <property name="text">
            <string>Limiter l'analyse aux espèces patrimoniales</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="3">
+        <item row="6" column="0" colspan="4">
+         <widget class="QLabel" name="labelJulve">
+          <property name="font">
+           <font>
+            <pointsize>6</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Sources 
+Julve, P. (1998-). Baseflor. Index botanique, écologique et chorologique de la flore de France, Institut Catholique de Lille (extrait du 06/06/2026) 
+Lê, S., Josse, J. &amp; Husson, F. (2008). FactoMineR: An R Package for Multivariate Analysis. Journal of Statistical Software. 25(1). pp. 1-18. </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
          <widget class="QPushButton" name="btnAddLayerRowBotanix">
           <property name="font">
            <font>
@@ -1291,21 +1269,21 @@ QMessageBox QPushButton:hover {
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="labelFuzzyBotanix">
           <property name="text">
            <string>Réglage du flou</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="3">
+        <item row="4" column="3">
          <widget class="QPushButton" name="pBInfoFuzzyBotanix">
           <property name="text">
            <string>[i]</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="2" colspan="2">
+        <item row="5" column="2" colspan="2">
          <widget class="QPushButton" name="btnRunBotanix">
           <property name="palette">
            <palette>
@@ -1587,7 +1565,7 @@ QMessageBox QPushButton:hover {
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="4">
+        <item row="2" column="0" colspan="4">
          <widget class="QTableWidget" name="tableBotanix">
           <property name="autoFillBackground">
            <bool>false</bool>
@@ -1633,10 +1611,10 @@ QMessageBox QPushButton:hover {
           </column>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="4" column="1">
          <widget class="QSpinBox" name="spinBoxFuzzyBotanix"/>
         </item>
-        <item row="2" column="0" colspan="2">
+        <item row="1" column="0" colspan="2">
          <widget class="QLabel" name="labelAddDataBotanix">
           <property name="font">
            <font>
@@ -1652,33 +1630,6 @@ QMessageBox QPushButton:hover {
            <bool>true</bool>
           </property>
          </widget>
-        </item>
-        <item row="0" column="0" colspan="4">
-         <widget class="QLabel" name="labelJulve">
-          <property name="text">
-           <string>Baseflor. Index botanique, écologique et chorologique de la flore de France
-P Julve - Institut Catholique de Lille, Lille, 1998 (extrait du 06/06/2026)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="4">
-         <spacer name="verticalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
