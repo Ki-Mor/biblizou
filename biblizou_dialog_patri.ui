@@ -6,251 +6,639 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>449</height>
+    <width>560</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QRadioButton" name="rBPN">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>200</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Protection france</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBPR">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>220</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Protection régionale</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBLRM">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>270</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Liste Rouge mondiale</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBLREU">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>290</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Liste Rouge européenne</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBLRF">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>310</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Liste Rouge france</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBLRR">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>330</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Liste Rouge régionale</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBCITES">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>151</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CITES</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBBerne">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>70</y>
-     <width>151</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Berne</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBBonn">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>151</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Bonn</string>
-   </property>
-  </widget>
-  <widget class="QSlider" name="horizontalSlider">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>270</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>8</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="horizontalSlider_2">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>290</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="horizontalSlider_3">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>310</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QSlider" name="horizontalSlider_4">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>330</y>
-     <width>160</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="rBDHFF">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>150</y>
-     <width>141</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Directive Habitats</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>130</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>180</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>250</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>30</y>
-     <width>141</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
+  <property name="styleSheet">
+   <string notr="true">/* --- 1. FONDS ET CONTENEUR PRINCIPAL --- */
+QDialog {
+    background-color: #fcfcfc;
+}
+
+/* --- 2. GROUPES DE SÉLECTION GÉNÉRAUX (QGroupBox) --- */
+QGroupBox {
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 12px;
+    padding: 0 4px;
+    color: #2c3e50;
+}
+
+/* Style spécifique pour les sous-groupes imbriqués (hors listes rouges) */
+QGroupBox#gBDirHabAnnexes {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.01);
+    margin-top: 4px;
+    padding: 4px;
+}
+
+/* --- 3. BLOC LISTES ROUGES ULTRA-COMPACT --- */
+QGroupBox#gBListesRouges {
+    padding: 0px;
+}
+
+/* Force l'espacement vertical interne de la grille à zéro */
+QGroupBox#gBListesRouges QGridLayout {
+    vertical-spacing: 0px;
+    margin: 0px;
+}
+
+QGroupBox#gBListeRougeMond, 
+QGroupBox#gBListeRougeEuro, 
+QGroupBox#gBListeRougeNat, 
+QGroupBox#gBListeRougeReg {
+    padding-left: 145px; 
+    margin-top: -4px;    /* Resserrement vertical extrême */
+    margin-bottom: -4px;
+    min-height: 16px;    /* Hauteur calée sur la taille de l'indicateur */
+    max-height: 16px;    
+    border: none;
+    background-color: transparent;
+}
+
+/* Indicateurs de pliage des sous-groupes */
+QGroupBox#gBListeRougeMond::indicator,
+QGroupBox#gBListeRougeEuro::indicator,
+QGroupBox#gBListeRougeNat::indicator,
+QGroupBox#gBListeRougeReg::indicator {
+    subcontrol-origin: padding;
+    subcontrol-position: center left;
+    left: 0px;
+    width: 12px;
+    height: 12px;
+}
+
+/* Titres des sous-groupes */
+QGroupBox#gBListeRougeMond::title,
+QGroupBox#gBListeRougeEuro::title,
+QGroupBox#gBListeRougeNat::title,
+QGroupBox#gBListeRougeReg::title {
+    font-weight: normal;
+    color: #2c3e50;
+    font-size: 11px;
+    subcontrol-origin: padding;
+    subcontrol-position: center left;
+    left: 16px; 
+    padding: 0px;
+}
+
+/* En-tête des colonnes (LC, NT...) */
+QGroupBox#groupBox_5 {
+    padding-left: 145px; 
+    border: none;
+    background-color: transparent;
+    margin-top: 0px;
+    margin-bottom: -8px; /* Colle l'en-tête contre la première ligne */
+}
+
+QGroupBox#groupBox_5 QLabel {
+    font-weight: bold;
+    color: #555555;
+    font-size: 10px;
+    min-width: 24px;
+    max-width: 24px;
+    qproperty-alignment: 'AlignCenter';
+}
+
+/* Alignement et taille des cases à cocher */
+QGroupBox#gBListeRougeMond QCheckBox,
+QGroupBox#gBListeRougeEuro QCheckBox,
+QGroupBox#gBListeRougeNat QCheckBox,
+QGroupBox#gBListeRougeReg QCheckBox {
+    min-width: 24px;
+    max-width: 24px;
+    margin: 0px;
+    padding: 0px;
+}
+
+QGroupBox#gBListesRouges QCheckBox::indicator {
+    subcontrol-origin: padding;
+    subcontrol-position: center;
+}
+
+/* --- 4. STYLE UNIQUE DES INDICATEURS --- */
+QCheckBox::indicator, QGroupBox::indicator {
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    background-color: #ffffff;
+}
+
+QCheckBox::indicator:hover, QGroupBox::indicator:hover {
+    border: 1px solid #3D8C70;
+    background-color: rgba(61, 140, 112, 0.05);
+}
+
+QCheckBox::indicator:checked, QGroupBox::indicator:checked {
+    background-color: #3D8C70;
+    border: 1px solid #3D8C70;
+    image: url(:/plugins/biblizou/misc/arrowDown.png);
+}
+
+QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* --- 5. ADAPTATION PETITS ÉCRANS --- */
+@media (max-width: 400px) {
+    QGroupBox {
+        margin-top: 4px;
+        padding: 4px;
+    }
+    QGroupBox#gBListeRougeMond, 
+    QGroupBox#gBListeRougeEuro, 
+    QGroupBox#gBListeRougeNat, 
+    QGroupBox#gBListeRougeReg,
+    QGroupBox#groupBox_5 {
+        padding-left: 110px;
+    }
+    QGroupBox#groupBox_5 QLabel,
+    QGroupBox#gBListeRougeMond QCheckBox,
+    QGroupBox#gBListeRougeEuro QCheckBox,
+    QGroupBox#gBListeRougeNat QCheckBox,
+    QGroupBox#gBListeRougeReg QCheckBox {
+        min-width: 20px;
+        max-width: 20px;
+    }
+}</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="gBConventionInternationales">
+     <property name="title">
+      <string>Convention internationale</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cBBerne">
+        <property name="text">
+         <string>Convention de Berne</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cBCITES">
+        <property name="text">
+         <string>CITES</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="cBBonn">
+        <property name="text">
+         <string>Convention de Bonn</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="gBDirEuro">
+     <property name="title">
+      <string>Directives européennes</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cBDirHab">
+        <property name="text">
+         <string>Directive Habitat</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QGroupBox" name="gBDirHabAnnexes">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cBDirHab2">
+           <property name="text">
+            <string>Annexe II</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="cBDirHah4">
+           <property name="text">
+            <string>Annexe IV</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QGroupBox" name="gBProtection">
+     <property name="title">
+      <string>Protection</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="cBProtNat">
+        <property name="text">
+         <string>Protection nationale</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="cBProtReg">
+        <property name="text">
+         <string>Protection régionale</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="gBListesRouges">
+     <property name="title">
+      <string>Listes rouges</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QGroupBox" name="gBListeRougeMond">
+        <property name="title">
+         <string>Liste Rouge mondiale</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_7">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cBLRMondLC">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="cBLRMondNT">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="cBLRMondVU">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QCheckBox" name="cBLRMondEN">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QCheckBox" name="cBLRMondCR">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QGroupBox" name="gBListeRougeEuro">
+        <property name="title">
+         <string>Liste Rouge européenne</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_8">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cBLREuLC">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="cBLREuNT">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="cBLREuVU">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QCheckBox" name="cBLREuEN">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QCheckBox" name="cBLREuCR">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QGroupBox" name="gBListeRougeReg">
+        <property name="title">
+         <string>Liste Rouge régionale</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_10">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cBLRRegLC">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="cBLRRegNT">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="cBLRRegVU">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QCheckBox" name="cBLRRegEN">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QCheckBox" name="cBLRRegCR">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_11">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLabel" name="labelNT">
+           <property name="text">
+            <string>NT</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelLC">
+           <property name="text">
+            <string>LC</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="labelVU">
+           <property name="text">
+            <string>VU</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="labelCR">
+           <property name="text">
+            <string>CR</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="labelEN">
+           <property name="text">
+            <string>EN</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QGroupBox" name="gBListeRougeNat">
+        <property name="title">
+         <string>Liste Rouge nationale</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_9">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="cBLRNatLC">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="cBLRNatNT">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="cBLRNatVU">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QCheckBox" name="cBLRNatEN">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="4">
+          <widget class="QCheckBox" name="cBLRNatCR">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
