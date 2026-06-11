@@ -30,7 +30,7 @@ Le workflow Botanix exécute le script R via le Processing R Provider de QGIS
 (processing.run), et non plus via un appel subprocess direct à Rscript.
 
 Fichiers attendus dans le dossier de travail :
-- bota_julve.csv (généré par BotaJulveBuilder)
+- julve_df.csv (généré par BotaJulveBuilder)
 
 Installation
 ------------
