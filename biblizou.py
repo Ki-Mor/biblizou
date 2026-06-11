@@ -131,7 +131,7 @@ class Biblizou:
 
     def install_r_scripts(self):
         """Copie les scripts .rsx du plugin vers le dossier R configuré dans QGIS."""
-        source = os.path.join(self.plugin_dir, "modules", "DcaToMembershipDf.rsx")
+        source = os.path.join(self.plugin_dir, "r_scripts", "JulveDfToMembershipDf.rsx")
         if not os.path.isfile(source):
             QgsMessageLog.logMessage(
                 f"Biblizou : script R introuvable : {source}",
@@ -162,7 +162,7 @@ class Biblizou:
             if not folder:
                 continue
             os.makedirs(folder, exist_ok=True)
-            dest = os.path.join(folder, "DcaToMembershipDf.rsx")
+            dest = os.path.join(folder, "JulveDfToMembershipDf.rsx")
             shutil.copy2(source, dest)
             QgsMessageLog.logMessage(
                 f"Biblizou : script R installé dans {dest}",
