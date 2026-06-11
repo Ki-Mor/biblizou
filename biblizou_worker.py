@@ -379,7 +379,7 @@ class BdStatutsProcessingThread(QThread):
         except Exception as e:
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
 
-class BotanixProcessingThread(QThread):
+class BotazouProcessingThread(QThread):
     """Thread gérant le workflow d'analyse écologique via le script R JulveDfToMembershipDf."""
     progress = pyqtSignal(int, int, str)
     log      = pyqtSignal(str)
@@ -393,7 +393,7 @@ class BotanixProcessingThread(QThread):
 
     def run(self):
         try:
-            self.log.emit("=== Démarrage du workflow Botanix (Julve → Membership) ===")
+            self.log.emit("=== Démarrage du workflow Botazou (Julve → Membership) ===")
 
             working_folder = self.params.get("working_folder")
             input_file     = self.params.get("input_file")
@@ -419,10 +419,10 @@ class BotanixProcessingThread(QThread):
                 step_fn()
                 self.log.emit(f"--- Terminé : {step_name} ---")
 
-            self.finished.emit("Analyse Botanix terminée avec succès !")
+            self.finished.emit("Analyse Botazou terminée avec succès !")
 
         except Exception as e:
-            self.error.emit(f"Erreur critique dans le workflow Botanix : {str(e)}")
+            self.error.emit(f"Erreur critique dans le workflow Botazou : {str(e)}")
 
     def check_r_provider(self):
         """Vérifie que le Processing R Provider est configuré et que le script est disponible."""
@@ -464,7 +464,7 @@ class BotanixProcessingThread(QThread):
         """Génère JulveDf.csv depuis les couches sélectionnées + baseflor."""
         layer_config = self.params.get("consolidation_config", [])
         if not layer_config:
-            raise RuntimeError("Aucune couche source configurée dans l'onglet Botanix.")
+            raise RuntimeError("Aucune couche source configurée dans l'onglet Botazou.")
 
         working_folder = self.params["working_folder"]
         builder = BuildJulveDf(working_folder)

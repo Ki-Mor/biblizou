@@ -2,7 +2,7 @@
 """
 Auteur : ExEco Environnement - François Botcazou
 Nom : BuildJulveDf .py
-Groupe : Botanix
+Groupe : Botazou
 Description : Collecte les codes CD_NOM uniques depuis les couches sélectionnées,
               jointure avec baseflor.csv (indices Julve),
               export dans le dossier de travail sous julve_df.csv

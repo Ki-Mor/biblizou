@@ -1209,20 +1209,20 @@ QMessageBox QPushButton:hover {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="TabBotanix">
+      <widget class="QWidget" name="TabBotazou">
        <attribute name="title">
-        <string>Botanix</string>
+        <string>Botazou</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="3" column="3">
-         <widget class="QPushButton" name="pBPatriBotanix">
+         <widget class="QPushButton" name="pBPatriBotazou">
           <property name="text">
            <string>Gérer patrimonialité</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0" colspan="2">
-         <widget class="QRadioButton" name="rBPatriBotanix">
+         <widget class="QRadioButton" name="rBPatriBotazou">
           <property name="text">
            <string>Limiter l'analyse aux espèces patrimoniales</string>
           </property>
@@ -1249,7 +1249,7 @@ Lê, S., Josse, J. &amp; Husson, F. (2008). FactoMineR: An R Package for Multiva
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QPushButton" name="btnAddLayerRowBotanix">
+         <widget class="QPushButton" name="btnAddLayerRowBotazou">
           <property name="font">
            <font>
             <pointsize>8</pointsize>
@@ -1270,21 +1270,21 @@ Lê, S., Josse, J. &amp; Husson, F. (2008). FactoMineR: An R Package for Multiva
          </widget>
         </item>
         <item row="4" column="0">
-         <widget class="QLabel" name="labelFuzzyBotanix">
+         <widget class="QLabel" name="labelFuzzyBotazou">
           <property name="text">
            <string>Réglage du flou</string>
           </property>
          </widget>
         </item>
         <item row="4" column="3">
-         <widget class="QPushButton" name="pBInfoFuzzyBotanix">
+         <widget class="QPushButton" name="pBInfoFuzzyBotazou">
           <property name="text">
            <string>[i]</string>
           </property>
          </widget>
         </item>
         <item row="5" column="2" colspan="2">
-         <widget class="QPushButton" name="btnRunBotanix">
+         <widget class="QPushButton" name="btnRunBotazou">
           <property name="palette">
            <palette>
             <active>
@@ -1566,7 +1566,7 @@ Lê, S., Josse, J. &amp; Husson, F. (2008). FactoMineR: An R Package for Multiva
          </widget>
         </item>
         <item row="2" column="0" colspan="4">
-         <widget class="QTableWidget" name="tableBotanix">
+         <widget class="QTableWidget" name="tableBotazou">
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
@@ -1612,10 +1612,10 @@ Lê, S., Josse, J. &amp; Husson, F. (2008). FactoMineR: An R Package for Multiva
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QSpinBox" name="spinBoxFuzzyBotanix"/>
+         <widget class="QSpinBox" name="spinBoxFuzzyBotazou"/>
         </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QLabel" name="labelAddDataBotanix">
+         <widget class="QLabel" name="labelAddDataBotazou">
           <property name="font">
            <font>
             <pointsize>8</pointsize>
