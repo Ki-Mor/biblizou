@@ -51,6 +51,8 @@ from .modules.StatusApiToTable import run as status_api_to_table
 from .modules.StatusJoinTaxref import run as status_join_taxref
 from .modules.StatusPivotByGroup import run as status_pivot_by_group
 
+from .modules.BuildJulveDf import BuildJulveDf
+
 
 class FsdProcessingThread(QThread):
     """Thread gérant le workflow complet des données FSD (Natura 2000 + ZNIEFF)."""
@@ -378,7 +380,7 @@ class BdStatutsProcessingThread(QThread):
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
 
 class BotanixProcessingThread(QThread):
-    """Thread gérant le workflow d'analyse écologique via le script R DcaToMembershipDf."""
+    """Thread gérant le workflow d'analyse écologique via le script R JulveDfToMembershipDf."""
     progress = pyqtSignal(int, int, str)
     log      = pyqtSignal(str)
     finished = pyqtSignal(str)
@@ -391,7 +393,7 @@ class BotanixProcessingThread(QThread):
 
     def run(self):
         try:
-            self.log.emit("=== Démarrage du workflow Botanix (DCA → Membership) ===")
+            self.log.emit("=== Démarrage du workflow Botanix (Julve → Membership) ===")
 
             working_folder = self.params.get("working_folder")
             input_file     = self.params.get("input_file")
@@ -406,7 +408,8 @@ class BotanixProcessingThread(QThread):
 
             steps = [
                 ("Vérification du fournisseur R", self.check_r_provider),
-                ("Lancement de l'analyse DCA / Membership", self.run_dca_algorithm),
+                ("Construction du tableau Julve", self.build_julve_csv),
+                ("Lancement de l'analyse Julve / Membership", self.run_julve_algorithm),
             ]
 
             total = len(steps)
@@ -446,42 +449,59 @@ class BotanixProcessingThread(QThread):
                 "Dossier R non configuré. Allez dans Traitement → Options → Fournisseurs → R."
             )
 
-        algorithm_id = "r:DcaToMembershipDf"
+        algorithm_id = "r:JulveDfToMembershipDf"
         if not QgsApplication.processingRegistry().algorithmById(algorithm_id):
             script_dirs = ", ".join(RUtils.script_folders())
             raise RuntimeError(
-                "Script R « DcaToMembershipDf » introuvable. "
+                "Script R « JulveDfToMembershipDf » introuvable. "
                 f"Dossiers de scripts consultés : {script_dirs}. "
                 "Réinstallez le plugin Biblizou ou vérifiez le dossier de scripts R."
             )
 
         self.log.emit(f"Fournisseur R OK — {r_folder}")
 
-    def run_dca_algorithm(self):
-        """Lance DcaToMembershipDf via le Processing R Provider de QGIS."""
+    def build_julve_csv(self):
+        """Génère JulveDf.csv depuis les couches sélectionnées + baseflor."""
+        layer_config = self.params.get("consolidation_config", [])
+        if not layer_config:
+            raise RuntimeError("Aucune couche source configurée dans l'onglet Botanix.")
+
+        working_folder = self.params["working_folder"]
+        builder = BuildJulveDf(working_folder)
+        builder.status_changed.connect(self.log)
+
+        success, msg = builder.run(layer_config)
+        self.log.emit(msg)
+
+        if not success:
+            raise RuntimeError(f"Échec de la construction du tableau Julve : {msg}")
+
+    def run_julve_algorithm(self):
+        """Lance JulveDfToMembershipDf via le Processing R Provider de QGIS."""
         from qgis import processing
         from qgis.core import QgsProcessingContext, QgsProcessingFeedback
 
         plugin_dir = os.path.dirname(__file__)
-        baseflor = os.path.join(plugin_dir, "config", "baseflor.csv")
         julve_labels = os.path.join(plugin_dir, "config", "julve_labels.json")
 
         if not os.path.isfile(julve_labels):
             raise RuntimeError(f"Fichier julve_labels.json introuvable : {julve_labels}")
-        if not os.path.isfile(baseflor):
-            raise RuntimeError(f"Fichier baseflor.csv introuvable : {baseflor}")
+
+        # Normalisation des chemins Windows pour R
+        working_folder = self.params["working_folder"].replace("\\", "/")
+        julve_labels = julve_labels.replace("\\", "/")
 
         feedback = QgsProcessingFeedback()
         context = QgsProcessingContext()
 
         params = {
-            "folder_path": self.params["working_folder"],
-            "input_file": baseflor,  # ← chemin complet vers config/baseflor.csv
+            "folder_path": working_folder,
+            "input_file": self.params.get("input_file", "julve_df.csv"),
             "julve_labels": julve_labels,
         }
 
         result = processing.run(
-            "r:DcaToMembershipDf",
+            "r:JulveDfToMembershipDf",
             params,
             context=context,
             feedback=feedback,
@@ -491,4 +511,4 @@ class BotanixProcessingThread(QThread):
         if console_output:
             self.log.emit(console_output)
 
-        self.log.emit("Analyse DCA / Membership exécutée avec succès.")
+        self.log.emit("Analyse Julve / Membership exécutée avec succès.")
