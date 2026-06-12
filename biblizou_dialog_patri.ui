@@ -511,6 +511,14 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
          </property>
          <item row="0" column="1">
           <widget class="QLabel" name="labelNT">
+           <property name="styleSheet">
+            <string notr="true">QLabel#labelNT {
+    color: #1a5c1a;
+    background-color: #cccc00;
+    border-radius: 8px;
+    padding: 1px 2px;
+}</string>
+           </property>
            <property name="text">
             <string>NT</string>
            </property>
@@ -518,6 +526,41 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="labelLC">
+           <property name="styleSheet">
+            <string notr="true">QLabel#labelLC {
+    color: #2c7a2c;
+    background-color: #60aa00;
+    border-radius: 8px;
+    padding: 1px 2px;
+}
+
+QLabel#labelNT {
+    color: #1a5c1a;
+    background-color: #cccc00;
+    border-radius: 8px;
+    padding: 1px 2px;
+}
+
+QLabel#labelVU {
+    color: #7a4a00;
+    background-color: #fbbf00;
+    border-radius: 8px;
+    padding: 1px 2px;
+}
+
+QLabel#labelEN {
+    color: #ffffff;
+    background-color: #d3001b;
+    border-radius: 8px;
+    padding: 1px 2px;
+}
+
+QLabel#labelCR {
+    color: #ffffff;
+    background-color: #5a1a63;
+    border-radius: 8px;
+    padding:</string>
+           </property>
            <property name="text">
             <string>LC</string>
            </property>
@@ -525,6 +568,14 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
          </item>
          <item row="0" column="2">
           <widget class="QLabel" name="labelVU">
+           <property name="styleSheet">
+            <string notr="true">QLabel#labelVU {
+    color: #7a4a00;
+    background-color: #fbbf00;
+    border-radius: 8px;
+    padding: 1px 2px;
+}</string>
+           </property>
            <property name="text">
             <string>VU</string>
            </property>
@@ -532,6 +583,14 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
          </item>
          <item row="0" column="4">
           <widget class="QLabel" name="labelCR">
+           <property name="styleSheet">
+            <string notr="true">QLabel#labelCR {
+    color: #ffffff;
+    background-color: #5a1a63;
+    border-radius: 8px;
+    padding: 1px 2px;
+}</string>
+           </property>
            <property name="text">
             <string>CR</string>
            </property>
@@ -539,6 +598,14 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
          </item>
          <item row="0" column="3">
           <widget class="QLabel" name="labelEN">
+           <property name="styleSheet">
+            <string notr="true">QLabel#labelEN {
+    color: #ffffff;
+    background-color: #d3001b;
+    border-radius: 8px;
+    padding: 1px 2px;
+}</string>
+           </property>
            <property name="text">
             <string>EN</string>
            </property>
@@ -631,7 +698,7 @@ QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
      </property>
      <layout class="QGridLayout" name="gridLayout_12">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="cBDZnieffDet">
         <property name="text">
          <string>ZNIEFF déterminantes</string>
         </property>
