@@ -4,19 +4,13 @@ Auteur : ExEco Environnement - François Botcazou
 Date : 2026/06
 Version : 1.0
 Nom : XmlToLayer.py
-Groupe : Biblizou_PatNat
+Groupe : base
 Description : Classe abstraite (ABC) mutualisée pour l'extraction de données
               à partir de fichiers XML (ZNIEFF, Natura 2000) vers un GeoPackage.
 
               Toute la logique commune (I/O fichiers, GeoPackage, logging) est
               implémentée ici une seule fois. Les classes enfants n'ont qu'à
               implémenter les méthodes abstraites spécifiques à leur format XML.
-
-Utilisation :
-    - Ne pas instancier directement — classe abstraite.
-    - Hériter et implémenter les 4 méthodes abstraites.
-    - En mode BiblizouMain : instance.run_with_path(folder_path)
-    - En mode indépendant  : instance.run()
 """
 
 import os
