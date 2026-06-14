@@ -4,6 +4,8 @@ __pycache__/
 *.pyo
 
 #R
+*.Rhistory
+*.Rproj
 *.Rproj*
 
 # IDE
@@ -12,3 +14,4 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+.Rproj.user
