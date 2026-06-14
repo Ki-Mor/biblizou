@@ -2,8 +2,11 @@
 __pycache__/
 *.pyc
 *.pyo
+
+#R
 *.Rhistory
 *.Rproj
+*.Rproj*
 
 # IDE
 .idea/
