@@ -6,7 +6,6 @@ Groupe : FSD
 Description : Module pour extraire les données d'espèces directive des XML Natura 2000
               et les exporter dans un GeoPackage (Mode Offline - sans API TAXREF).
               Version étendue avec extraction complète des champs SPECIES_ROW.
-              Version compatible avec BiblizouMain ou exécution indépendante.
 """
 
 import os

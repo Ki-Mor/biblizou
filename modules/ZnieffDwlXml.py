@@ -4,7 +4,6 @@ Auteur : François Botcazou
 Nom : ZnieffDwlXml.py
 Groupe : FSD
 Description : Module pour télécharger les xml des zonages ZNIEFF dans un périmètre donné.
-              Version compatible avec BiblizouMain ou exécution indépendante.
 """
 
 import os

@@ -5,7 +5,6 @@ Nom : NaturaXmlToLayerHab.py
 Groupe : FSD
 Description : Module pour extraire des données d'habitats directive à partir de fichiers XML
               et les exporter dans un GeoPackage.
-              Version compatible avec BiblizouMain ou exécution indépendante.
 """
 
 import os

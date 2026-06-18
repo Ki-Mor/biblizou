@@ -5,7 +5,6 @@ Nom : ZnieffXmlToLayerEsp.py
 Groupe : FSD
 Description : Module pour extraire les données d'espèces à partir des XML ZNIEFF
               et les exporter dans un GeoPackage (Mode Offline).
-              Version compatible avec BiblizouMain ou exécution indépendante.
 """
 
 import os

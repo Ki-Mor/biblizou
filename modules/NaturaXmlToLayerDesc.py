@@ -5,7 +5,6 @@ Nom : NaturaXmlToLayerDesc.py
 Groupe : FSD
 Description : Module pour extraire les descriptions des sites Natura 2000 des fichiers XML
               et les exporter dans une couche QGIS enrichie sans géométrie.
-              Version compatible avec BiblizouMain ou exécution indépendante.
 """
 
 import os
