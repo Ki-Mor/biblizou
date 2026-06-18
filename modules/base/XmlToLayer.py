@@ -7,10 +7,6 @@ Nom : XmlToLayer.py
 Groupe : base
 Description : Classe abstraite (ABC) mutualisée pour l'extraction de données
               à partir de fichiers XML (ZNIEFF, Natura 2000) vers un GeoPackage.
-
-              Toute la logique commune (I/O fichiers, GeoPackage, logging) est
-              implémentée ici une seule fois. Les classes enfants n'ont qu'à
-              implémenter les méthodes abstraites spécifiques à leur format XML.
 """
 
 import os
