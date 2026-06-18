@@ -32,7 +32,7 @@ class XmlToLayer(ABC):
     Classe abstraite pour l'extraction XML vers couche QGIS / GeoPackage.
 
     Méthodes concrètes (mutualisées) :
-        run(), run_with_path(), process_folder(),
+        run_with_path(), process_folder(),
         save_to_geopackage(), load_from_geopackage(),
         log_message(), select_folder_dialog()
 
@@ -99,44 +99,6 @@ class XmlToLayer(ABC):
     # -----------------------------------------------------------------------
     # Méthodes concrètes — logique commune à tous les modules
     # -----------------------------------------------------------------------
-
-    def run(self):
-        """Point d'entrée en mode indépendant (avec boîte de dialogue)."""
-        folder_path = self.select_folder_dialog()
-        if not folder_path:
-            return
-
-        data = self.process_folder(folder_path)
-
-        if not data:
-            QMessageBox.information(
-                None,
-                "Information",
-                f"Aucune donnée trouvée dans les fichiers XML.\n({folder_path})"
-            )
-            return
-
-        temp_layer = self.create_temp_layer(data)
-
-        self.gpkg_path = os.path.join(folder_path, "biblizou.gpkg")
-        self.save_to_geopackage(temp_layer)
-
-        if self.gpkg_saved:
-            self.load_from_geopackage()
-        else:
-            QgsProject.instance().addMapLayer(temp_layer)
-            self.log_message("Couche temporaire ajoutée (échec sauvegarde GeoPackage)", Qgis.Warning)
-
-        QMessageBox.information(
-            None,
-            "Traitement terminé",
-            (
-                f"Couche : {self.get_layer_name()}\n"
-                f"Fichiers traités : {self.processed_files}\n"
-                f"Enregistrements : {len(data)}\n"
-                f"GeoPackage : {'✓' if self.gpkg_saved else '✗'} {self.gpkg_path}"
-            )
-        )
 
     def run_with_path(self, folder_path: str):
         """
