@@ -51,8 +51,8 @@ class NaturaPivotEspeces(PivotLayer):
         )
 
 
-def run_module():
-    return NaturaPivotEspeces().run()
+def run_module(gpkg_path: str = None):
+    return NaturaPivotEspeces().run(gpkg_path)
 
 
 if __name__ == "__console__":
