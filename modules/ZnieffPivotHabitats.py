@@ -46,8 +46,8 @@ ORDER BY LB_CODE
 """
 
 
-def run_module():
-    return ZnieffPivotHabitats().run()
+def run_module(gpkg_path: str = None):
+    return ZnieffPivotHabitats().run(gpkg_path)
 
 if __name__ == "__console__":
     run_module()
