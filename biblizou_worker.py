@@ -28,7 +28,7 @@ from qgis.PyQt.QtCore import QThread, pyqtSignal
 from .modules.WfsManager import setup_wfs_connections, load_wfs_layers
 
 # Import des modules Natura 2000
-from .modules.NaturaDwlXml import run_module_with_params as natura_download
+from .modules.NaturaDwlXml import run_module_with_path as natura_download
 from .modules.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
 from .modules.NaturaXmlToLayerHab import run_module_with_path as natura_process_hab
 from .modules.NaturaPivotHabitats import run_module as natura_pivot_hab
@@ -36,7 +36,7 @@ from .modules.NaturaXmlToLayerEsp import run_module_with_path as natura_process_
 from .modules.NaturaPivotEspeces import run_module as natura_pivot_esp
 
 # Import des modules ZNIEFF
-from .modules.ZnieffDwlXml import run_module_with_params as znieff_download
+from .modules.ZnieffDwlXml import run_module_with_path as znieff_download
 from .modules.ZnieffXmlToLayerDesc import run_module_with_path as znieff_process_desc
 from .modules.ZnieffXmlToLayerHab import run_module_with_path as znieff_process_hab
 from .modules.ZnieffPivotHabitats import run_module as znieff_pivot_hab
