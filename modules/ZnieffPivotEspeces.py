@@ -78,8 +78,8 @@ class ZnieffPivotEspeces(PivotLayer):
         )
 
 
-def run_module():
-    return ZnieffPivotEspeces().run()
+def run_module(gpkg_path: str = None):
+    return ZnieffPivotEspeces().run(gpkg_path)
 
 if __name__ == "__console__":
     run_module()
