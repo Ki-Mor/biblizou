@@ -31,11 +31,13 @@ Le moteur R est indispensable au fonctionnement du module **Botazou**.
 
 ## Contribution
 
+* **Auteur** : François Botcazou — francois.botcazou@proton.me
+* **Contributeurs** : Max Tanquerel
+
 Le projet est collaboratif. Vous pouvez participer via deux canaux :
 * **Workflow Git** : Ouverture d'une *Issue* pour signaler un bug/proposer une évolution, ou soumission directe d'une *Pull Request* (PR).
 * **Contact direct** : Envoi de suggestions par e-mail si vous n'utilisez pas Git.
 
-**Auteur** : François Botcazou — francois.botcazou@proton.me
 
 ## Références & Citations
 
