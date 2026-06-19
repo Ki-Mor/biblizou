@@ -12,139 +12,74 @@ Description : Module pour créer un tableau croisé dynamique (pivot) unique des
               - Tri par GROUPE puis par nom_complet (ascendant).
 """
 
-import unicodedata
-from qgis.core import (
-    QgsProject,
-    QgsVectorLayer,
-    QgsMessageLog,
-    Qgis
-)
-from PyQt5.QtWidgets import QMessageBox
+from .base.PivotLayer import PivotLayer
+from qgis.core import Qgis
 
 
-class ZnieffPivotEspeces:
-    """Classe pour créer un tableau croisé unique pour toutes les espèces déterminantes ZNIEFF."""
-    
-    def __init__(self, source_layer_name="Znieff_Especes"):
-        """Initialisation."""
-        self.source_layer_name = source_layer_name
-        self.output_layer_name = "Znieff_EspDet_Pivot"
+class ZnieffPivotEspeces(PivotLayer):
+    """
+    Pivot des espèces déterminantes ZNIEFF (FG_ESP = 'D').
+    Colonnes : GROUPE, cd_nom, nom_complet, nom_vern + une colonne par ZNIEFF.
+    Utilise l'ID de couche dans la requête SQL pour éviter les conflits de noms.
+    """
 
-    def remove_accents(self, text):
-        """Supprime les accents d'une chaîne de caractères."""
-        if not text:
-            return text
-        # Normalisation NFD (décomposition) puis suppression des marques diacritiques
-        nfd = unicodedata.normalize('NFD', str(text))
-        return ''.join(char for char in nfd if unicodedata.category(char) != 'Mn')
+    def get_source_layer_name(self) -> str:
+        return "Znieff_Especes"
 
-    def run(self):
-        """Exécute la création du pivot unique."""
-        # 1. Récupérer la couche source
-        source_layers = QgsProject.instance().mapLayersByName(self.source_layer_name)
-        
-        if not source_layers:
-            QgsMessageLog.logMessage(f"Erreur : Couche '{self.source_layer_name}' introuvable.", "Biblizou", level=Qgis.Critical)
-            return False
+    def get_output_layer_name(self) -> str:
+        return "Znieff_EspDet_Pivot"
 
-        source_layer = source_layers[0]
-        
-        # 2. Vérifier que le champ FG_ESP existe
-        if source_layer.fields().indexOf('fg_esp') == -1:
-            QgsMessageLog.logMessage(f"Erreur : Champ 'fg_esp' introuvable.", "Biblizou", level=Qgis.Critical)
-            return False
-        
-        # 3. Créer le pivot unique
-        success = self.create_pivot(source_layer)
-        
-        if success:
-            QgsMessageLog.logMessage(f"Pivot unique créé : {self.output_layer_name}", "Biblizou", level=Qgis.Success)
-        
-        return success
+    def get_site_keys(self) -> tuple:
+        return ('nm_sffzn', 'lb_zn')
 
-    def get_all_sites_for_determinant_species(self, layer):
-        """Récupère tous les couples (nm_sffzn, lb_zn) uniques pour les espèces déterminantes."""
-        site_info = {}
-        for feature in layer.getFeatures():
-            # Filtrer uniquement les espèces déterminantes
-            if feature['fg_esp'] == 'D':
-                code = feature['nm_sffzn']
-                name = feature['lb_zn']
-                if code:
-                    site_info[code] = name if name else "Nom inconnu"
-        return site_info
+    def get_sites(self) -> dict:
+        """
+        Surcharge : filtre sur les espèces déterminantes uniquement (fg_esp = 'D')
+        avant d'extraire les sites.
+        """
+        sites = {}
+        try:
+            for feat in self.source_layer.getFeatures():
+                if feat['fg_esp'] == 'D':
+                    code = feat['nm_sffzn']
+                    name = feat['lb_zn']
+                    if code:
+                        sites[code] = name if name else "Nom inconnu"
+        except KeyError as e:
+            self.log(f"Champ manquant : {e}", Qgis.Critical)
 
-    def create_pivot(self, source_layer):
-        """Crée une couche virtuelle pivot unique pour tous les groupes (espèces déterminantes uniquement)."""
-        
-        # Récupérer tous les sites pour toutes les espèces déterminantes
-        sites_dict = self.get_all_sites_for_determinant_species(source_layer)
-        if not sites_dict:
-            QgsMessageLog.logMessage("Aucun site trouvé pour les espèces déterminantes", "Biblizou", level=Qgis.Warning)
-            return False
+        if not sites:
+            self.log("Aucun site trouvé pour les espèces déterminantes", Qgis.Warning)
 
-        # Construction de la requête SQL avec GROUPE en première colonne
-        # On utilise l'ID de la couche source au lieu du nom
-        layer_id = source_layer.id()
-        
-        query = "SELECT groupe AS GROUPE, cd_nom, nom_complet, nom_vern"
-        
-        # Colonnes pivotées : [code] - [NOM_SITE] (NOM_SITE en majuscules, sans accents)
-        for site_code in sorted(sites_dict.keys()):
-            site_label = sites_dict[site_code]
-            
-            safe_code = site_code.replace("'", "''")
-            # NOM_SITE : majuscules et sans diacritiques (à, â, é, è, ë, ê, î, ô, ù...)
-            nom_site = self.remove_accents(str(site_label)).upper()
-            column_alias = f"{site_code} - {nom_site}".replace('"', '""')
-            
-            # CASE : 1 si présent, NULL (vide) sinon
-            query += f', MAX(CASE WHEN nm_sffzn = \'{safe_code}\' THEN 1 ELSE NULL END) AS "{column_alias}"'
-        
-        # Filtrer uniquement les espèces déterminantes - utiliser l'ID de la couche
-        query += f' FROM "{layer_id}"'
-        query += " WHERE fg_esp = 'D'"
-        query += " GROUP BY groupe, cd_nom, nom_complet, nom_vern"
-        # Tri par groupe puis par nom scientifique
-        query += " ORDER BY groupe ASC, nom_complet ASC"
+        return sites
 
-        uri = f"?query={query}"
-        
-        # Log de la requête pour débogage (premiers caractères uniquement)
-        QgsMessageLog.logMessage(f"Requête SQL (début) : {query[:500]}", "Biblizou", level=Qgis.Info)
-        
-        vlayer = QgsVectorLayer(uri, self.output_layer_name, "virtual")
-        
-        if vlayer.isValid():
-            # Nettoyage si doublon
-            existing_layers = QgsProject.instance().mapLayersByName(self.output_layer_name)
-            for old_layer in existing_layers:
-                QgsProject.instance().removeMapLayer(old_layer.id())
-                
-            QgsProject.instance().addMapLayer(vlayer)
-            QgsMessageLog.logMessage(f"Pivot unique créé avec succès", "Biblizou", level=Qgis.Info)
-            return True
-        else:
-            QgsMessageLog.logMessage(f"Erreur SQL pour le pivot unifié", "Biblizou", level=Qgis.Critical)
-            return False
-            
-    def show_summary(self):
-        """Affiche un résumé final."""
-        msg = "Tableau croisé ZNIEFF créé avec succès :\n\n"
-        msg += "• FILTRE : Espèces déterminantes uniquement (FG_ESP = 'D')\n"
-        msg += "• Colonnes : GROUPE, cd_nom, nom_complet, nom_vern\n"
-        msg += "• En-têtes : [code] - [NOM_SITE] (majuscules, sans accents)\n"
-        msg += "• Absences : Cellules vides\n"
-        msg += "• Tri : Par GROUPE puis nom scientifique (ascendant)\n\n"
-        msg += f"• {self.output_layer_name}\n"
-        
-        QMessageBox.information(None, "Pivot ZNIEFF (espèces déterminantes) terminé", msg)
+    def build_pivot_query(self) -> str:
+        sites = self.get_sites()
+        if not sites:
+            return None
+
+        # Utilise l'ID de couche pour éviter les conflits si le nom contient des caractères spéciaux
+        layer_id = self.source_layer.id()
+
+        case_statements = [
+            f'MAX(CASE WHEN nm_sffzn = \'{str(code).replace("\'", "\'\'")}\' THEN 1 ELSE NULL END) AS "{self.col_alias(code, name)}"'
+            for code, name in sorted(sites.items())
+        ]
+
+        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes", Qgis.Info)
+
+        return (
+            f'SELECT groupe AS GROUPE, cd_nom, nom_complet, nom_vern, '
+            f'{", ".join(case_statements)} '
+            f'FROM "{layer_id}" '
+            f"WHERE fg_esp = 'D' "
+            f'GROUP BY groupe, cd_nom, nom_complet, nom_vern '
+            f'ORDER BY groupe ASC, nom_complet ASC'
+        )
 
 
 def run_module():
-    """Lancement du module."""
-    pivot = ZnieffPivotEspeces()
-    return pivot.run()
+    return ZnieffPivotEspeces().run()
 
 if __name__ == "__console__":
     run_module()
