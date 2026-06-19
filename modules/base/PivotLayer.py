@@ -151,5 +151,8 @@ class PivotLayer(ABC):
 
     def log(self, message: str, level=Qgis.Info):
         """Enregistre un message dans le journal QGIS."""
-        prefix = f"Biblizou :: {self.__class__.__name__}"
-        QgsMessageLog.logMessage(message, prefix, level)
+        QgsMessageLog.logMessage(
+            f"[{self.__class__.__name__}]: {message}",
+            "Biblizou",
+            level=level
+        )
