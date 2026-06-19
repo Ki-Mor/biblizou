@@ -7,7 +7,7 @@ Description : Classe utilitaire centralisant la gestion, la validation, le charg
               la création de GeoPackage et la substitution des couches vectorielles au sein de QGIS.
 """
 
-from qgis.core import QgsProject, QgsVectorLayer, QgsProviderRegistry
+from qgis.core import QgsProject, QgsVectorLayer, QgsProviderRegistry, QgsVectorFileWriter
 import os
 
 
@@ -60,3 +60,26 @@ class LayerManager:
         options = {}
         err = QgsProviderRegistry.instance().createProvider("ogr", gpkg_path, options)
         return err is None
+
+    @staticmethod
+    def save_to_gpkg(layer: QgsVectorLayer, gpkg_path: str) -> tuple[bool, str]:
+        """Exporte de manière persistante n'importe quelle couche (y compris virtuelle) dans un GeoPackage."""
+        if not layer or not layer.isValid():
+            return False, "Couche invalide ou absente."
+
+        options = QgsVectorFileWriter.SaveVectorOptions()
+        options.driverName = "GPKG"
+        options.layerName = layer.name()
+        options.actionOnExistingFile = QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteLayer
+
+        error, msg, _, _ = QgsVectorFileWriter.writeAsVectorFormatV3(
+            layer,
+            gpkg_path,
+            QgsProject.instance().transformContext(),
+            options
+        )
+
+        if error == QgsVectorFileWriter.WriterError.NoError:
+            return True, ""
+        else:
+            return False, msg
