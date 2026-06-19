@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2026/02
+Auteur : François Botcazou
 Nom : StatusPivotByGroup.py
-Groupe : Biblizou_PatNat
+Groupe : Status
 Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom latin,
               nom vernaculaire ; en colonnes statusTypeName ; en valeur statusCode.
               Utilise la table status_data_joined (ou status_data) du GeoPackage.
 """
+
 import re
 from qgis.core import (
     QgsProject,

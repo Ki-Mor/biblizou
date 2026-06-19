@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Auteur : François Botcazou
+Nom : WfsManager.py
+Groupe : TaxRef
+Description : Créer les connexions au flux WFS de l'INPN puis ajouter les couches au projet.
+"""
+
 from qgis.utils import iface
 from qgis.PyQt.QtCore import QSettings
 from qgis.core import QgsProject, QgsVectorLayer, QgsMessageLog, Qgis

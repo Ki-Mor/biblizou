@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
-Date : 2026/02
+Auteur : François Botcazou
 Nom : StatusJoinTaxref.py
-Groupe : Biblizou_PatNat
+Groupe : Status
 Description : Enrichit la table status_data avec nom vernaculaire et groupe taxonomique
               obtenus par requête API TaxRef (GET taxa/{cd_nom}), comme TaxrefApiToTable.
               Enregistre le résultat dans biblizou.gpkg|status_data_joined.
