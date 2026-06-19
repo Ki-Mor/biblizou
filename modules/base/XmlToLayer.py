@@ -47,8 +47,6 @@ class XmlToLayer(ABC):
         self.gpkg_saved = False
 
     # -----------------------------------------------------------------------
-    # Méthodes abstraites — à implémenter dans chaque classe enfant
-    # -----------------------------------------------------------------------
 
     @abstractmethod
     def get_layer_name(self) -> str:
@@ -92,8 +90,6 @@ class XmlToLayer(ABC):
             QgsVectorLayer: couche mémoire prête à être sauvegardée
         """
 
-    # -----------------------------------------------------------------------
-    # Méthodes concrètes — logique commune à tous les modules
     # -----------------------------------------------------------------------
 
     def run_with_path(self, folder_path: str):

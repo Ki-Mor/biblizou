@@ -36,8 +36,6 @@ class PivotLayer(ABC):
         self.source_layer = None
 
     # -----------------------------------------------------------------------
-    # Méthodes abstraites
-    # -----------------------------------------------------------------------
 
     @abstractmethod
     def get_source_layer_name(self) -> str:
@@ -63,8 +61,6 @@ class PivotLayer(ABC):
         Retourne None en cas d'erreur.
         """
 
-    # -----------------------------------------------------------------------
-    # Méthodes concrètes
     # -----------------------------------------------------------------------
 
     def run(self) -> bool:
