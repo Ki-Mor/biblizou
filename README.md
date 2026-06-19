@@ -1,3 +1,4 @@
+# <img src="misc/icon.svg" width="100">
 # Biblizou — Plugin QGIS
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
