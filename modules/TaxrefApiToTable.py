@@ -18,7 +18,7 @@ from qgis.core import (
 from qgis.PyQt.QtCore import QVariant, pyqtSignal, QObject
 
 from .base.ApiUtils import collect_cdnom_from_config, create_taxref_session
-from .base.LayerManager import LayerManager
+from .base.LayerUtils import LayerUtils
 
 
 class TaxrefApiToTable(QObject):
@@ -88,7 +88,7 @@ class TaxrefApiToTable(QObject):
 
         temp_layer.dataProvider().addFeatures(features)
 
-        success, err_msg = LayerManager.save_to_gpkg(temp_layer, self.gpkg_path)
+        success, err_msg = LayerUtils.save_to_gpkg(temp_layer, self.gpkg_path)
         if success:
             self.status_changed.emit("Table data_taxref enregistrée avec succès.")
             return True, f"{len(results)} taxons consolidés dans le GeoPackage."
