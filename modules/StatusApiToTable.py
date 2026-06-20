@@ -8,7 +8,6 @@ Description : Interroge l'API TaxRef Statuts (locationId=INSEED + code départem
               dans biblizou.gpkg|status_data.
 """
 
-import os
 import time
 import requests
 from qgis.core import (
@@ -17,64 +16,38 @@ from qgis.core import (
     QgsFeature,
     QgsField,
     QgsMessageLog,
-    QgsVectorFileWriter,
     Qgis
 )
 from qgis.PyQt.QtCore import QVariant
+
+from .base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from .base.LayerUtils import LayerUtils
 
 API_BASE = "https://taxref.mnhn.fr/api/status/search/lines"
 BATCH_SIZE = 50
 MAX_RETRIES = 3
 
 
-def collect_cdnom_from_config(layer_config):
-    """Collecte les cd_nom uniques depuis les couches du projet (comme TaxrefApiToTable)."""
-    unique_codes = set()
-    for config in layer_config:
-        layer = QgsProject.instance().mapLayer(config["layer_id"])
-        if not layer:
-            continue
-        idx = layer.fields().lookupField(config["column"])
-        if idx == -1:
-            continue
-        for feat in layer.getFeatures():
-            val = feat.attributes()[idx]
-            if val is not None and str(val).strip():
-                str_val = str(val).split(".")[0]
-                clean_val = "".join(filter(str.isdigit, str(val)))
-                if clean_val:
-                    unique_codes.add(clean_val)
-    return list(unique_codes)
-
-
-def fetch_status_batch(location_id, taxref_ids, session):
+def _fetch_status_batch(location_id: str, taxref_ids: list, session) -> list:
     """Requête une page de statuts pour un lot de taxrefId."""
-    params = {"locationId": location_id, "page": 1, "size": 10000}
-    for tid in taxref_ids:
-        params.setdefault("taxrefId", []).append(tid)
-    # requests attend une liste pour taxrefId multiple du même nom
-    url = API_BASE
-    # Construction URL: ?locationId=INSEED07&page=1&size=10000&taxrefId=1&taxrefId=2...
     query = f"locationId={location_id}&page=1&size=10000"
     for tid in taxref_ids:
         query += f"&taxrefId={tid}"
-    full_url = f"{url}?{query}"
+    full_url = f"{API_BASE}?{query}"
+
     for attempt in range(MAX_RETRIES):
         try:
             r = session.get(full_url, timeout=30)
             if r.status_code == 200:
-                data = r.json()
-                return data.get("_embedded", {}).get("status", [])
+                return r.json().get("_embedded", {}).get("status", [])
             QgsMessageLog.logMessage(
-                f"StatusApiToTable: HTTP {r.status_code} pour lot, tentative {attempt + 1}",
-                "Biblizou",
-                level=Qgis.Warning
+                f"[StatusApiToTable]: HTTP {r.status_code} lot, tentative {attempt + 1}",
+                "Biblizou", Qgis.Warning
             )
         except requests.RequestException as e:
             QgsMessageLog.logMessage(
-                f"StatusApiToTable: Erreur requête {e}",
-                "Biblizou",
-                level=Qgis.Warning
+                f"[StatusApiToTable]: Erreur requête {e}",
+                "Biblizou", Qgis.Warning
             )
         time.sleep(2)
     return []
@@ -82,49 +55,43 @@ def fetch_status_batch(location_id, taxref_ids, session):
 
 def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_callback=None):
     """
-    Point d'entrée principal.
-    
     Args:
         gpkg_path: chemin vers biblizou.gpkg
         code_insee_dept: code INSEE du département (ex. "07", "2A")
         layer_config: liste de dicts [{'layer_id': '...', 'column': '...'}]
         progress_callback: optional (current, total, message)
         log_callback: optional (message)
-    
     Returns:
         (success: bool, message: str)
     """
     def log(msg):
-        QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
+        QgsMessageLog.logMessage(f"[StatusApiToTable]: {msg}", "Biblizou", Qgis.Info)
         if log_callback:
             log_callback(msg)
 
-    # 1. Collecte des cd_nom
     log("Collecte des cd_nom depuis les couches...")
     cd_nom_list = collect_cdnom_from_config(layer_config)
     if not cd_nom_list:
         return False, "Aucun cd_nom trouvé dans les couches sélectionnées."
 
-    # locationId pour le département : INSEED + code_insee
     location_id = f"INSEED{code_insee_dept}"
     log(f"Requêtage API Statuts (locationId={location_id}, {len(cd_nom_list)} taxons)...")
 
-    session = requests.Session()
-    session.headers.update({"accept": "application/hal+json;version=1"})
-
+    session = create_taxref_session()
     all_rows = []
     total_batches = (len(cd_nom_list) + BATCH_SIZE - 1) // BATCH_SIZE
+
     for i in range(0, len(cd_nom_list), BATCH_SIZE):
-        batch = cd_nom_list[i : i + BATCH_SIZE]
+        batch = cd_nom_list[i: i + BATCH_SIZE]
         batch_num = i // BATCH_SIZE + 1
         if progress_callback:
             progress_callback(batch_num, total_batches, f"Lot {batch_num}/{total_batches}")
-        status_list = fetch_status_batch(location_id, batch, session)
-        for s in status_list:
+
+        for s in _fetch_status_batch(location_id, batch, session):
             taxon = s.get("taxon") or {}
             all_rows.append({
                 "cdnom": str(taxon.get("id", "")),
-                "scientificName": (taxon.get("scientificName") or ""),
+                "scientificName": taxon.get("scientificName") or "",
                 "statusTypeName": s.get("statusTypeName") or "",
                 "statusTypeGroup": s.get("statusTypeGroup") or "",
                 "statusCode": s.get("statusCode") or "",
@@ -139,7 +106,6 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_ca
     if not all_rows:
         return False, "Aucun statut récupéré depuis l'API."
 
-    # 2. Création couche mémoire (sans géométrie)
     fields = [
         QgsField("cdnom", QVariant.String),
         QgsField("scientificName", QVariant.String),
@@ -152,42 +118,19 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_ca
         QgsField("statusRemarks", QVariant.String),
         QgsField("source", QVariant.String),
     ]
-    temp_layer = QgsVectorLayer("None", "status_data_temp", "memory")
+
+    temp_layer = QgsVectorLayer("None", "status_data", "memory")
     temp_layer.dataProvider().addAttributes(fields)
     temp_layer.updateFields()
 
     for row in all_rows:
         feat = QgsFeature(temp_layer.fields())
-        feat.setAttributes([
-            row["cdnom"],
-            row["scientificName"],
-            row["statusTypeName"],
-            row["statusTypeGroup"],
-            row["statusCode"],
-            row["statusName"],
-            row["locationId"],
-            row["locationName"],
-            row["statusRemarks"],
-            row["source"],
-        ])
+        feat.setAttributes([row[f.name()] for f in temp_layer.fields()])
         temp_layer.dataProvider().addFeature(feat)
 
-    # 3. Sauvegarde dans le GeoPackage (comme NaturaPivotHabitats / TaxrefApiToTable)
-    save_options = QgsVectorFileWriter.SaveVectorOptions()
-    save_options.driverName = "GPKG"
-    save_options.layerName = "status_data"
-    save_options.actionOnExistingFile = (
-        QgsVectorFileWriter.CreateOrOverwriteLayer
-        if os.path.exists(gpkg_path)
-        else QgsVectorFileWriter.CreateOrOverwriteFile
-    )
-    err, err_msg = QgsVectorFileWriter.writeAsVectorFormatV3(
-        temp_layer,
-        gpkg_path,
-        QgsProject.instance().transformContext(),
-        save_options
-    )
-    if err != QgsVectorFileWriter.NoError:
+    success, err_msg = LayerUtils.save_to_gpkg(temp_layer, gpkg_path)
+    if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
+
     log(f"Table status_data enregistrée : {len(all_rows)} lignes.")
     return True, f"{len(all_rows)} statuts enregistrés dans status_data."

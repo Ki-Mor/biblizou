@@ -47,8 +47,8 @@ ORDER BY CD_UE
 """
 
 
-def run_module():
-    return NaturaPivotHabitats().run()
+def run_module(gpkg_path: str = None):
+    return NaturaPivotHabitats().run(gpkg_path)
 
 if __name__ == "__console__":
     run_module()

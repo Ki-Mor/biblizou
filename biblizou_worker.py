@@ -28,7 +28,7 @@ from qgis.PyQt.QtCore import QThread, pyqtSignal
 from .modules.WfsManager import setup_wfs_connections, load_wfs_layers
 
 # Import des modules Natura 2000
-from .modules.NaturaDwlXml import run_module_with_params as natura_download
+from .modules.NaturaDwlXml import run_module_with_path as natura_download
 from .modules.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
 from .modules.NaturaXmlToLayerHab import run_module_with_path as natura_process_hab
 from .modules.NaturaPivotHabitats import run_module as natura_pivot_hab
@@ -36,7 +36,7 @@ from .modules.NaturaXmlToLayerEsp import run_module_with_path as natura_process_
 from .modules.NaturaPivotEspeces import run_module as natura_pivot_esp
 
 # Import des modules ZNIEFF
-from .modules.ZnieffDwlXml import run_module_with_params as znieff_download
+from .modules.ZnieffDwlXml import run_module_with_path as znieff_download
 from .modules.ZnieffXmlToLayerDesc import run_module_with_path as znieff_process_desc
 from .modules.ZnieffXmlToLayerHab import run_module_with_path as znieff_process_hab
 from .modules.ZnieffPivotHabitats import run_module as znieff_pivot_hab
@@ -79,6 +79,7 @@ class FsdProcessingThread(QThread):
             
             # Stockage dans la variable d'instance pour utilisation dans toutes les méthodes
             self.working_folder = working_folder
+            self.gpkg_path = os.path.join(working_folder, "biblizou.gpkg")
             
             self.log.emit(f"Dossier de travail: {self.working_folder}")
 
@@ -205,14 +206,14 @@ class FsdProcessingThread(QThread):
             self.log.emit("Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
             return
         self.log.emit("Génération pivot espèces ZNIEFF...")
-        znieff_pivot_esp()
+        znieff_pivot_esp(self.gpkg_path)
 
     def pivot_znieff_hab(self):
         if not self._has_znieff_hab:
             self.log.emit("Pivot habitats ZNIEFF ignoré : aucune donnée disponible")
             return        
         self.log.emit("Génération pivot habitats ZNIEFF...")
-        znieff_pivot_hab()
+        znieff_pivot_hab(self.gpkg_path)
 
     # def download_natura(self):
     #     self.log.emit("Téléchargement des FSD des sites Natura 2000 au format xml...")
@@ -261,14 +262,14 @@ class FsdProcessingThread(QThread):
             self.log.emit("Pivot espèces Natura 2000 ignoré : aucune donnée disponible")
             return        
         self.log.emit("Génération pivot espèces Natura...")
-        natura_pivot_esp()
+        natura_pivot_esp(self.gpkg_path)
 
     def pivot_natura_hab(self):
         if not self._has_natura_hab:
             self.log.emit("Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
             return 
         self.log.emit("Génération pivot habitats Natura...")
-        natura_pivot_hab()
+        natura_pivot_hab(self.gpkg_path)
 
 
 class TaxrefProcessingThread(QThread):
