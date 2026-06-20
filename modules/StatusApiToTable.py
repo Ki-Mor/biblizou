@@ -21,7 +21,7 @@ from qgis.core import (
 from qgis.PyQt.QtCore import QVariant
 
 from .base.ApiUtils import collect_cdnom_from_config, create_taxref_session
-from .base.LayerManager import LayerManager
+from .base.LayerUtils import LayerUtils
 
 API_BASE = "https://taxref.mnhn.fr/api/status/search/lines"
 BATCH_SIZE = 50
@@ -128,7 +128,7 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_ca
         feat.setAttributes([row[f.name()] for f in temp_layer.fields()])
         temp_layer.dataProvider().addFeature(feat)
 
-    success, err_msg = LayerManager.save_to_gpkg(temp_layer, gpkg_path)
+    success, err_msg = LayerUtils.save_to_gpkg(temp_layer, gpkg_path)
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
