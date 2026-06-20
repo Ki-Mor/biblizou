@@ -11,7 +11,7 @@ from qgis.core import QgsProject, QgsVectorLayer, QgsProviderRegistry, QgsVector
 import os
 
 
-class LayerManager:
+class LayerUtils:
 
     @staticmethod
     def get_layer(name: str) -> QgsVectorLayer | None:
