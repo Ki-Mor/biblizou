@@ -70,7 +70,11 @@ class LayerManager:
         options = QgsVectorFileWriter.SaveVectorOptions()
         options.driverName = "GPKG"
         options.layerName = layer.name()
-        options.actionOnExistingFile = QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteLayer
+        options.actionOnExistingFile = (
+            QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteLayer
+            if os.path.exists(gpkg_path)
+            else QgsVectorFileWriter.ActionOnExistingFile.CreateOrOverwriteFile
+        )
 
         error, msg, _, _ = QgsVectorFileWriter.writeAsVectorFormatV3(
             layer,
