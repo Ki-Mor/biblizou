@@ -34,7 +34,7 @@ class LayerManager:
             return False
 
         project = QgsProject.instance()
-        old_layer = LayerManager.get_layer(layer.name())
+        old_layer = LayerUtils.get_layer(layer.name())
         if old_layer:
             project.removeMapLayer(old_layer.id())
 
