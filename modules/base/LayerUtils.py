@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Auteur : ExEco Environnement - François Botcazou
-Nom : LayerManager.py
+Nom : LayerUtils.py
 Groupe : base
 Description : Classe utilitaire centralisant la gestion, la validation, le chargement,
               la création de GeoPackage et la substitution des couches vectorielles au sein de QGIS.
