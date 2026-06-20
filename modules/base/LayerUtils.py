@@ -22,7 +22,7 @@ class LayerManager:
     @staticmethod
     def layer_is_ready(name: str) -> bool:
         """Vérifie si la couche existe, est valide et contient des entités."""
-        layer = LayerManager.get_layer(name)
+        layer = LayerUtils.get_layer(name)
         if layer is None or not layer.isValid():
             return False
         return layer.featureCount() > 0
