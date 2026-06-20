@@ -12,7 +12,7 @@ import unicodedata
 from abc import ABC, abstractmethod
 
 from qgis.core import QgsVectorLayer, QgsMessageLog, QgsProject, Qgis
-from .LayerManager import LayerManager
+from .LayerUtils import LayerUtils
 
 
 class PivotLayer(ABC):
@@ -30,6 +30,8 @@ class PivotLayer(ABC):
         get_site_keys()         → tuple (code_field, name_field) pour extraire les sites
         build_pivot_query()     → requête SQL complète du pivot
     """
+
+    # -----------------------------------------------------------------------
 
     def __init__(self):
         self.source_layer = None
@@ -50,10 +52,12 @@ class PivotLayer(ABC):
     def build_pivot_query(self) -> str:
         pass
 
+    # -----------------------------------------------------------------------
+
     def load_source_layer(self) -> bool:
-        """Charge et valide la couche source depuis le projet QGIS via le LayerManager."""
+        """Charge et valide la couche source depuis le projet QGIS via le LayerUtils."""
         source_name = self.get_source_layer_name()
-        self.source_layer = LayerManager.get_layer(source_name)
+        self.source_layer = LayerUtils.get_layer(source_name)
 
         if not self.source_layer:
             self.log(f"Couche source '{source_name}' introuvable dans le projet", Qgis.Warning)
@@ -104,7 +108,7 @@ class PivotLayer(ABC):
         return True
 
     def create_virtual_layer(self, sql_query: str) -> QgsVectorLayer | None:
-        """Génère la couche virtuelle SQL et l'injecte/substitue via le LayerManager."""
+        """Génère la couche virtuelle SQL et l'injecte/substitue via le LayerUtils."""
         output_name = self.get_output_layer_name()
         virtual_layer = QgsVectorLayer(f"?query={sql_query}", output_name, "virtual")
 
@@ -112,7 +116,7 @@ class PivotLayer(ABC):
             self.log(f"Couche virtuelle '{output_name}' invalide — vérifiez la requête SQL", Qgis.Critical)
             return None
 
-        if LayerManager.replace_layer(virtual_layer):
+        if LayerUtils.replace_layer(virtual_layer):
             self.log(
                 f"Pivot '{output_name}' créé ({virtual_layer.featureCount()} enregistrements)",
                 Qgis.Success
@@ -122,7 +126,7 @@ class PivotLayer(ABC):
         return None
 
     def export_to_geopackage(self, layer: QgsVectorLayer, gpkg_path: str = None):
-        """Exporte de façon persistante la couche générée via le LayerManager."""
+        """Exporte de façon persistante la couche générée via le LayerUtils."""
         if not gpkg_path:
             project_dir = os.path.dirname(QgsProject.instance().fileName())
             if not project_dir:
@@ -130,7 +134,7 @@ class PivotLayer(ABC):
                 return
             gpkg_path = os.path.join(project_dir, "biblizou.gpkg")
 
-        success, err_msg = LayerManager.save_to_gpkg(layer, gpkg_path)
+        success, err_msg = LayerUtils.save_to_gpkg(layer, gpkg_path)
 
         if success:
             self.log(f"Couche pivot enregistrée dans '{layer.name()}' ({gpkg_path})", Qgis.Success)
