@@ -16,16 +16,12 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
 
 .. toctree::
    :maxdepth: 2
-   :caption: Sommaire :
+   :caption: Navigation générale :
 
    Fsd
    Taxref
    Bdc
    Interface
-
-.. contents:: Table des matières
-   :depth: 2
-   :local:
 
 
 Prérequis

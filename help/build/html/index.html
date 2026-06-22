@@ -16,6 +16,7 @@
 
     <link rel="index" title="Index" href="genindex.html"/>
     <link rel="search" title="Search" href="search.html"/>
+    <link rel="next" title="Module FSD — Formulaires Standards de Données" href="Fsd.html"/>
 </head>
 <body>
 <div class="related" role="navigation" aria-label="Related">
@@ -24,6 +25,10 @@
         <li class="right" style="margin-right: 10px">
             <a href="genindex.html" title="General Index"
                accesskey="I">index</a></li>
+        <li class="right">
+            <a href="Fsd.html" title="Module FSD — Formulaires Standards de Données"
+               accesskey="N">next</a> |
+        </li>
         <li class="nav-item nav-item-0"><a href="#">Biblizou 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Biblizou — Plugin QGIS</a></li>
     </ul>
@@ -54,24 +59,113 @@
                             (analyses multivariées).</p></li>
                     </ul>
                     <div class="toctree-wrapper compound">
-                    </div>
-                    <nav class="contents local" id="table-des-matieres">
-                        <p class="topic-title">Table des matières</p>
-                        <ul class="simple">
-                            <li><p><a class="reference internal" href="#prerequis" id="id1">Prérequis</a></p></li>
-                            <li><p><a class="reference internal" href="#configuration-de-r" id="id2">Configuration de
-                                R</a></p></li>
-                            <li><p><a class="reference internal" href="#installation" id="id3">Installation</a></p></li>
-                            <li><p><a class="reference internal" href="#contribution" id="id4">Contribution</a></p></li>
-                            <li><p><a class="reference internal" href="#references-citations" id="id5">Références &amp;
-                                Citations</a></p></li>
+                        <p class="caption" role="heading"><span class="caption-text">Navigation générale :</span></p>
+                        <ul>
+                            <li class="toctree-l1"><a class="reference internal" href="Fsd.html">Module FSD —
+                                Formulaires Standards de Données</a>
+                                <ul>
+                                    <li class="toctree-l2"><a class="reference internal" href="Fsd.html#presentation">Présentation</a>
+                                    </li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#flux-de-traitement">Flux de traitement</a>
+                                    </li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#architecture-des-classes-de-base">Architecture
+                                        des classes de base</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#volet-natura-2000">Volet Natura 2000</a>
+                                    </li>
+                                    <li class="toctree-l2"><a class="reference internal" href="Fsd.html#volet-znieff">Volet
+                                        ZNIEFF</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#connexions-wfs-wfsmanager">Connexions WFS —
+                                        <code class="docutils literal notranslate"><span
+                                                class="pre">WfsManager</span></code></a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#couches-et-geopackage-produits">Couches et
+                                        GeoPackage produits</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Fsd.html#reference-des-fichiers-source">Référence
+                                        des fichiers source</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l1"><a class="reference internal" href="Taxref.html">Module TaxRef —
+                                Consolidation taxonomique</a>
+                                <ul>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#presentation">Présentation</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#flux-de-traitement">Flux de
+                                        traitement</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#classes-et-utilitaires">Classes et
+                                        utilitaires</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#endpoint-api-taxref">Endpoint API
+                                        TaxRef</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#table-produite">Table produite</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Taxref.html#reference-des-fichiers-source">Référence
+                                        des fichiers source</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l1"><a class="reference internal" href="Bdc.html">Module BDC — Base de
+                                Données sur les statuts de Conservation</a>
+                                <ul>
+                                    <li class="toctree-l2"><a class="reference internal" href="Bdc.html#presentation">Présentation</a>
+                                    </li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#flux-de-traitement">Flux de traitement</a>
+                                    </li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#etape-1-requete-api-statuts-statusapitotable">Étape
+                                        1 — Requête API Statuts (<code class="docutils literal notranslate"><span
+                                                class="pre">StatusApiToTable</span></code>)</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#etape-2-enrichissement-taxref-statusjointaxref">Étape
+                                        2 — Enrichissement TaxRef (<code class="docutils literal notranslate"><span
+                                                class="pre">StatusJoinTaxref</span></code>)</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#etape-3-pivots-par-groupe-statuspivotbygroup">Étape
+                                        3 — Pivots par groupe (<code class="docutils literal notranslate"><span
+                                                class="pre">StatusPivotByGroup</span></code>)</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#tables-et-couches-produites">Tables et
+                                        couches produites</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Bdc.html#reference-des-fichiers-source">Référence
+                                        des fichiers source</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l1"><a class="reference internal" href="Interface.html">Interface
+                                utilisateur</a>
+                                <ul>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#presentation-generale">Présentation
+                                        générale</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#dossier-de-travail">Dossier de
+                                        travail</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#onglet-fsd">Onglet FSD</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#onglet-taxref">Onglet TaxRef</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#onglet-bdc-statuts">Onglet BDC
+                                        Statuts</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#comportement-commun-aux-threads">Comportement
+                                        commun aux threads</a></li>
+                                    <li class="toctree-l2"><a class="reference internal"
+                                                              href="Interface.html#reference-des-fichiers-source">Référence
+                                        des fichiers source</a></li>
+                                </ul>
+                            </li>
                         </ul>
-                    </nav>
+                    </div>
                     <section id="prerequis">
-                        <h2><a class="toc-backref" href="#id1" role="doc-backlink">Prérequis</a><a class="headerlink"
-                                                                                                   href="#prerequis"
-                                                                                                   title="Link to this heading">¶</a>
-                        </h2>
+                        <h2>Prérequis<a class="headerlink" href="#prerequis" title="Link to this heading">¶</a></h2>
                         <ul class="simple">
                             <li><p>QGIS <code class="docutils literal notranslate"><span class="pre">3.x</span></code>
                             </p></li>
@@ -81,8 +175,8 @@
                         </ul>
                     </section>
                     <section id="configuration-de-r">
-                        <h2><a class="toc-backref" href="#id2" role="doc-backlink">Configuration de R</a><a
-                                class="headerlink" href="#configuration-de-r" title="Link to this heading">¶</a></h2>
+                        <h2>Configuration de R<a class="headerlink" href="#configuration-de-r"
+                                                 title="Link to this heading">¶</a></h2>
                         <p>Le moteur R est indispensable au fonctionnement du module <strong>Botazou</strong>.</p>
                         <ol class="arabic simple">
                             <li><p>Accéder à <span class="menuselection">Traitement ‣ Options ‣ Fournisseurs ‣ R</span>.
@@ -102,9 +196,7 @@
                         </div>
                     </section>
                     <section id="installation">
-                        <h2><a class="toc-backref" href="#id3" role="doc-backlink">Installation</a><a class="headerlink"
-                                                                                                      href="#installation"
-                                                                                                      title="Link to this heading">¶</a>
+                        <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a>
                         </h2>
                         <ol class="arabic simple">
                             <li><p>Télécharger ou cloner le dépôt.</p></li>
@@ -125,9 +217,7 @@
                         </ol>
                     </section>
                     <section id="contribution">
-                        <h2><a class="toc-backref" href="#id4" role="doc-backlink">Contribution</a><a class="headerlink"
-                                                                                                      href="#contribution"
-                                                                                                      title="Link to this heading">¶</a>
+                        <h2>Contribution<a class="headerlink" href="#contribution" title="Link to this heading">¶</a>
                         </h2>
                         <ul class="simple">
                             <li><p><strong>Auteur</strong> : François Botcazou — <a class="reference external"
@@ -145,8 +235,8 @@
                         </ul>
                     </section>
                     <section id="references-citations">
-                        <h2><a class="toc-backref" href="#id5" role="doc-backlink">Références &amp; Citations</a><a
-                                class="headerlink" href="#references-citations" title="Link to this heading">¶</a></h2>
+                        <h2>Références &amp; Citations<a class="headerlink" href="#references-citations"
+                                                         title="Link to this heading">¶</a></h2>
                         <ul class="simple">
                             <li><p><strong>Baseflor</strong> : Julve, P. (1998-). <em>Index botanique, écologique et
                                 chorologique de la flore
@@ -195,6 +285,11 @@
                 </ul>
 
             </div>
+            <div>
+                <h4>Next topic</h4>
+                <p class="topless"><a href="Fsd.html"
+                                      title="next chapter">Module FSD — Formulaires Standards de Données</a></p>
+            </div>
             <div role="note" aria-label="source link">
                 <h3>This Page</h3>
                 <ul class="this-page-menu">
@@ -223,6 +318,10 @@
         <li class="right" style="margin-right: 10px">
             <a href="genindex.html" title="General Index"
             >index</a></li>
+        <li class="right">
+            <a href="Fsd.html" title="Module FSD — Formulaires Standards de Données"
+            >next</a> |
+        </li>
         <li class="nav-item nav-item-0"><a href="#">Biblizou 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Biblizou — Plugin QGIS</a></li>
     </ul>
