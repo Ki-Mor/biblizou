@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Module BDC — Base de Données sur les statuts de Conservation &#8212; Biblizou 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50"/>
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=2bf1fcf8"/>
+
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+
+    <link rel="index" title="Index" href="genindex.html"/>
+    <link rel="search" title="Search" href="search.html"/>
+    <link rel="next" title="Interface utilisateur" href="Interface.html"/>
+    <link rel="prev" title="Module TaxRef — Consolidation taxonomique" href="Taxref.html"/>
+</head>
+<body>
+<div class="related" role="navigation" aria-label="Related">
+    <h3>Navigation</h3>
+    <ul>
+        <li class="right" style="margin-right: 10px">
+            <a href="genindex.html" title="General Index"
+               accesskey="I">index</a></li>
+        <li class="right">
+            <a href="Interface.html" title="Interface utilisateur"
+               accesskey="N">next</a> |
+        </li>
+        <li class="right">
+            <a href="Taxref.html" title="Module TaxRef — Consolidation taxonomique"
+               accesskey="P">previous</a> |
+        </li>
+        <li class="nav-item nav-item-0"><a href="index.html">Biblizou 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Module BDC — Base de Données sur les statuts de Conservation</a>
+        </li>
+    </ul>
+</div>
+
+<div class="document">
+    <div class="documentwrapper">
+        <div class="bodywrapper">
+            <div class="body" role="main">
+
+                <section id="module-bdc-base-de-donnees-sur-les-statuts-de-conservation">
+                    <span id="module-bdc"></span>
+                    <h1>Module BDC — Base de Données sur les statuts de Conservation<a class="headerlink"
+                                                                                       href="#module-bdc-base-de-donnees-sur-les-statuts-de-conservation"
+                                                                                       title="Link to this heading">¶</a>
+                    </h1>
+                    <nav class="contents local" id="sommaire">
+                        <p class="topic-title">Sommaire</p>
+                        <ul class="simple">
+                            <li><p><a class="reference internal" href="#presentation" id="id1">Présentation</a></p></li>
+                            <li><p><a class="reference internal" href="#flux-de-traitement" id="id2">Flux de
+                                traitement</a></p></li>
+                            <li><p><a class="reference internal" href="#etape-1-requete-api-statuts-statusapitotable"
+                                      id="id3">Étape 1 — Requête API Statuts (<code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">StatusApiToTable</span></code>)</a></p></li>
+                            <li><p><a class="reference internal" href="#etape-2-enrichissement-taxref-statusjointaxref"
+                                      id="id4">Étape 2 — Enrichissement TaxRef (<code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">StatusJoinTaxref</span></code>)</a></p></li>
+                            <li><p><a class="reference internal" href="#etape-3-pivots-par-groupe-statuspivotbygroup"
+                                      id="id5">Étape 3 — Pivots par groupe (<code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">StatusPivotByGroup</span></code>)</a></p></li>
+                            <li><p><a class="reference internal" href="#tables-et-couches-produites" id="id6">Tables et
+                                couches produites</a></p>
+                                <ul>
+                                    <li><p><a class="reference internal" href="#structure-de-status-data" id="id7">Structure
+                                        de <code class="docutils literal notranslate"><span
+                                                class="pre">status_data</span></code></a></p></li>
+                                </ul>
+                            </li>
+                            <li><p><a class="reference internal" href="#reference-des-fichiers-source" id="id8">Référence
+                                des fichiers source</a></p></li>
+                        </ul>
+                    </nav>
+                    <section id="presentation">
+                        <h2><a class="toc-backref" href="#id1" role="doc-backlink">Présentation</a><a class="headerlink"
+                                                                                                      href="#presentation"
+                                                                                                      title="Link to this heading">¶</a>
+                        </h2>
+                        <p>Le module <strong>BDC Statuts</strong> interroge l’API <em>TaxRef Statuts</em> de l’INPN pour
+                            récupérer,
+                            pour un département donné, l’ensemble des statuts de protection et de conservation
+                            associés aux taxons présents dans les couches du projet.</p>
+                        <p>Il produit trois tables dans <code class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>
+                            :</p>
+                        <ul class="simple">
+                            <li><p><code class="docutils literal notranslate"><span
+                                    class="pre">status_data</span></code> — table brute, une ligne par statut par taxon
+                                ;</p></li>
+                            <li><p><code class="docutils literal notranslate"><span
+                                    class="pre">status_data_joined</span></code> — enrichissement de <code
+                                    class="docutils literal notranslate"><span class="pre">status_data</span></code>
+                                avec le nom vernaculaire
+                                et le groupe taxonomique récupérés via l’API TaxRef ;</p></li>
+                            <li><p>une série de <strong>couches pivots</strong> <code
+                                    class="docutils literal notranslate"><span class="pre">Statuts_Pivot_{groupe}</span></code>
+                                — une par groupe de statuts
+                                (protection nationale, directive Habitats, liste rouge…), en format large.</p></li>
+                        </ul>
+                    </section>
+                    <section id="flux-de-traitement">
+                        <h2><a class="toc-backref" href="#id2" role="doc-backlink">Flux de traitement</a><a
+                                class="headerlink" href="#flux-de-traitement" title="Link to this heading">¶</a></h2>
+                        <p>Le module BDC est orchestré par <code class="docutils literal notranslate"><span class="pre">BdStatutsProcessingThread</span></code>
+                            (<code class="docutils literal notranslate"><span
+                                    class="pre">biblizou_worker.py</span></code>),
+                            un <code class="docutils literal notranslate"><span class="pre">QThread</span></code> PyQt5
+                            qui enchaîne quatre étapes :</p>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 5.9%"/>
+                                <col style="width: 52.9%"/>
+                                <col style="width: 41.2%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Étape</p></th>
+                                <th class="head"><p>Description</p></th>
+                                <th class="head"><p>Fonction appelée</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p>1</p></td>
+                                <td><p>Requête API Statuts → <code class="docutils literal notranslate"><span
+                                        class="pre">status_data</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">StatusApiToTable.run()</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p>2</p></td>
+                                <td><p>Enrichissement via API TaxRef → <code class="docutils literal notranslate"><span
+                                        class="pre">status_data_joined</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">StatusJoinTaxref.run()</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p>3</p></td>
+                                <td><p>Création des pivots par groupe de statuts</p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">StatusPivotByGroup.run()</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p>4</p></td>
+                                <td><p>Fin</p></td>
+                                <td><p>—</p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="admonition note">
+                            <p class="admonition-title">Note</p>
+                            <p>L’étape 2 est <strong>non bloquante</strong> : en cas d’échec (par exemple si l’API
+                                TaxRef est
+                                inaccessible), le workflow continue avec <code
+                                        class="docutils literal notranslate"><span class="pre">status_data</span></code>
+                                seule, et les pivots
+                                sont construits à partir de cette table de repli.</p>
+                        </div>
+                        <p>Le thread émet les signaux <code class="docutils literal notranslate"><span class="pre">progress(int,</span>
+                            <span class="pre">int,</span> <span class="pre">str)</span></code>, <code
+                                class="docutils literal notranslate"><span class="pre">log(str)</span></code>,
+                            <code class="docutils literal notranslate"><span class="pre">finished(str)</span></code> et
+                            <code class="docutils literal notranslate"><span class="pre">error(str)</span></code>.</p>
+                        <p><strong>Paramètres transmis par l’interface :</strong></p>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 30.0%"/>
+                                <col style="width: 70.0%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Clé</p></th>
+                                <th class="head"><p>Valeur</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">gpkg_path</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">{working_folder}/biblizou.gpkg</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">code_insee</span></code></p></td>
+                                <td><p>Code INSEE du département sélectionné (ex. <code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">&quot;14&quot;</span></code>, <code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">&quot;2A&quot;</span></code>)</p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">consolidation_config</span></code></p></td>
+                                <td><p>Liste de dicts <code class="docutils literal notranslate"><span class="pre">[{'layer_id':</span>
+                                    <span class="pre">'...',</span> <span class="pre">'column':</span> <span
+                                            class="pre">'...'}]</span></code> extraite de <code
+                                        class="docutils literal notranslate"><span class="pre">tableStat</span></code>
+                                </p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section id="etape-1-requete-api-statuts-statusapitotable">
+                        <h2><a class="toc-backref" href="#id3" role="doc-backlink">Étape 1 — Requête API Statuts (<code
+                                class="docutils literal notranslate"><span
+                                class="pre">StatusApiToTable</span></code>)</a><a class="headerlink"
+                                                                                  href="#etape-1-requete-api-statuts-statusapitotable"
+                                                                                  title="Link to this heading">¶</a>
+                        </h2>
+                        <p><strong>Fichier :</strong> <code class="docutils literal notranslate"><span class="pre">modules/StatusApiToTable.py</span></code>
+                        </p>
+                        <p><strong>Fonction principale :</strong> <code class="docutils literal notranslate"><span
+                                class="pre">run(gpkg_path,</span> <span class="pre">code_insee_dept,</span> <span
+                                class="pre">layer_config,</span> <span class="pre">progress_callback,</span> <span
+                                class="pre">log_callback)</span></code></p>
+                        <p>Déroulement :</p>
+                        <ol class="arabic simple">
+                            <li><p><strong>Collecte des cd_nom</strong> via <code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">collect_cdnom_from_config()</span></code> (<code
+                                    class="docutils literal notranslate"><span class="pre">ApiUtils</span></code>).</p>
+                            </li>
+                            <li><p><strong>Construction du ``locationId``</strong> : <code
+                                    class="docutils literal notranslate"><span class="pre">f&quot;INSEED{code_insee_dept}&quot;</span></code>
+                                (ex. <code class="docutils literal notranslate"><span
+                                        class="pre">&quot;INSEED14&quot;</span></code> pour le Calvados).</p></li>
+                            <li><p><strong>Requêtage par lots</strong> (<code class="docutils literal notranslate"><span
+                                    class="pre">BATCH_SIZE</span> <span class="pre">=</span> <span class="pre">50</span></code>)
+                                :</p>
+                                <ul class="simple">
+                                    <li><p>Pour chaque lot, appel <code class="docutils literal notranslate"><span
+                                            class="pre">GET</span></code> à l’endpoint <code
+                                            class="docutils literal notranslate"><span class="pre">/api/status/search/lines</span></code>
+                                        avec les paramètres <code class="docutils literal notranslate"><span
+                                                class="pre">locationId</span></code>, <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">taxrefId</span></code> (répété par taxon),
+                                        <code class="docutils literal notranslate"><span
+                                                class="pre">page=1</span></code> et <code
+                                                class="docutils literal notranslate"><span class="pre">size=10000</span></code>.
+                                    </p></li>
+                                    <li><p>Retry exponentiel : jusqu’à <code class="docutils literal notranslate"><span
+                                            class="pre">MAX_RETRIES</span> <span class="pre">=</span> <span class="pre">3</span></code>
+                                        tentatives avec pause de 2 s.</p></li>
+                                    <li><p>Pause de 0,3 s entre chaque lot pour ménager l’API.</p></li>
+                                </ul>
+                            </li>
+                            <li><p><strong>Aplatissement des réponses</strong> : pour chaque statut retourné dans
+                                <code class="docutils literal notranslate"><span
+                                        class="pre">_embedded.status</span></code>, extraction des champs suivants :</p>
+                            </li>
+                        </ol>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 25.0%"/>
+                                <col style="width: 75.0%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Champ extrait</p></th>
+                                <th class="head"><p>Source dans la réponse API</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">cdnom</span></code>
+                                </p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">taxon.id</span></code></p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">scientificName</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">taxon.scientificName</span></code></p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusTypeName</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusTypeName</span></code></p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusTypeGroup</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusTypeGroup</span></code> (ex. <em>Protection nationale</em>,
+                                    <em>Liste rouge</em>, <em>Directive Habitats</em>)</p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusCode</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusCode</span></code> (ex. <em>PN</em>, <em>EN</em>, <em>LC</em>,
+                                    <em>II</em>)</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusName</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">statusName</span></code></p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">locationId</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">locationId</span></code></p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">locationName</span></code>
+                                </p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">locationName</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">statusRemarks</span></code>
+                                </p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">statusRemarks</span></code>
+                                    (tronqué à 500 caractères)</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">source</span></code>
+                                </p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">source</span></code>
+                                    (tronqué à 1 000 caractères)</p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <ol class="arabic simple" start="5">
+                            <li><p><strong>Export GPKG</strong> vers la table <code
+                                    class="docutils literal notranslate"><span class="pre">status_data</span></code> via
+                                <code class="docutils literal notranslate"><span
+                                        class="pre">LayerUtils.save_to_gpkg()</span></code>.</p></li>
+                        </ol>
+                        <p><strong>Endpoint API :</strong></p>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 20.0%"/>
+                                <col style="width: 80.0%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Paramètre</p></th>
+                                <th class="head"><p>Valeur</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p>URL de base</p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">https://taxref.mnhn.fr/api/status/search/lines</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">locationId</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">INSEED{code_insee}</span></code> — identifiant départemental INPN
+                                </p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">taxrefId</span></code></p></td>
+                                <td><p>Répété pour chaque cd_nom du lot (max 50)</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">page</span></code> /
+                                    <code class="docutils literal notranslate"><span class="pre">size</span></code></p>
+                                </td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">1</span></code> /
+                                    <code class="docutils literal notranslate"><span class="pre">10000</span></code></p>
+                                </td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p>Timeout</p></td>
+                                <td><p>30 secondes</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p>En-tête</p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">accept:</span> <span
+                                        class="pre">application/hal+json;version=1</span></code></p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section id="etape-2-enrichissement-taxref-statusjointaxref">
+                        <h2><a class="toc-backref" href="#id4" role="doc-backlink">Étape 2 — Enrichissement TaxRef
+                            (<code class="docutils literal notranslate"><span class="pre">StatusJoinTaxref</span></code>)</a><a
+                                class="headerlink" href="#etape-2-enrichissement-taxref-statusjointaxref"
+                                title="Link to this heading">¶</a></h2>
+                        <p><strong>Fichier :</strong> <code class="docutils literal notranslate"><span class="pre">modules/StatusJoinTaxref.py</span></code>
+                        </p>
+                        <p><strong>Fonction principale :</strong> <code class="docutils literal notranslate"><span
+                                class="pre">run(gpkg_path,</span> <span class="pre">progress_callback,</span> <span
+                                class="pre">log_callback)</span></code></p>
+                        <p>Déroulement :</p>
+                        <ol class="arabic simple">
+                            <li><p><strong>Chargement</strong> de <code class="docutils literal notranslate"><span
+                                    class="pre">status_data</span></code> depuis le GeoPackage.</p></li>
+                            <li><p><strong>Extraction des ``cdnom`` distincts</strong> (nettoyage des éventuels suffixes
+                                décimaux
+                                hérités du stockage <code class="docutils literal notranslate"><span class="pre">QVariant.String</span></code>).
+                            </p></li>
+                            <li><p><strong>Requêtage API TaxRef</strong> — pour chaque <code
+                                    class="docutils literal notranslate"><span class="pre">cdnom</span></code> unique :
+                            </p>
+                                <ul class="simple">
+                                    <li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span
+                                            class="pre">https://taxref.mnhn.fr/api/taxa/{cdnom}</span></code> (timeout
+                                        10 s, <code class="docutils literal notranslate"><span
+                                                class="pre">MAX_RETRIES</span> <span class="pre">=</span> <span
+                                                class="pre">2</span></code>).</p></li>
+                                    <li><p>Extraction de <code class="docutils literal notranslate"><span class="pre">vernacularName1</span></code>
+                                        (ou <code class="docutils literal notranslate"><span class="pre">nomVern</span></code>
+                                        en repli) → champ <code class="docutils literal notranslate"><span class="pre">nom_vern</span></code>.
+                                    </p></li>
+                                    <li><p>Extraction de <code class="docutils literal notranslate"><span class="pre">classe</span></code>
+                                        (ou <code class="docutils literal notranslate"><span
+                                                class="pre">ordre</span></code>, ou <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">groupe</span></code> en repli) → champ <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">groupe</span></code>.</p></li>
+                                    <li><p>Pause de 0,15 s entre chaque appel.</p></li>
+                                </ul>
+                            </li>
+                            <li><p><strong>Construction de</strong> <code class="docutils literal notranslate"><span
+                                    class="pre">status_data_joined</span></code> : copie de toutes les lignes de
+                                <code class="docutils literal notranslate"><span class="pre">status_data</span></code>
+                                auxquelles sont ajoutées les deux colonnes <code
+                                        class="docutils literal notranslate"><span class="pre">nom_vern</span></code> et
+                                <code class="docutils literal notranslate"><span class="pre">groupe</span></code>.</p>
+                            </li>
+                            <li><p><strong>Export GPKG</strong> vers la table <code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">status_data_joined</span></code>
+                                (via <code class="docutils literal notranslate"><span class="pre">QgsVectorFileWriter.writeAsVectorFormatV3</span></code>
+                                en mode <code class="docutils literal notranslate"><span class="pre">CreateOrOverwriteLayer</span></code>).
+                            </p></li>
+                        </ol>
+                        <div class="admonition note">
+                            <p class="admonition-title">Note</p>
+                            <p>Cette étape ne s’appuie <strong>pas</strong> sur la table <code
+                                    class="docutils literal notranslate"><span class="pre">data_taxref</span></code>
+                                produite par le module
+                                <a class="reference internal" href="Taxref.html#module-taxref"><span
+                                        class="std std-ref">Module TaxRef — Consolidation taxonomique</span></a>. Elle
+                                appelle directement l’API TaxRef pour éviter toute dépendance
+                                à l’exécution préalable du module TaxRef.</p>
+                        </div>
+                    </section>
+                    <section id="etape-3-pivots-par-groupe-statuspivotbygroup">
+                        <h2><a class="toc-backref" href="#id5" role="doc-backlink">Étape 3 — Pivots par groupe (<code
+                                class="docutils literal notranslate"><span class="pre">StatusPivotByGroup</span></code>)</a><a
+                                class="headerlink" href="#etape-3-pivots-par-groupe-statuspivotbygroup"
+                                title="Link to this heading">¶</a></h2>
+                        <p><strong>Fichier :</strong> <code class="docutils literal notranslate"><span class="pre">modules/StatusPivotByGroup.py</span></code>
+                        </p>
+                        <p><strong>Fonction principale :</strong> <code class="docutils literal notranslate"><span
+                                class="pre">run(gpkg_path,</span> <span class="pre">progress_callback,</span> <span
+                                class="pre">log_callback)</span></code></p>
+                        <p>Déroulement :</p>
+                        <ol class="arabic">
+                            <li><p><strong>Chargement de la source</strong> : tente d’abord <code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">status_data_joined</span></code>,
+                                se replie sur <code class="docutils literal notranslate"><span
+                                        class="pre">status_data</span></code> si la première est absente ou invalide.
+                                La couche est ajoutée temporairement au projet QGIS (requis pour les couches
+                                virtuelles).</p></li>
+                            <li><p><strong>Détection du champ vernaculaire</strong> (<code
+                                    class="docutils literal notranslate"><span
+                                    class="pre">_get_vernacular_field()</span></code>) :
+                                recherche dans l’ordre <code class="docutils literal notranslate"><span class="pre">nom_vern</span></code>,
+                                <code class="docutils literal notranslate"><span
+                                        class="pre">vernacularName1</span></code>, <code
+                                        class="docutils literal notranslate"><span class="pre">nomVern</span></code>,
+                                <code class="docutils literal notranslate"><span
+                                        class="pre">taxref_vernacularName1</span></code>, <code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">taxref_nomVern</span></code> ; se replie sur <code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">scientificName</span></code>.</p></li>
+                            <li><p><strong>Collecte des groupes et types</strong> : itération sur toutes les entités
+                                pour
+                                construire le dictionnaire <code class="docutils literal notranslate"><span class="pre">{statusTypeGroup</span>
+                                    <span class="pre">→</span> <span class="pre">{statusTypeName,</span> <span
+                                            class="pre">...}}</span></code>.</p></li>
+                            <li><p><strong>Génération d’une couche virtuelle par groupe</strong> :</p>
+                                <p>Pour chaque <code class="docutils literal notranslate"><span class="pre">statusTypeGroup</span></code>,
+                                    une requête SQL de type pivot est construite :</p>
+                                <div class="highlight-sql notranslate">
+                                    <div class="highlight"><pre><span></span><span class="k">SELECT</span><span
+                                            class="w"> </span><span class="n">cdnom</span><span class="p">,</span><span
+                                            class="w"> </span><span class="n">scientificName</span><span
+                                            class="w"> </span><span class="k">AS</span><span class="w"> </span><span
+                                            class="n">nom_latin</span><span class="p">,</span><span
+                                            class="w"> </span><span class="ss">&quot;{nom_vern}&quot;</span><span
+                                            class="w"> </span><span class="k">AS</span><span class="w"> </span><span
+                                            class="n">nom_vernaculaire</span><span class="p">,</span>
+<span class="w">  </span><span class="k">MAX</span><span class="p">(</span><span class="k">CASE</span><span
+                                                class="w"> </span><span class="k">WHEN</span><span
+                                                class="w"> </span><span class="n">statusTypeName</span><span
+                                                class="w"> </span><span class="o">=</span><span class="w"> </span><span
+                                                class="s1">&#39;Protection nationale&#39;</span><span class="w"> </span><span
+                                                class="k">THEN</span><span class="w"> </span><span
+                                                class="n">statusCode</span><span class="w"> </span><span
+                                                class="k">END</span><span class="p">)</span><span
+                                                class="w"> </span><span class="k">AS</span><span class="w"> </span><span
+                                                class="ss">&quot;Protection nationale&quot;</span><span
+                                                class="p">,</span>
+<span class="w">  </span><span class="k">MAX</span><span class="p">(</span><span class="k">CASE</span><span
+                                                class="w"> </span><span class="k">WHEN</span><span
+                                                class="w"> </span><span class="n">statusTypeName</span><span
+                                                class="w"> </span><span class="o">=</span><span class="w"> </span><span
+                                                class="s1">&#39;Liste rouge nationale&#39;</span><span
+                                                class="w"> </span><span class="k">THEN</span><span
+                                                class="w"> </span><span class="n">statusCode</span><span
+                                                class="w"> </span><span class="k">END</span><span
+                                                class="p">)</span><span class="w"> </span><span class="k">AS</span><span
+                                                class="w"> </span><span
+                                                class="ss">&quot;Liste rouge nationale&quot;</span><span
+                                                class="p">,</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;{layer_id}&quot;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">statusTypeGroup</span><span class="w"> </span><span
+                                                class="o">=</span><span class="w"> </span><span class="s1">&#39;{groupe}&#39;</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">cdnom</span><span
+                                                class="p">,</span><span class="w"> </span><span
+                                                class="n">scientificName</span><span class="p">,</span><span
+                                                class="w"> </span><span class="ss">&quot;{nom_vern}&quot;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">scientificName</span>
+</pre>
+                                    </div>
+                                </div>
+                                <p>La requête référence la table par <strong>ID interne QGIS</strong> (<code
+                                        class="docutils literal notranslate"><span class="pre">layer.id()</span></code>)
+                                    pour éviter
+                                    les conflits de nommage.</p>
+                            </li>
+                            <li><p><strong>Nommage et ajout au projet</strong> : la couche est nommée
+                                <code class="docutils literal notranslate"><span class="pre">Statuts_Pivot_{groupe_nettoyé}</span></code>,
+                                où le nom du groupe est assaini par
+                                <code class="docutils literal notranslate"><span
+                                        class="pre">_sanitize_layer_name()</span></code> (remplacement des caractères
+                                non alphanumériques par <code class="docutils literal notranslate"><span
+                                        class="pre">_</span></code>).
+                                Une couche éponyme déjà présente dans le projet est supprimée avant l’ajout.</p></li>
+                        </ol>
+                        <div class="admonition note">
+                            <p class="admonition-title">Note</p>
+                            <p>Les couches pivot <code class="docutils literal notranslate"><span class="pre">Statuts_Pivot_*</span></code>
+                                sont des <strong>couches virtuelles QGIS</strong> (non persistées
+                                dans le GeoPackage). Elles dépendent de la présence de <code
+                                        class="docutils literal notranslate"><span class="pre">status_data_joined</span></code>
+                                ou
+                                <code class="docutils literal notranslate"><span class="pre">status_data</span></code>
+                                dans le projet QGIS. Pour les rendre persistantes, l’utilisateur doit
+                                les exporter manuellement via <span
+                                        class="menuselection">Couche ‣ Enregistrer sous</span>.</p>
+                        </div>
+                    </section>
+                    <section id="tables-et-couches-produites">
+                        <h2><a class="toc-backref" href="#id6" role="doc-backlink">Tables et couches produites</a><a
+                                class="headerlink" href="#tables-et-couches-produites"
+                                title="Link to this heading">¶</a></h2>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 35.0%"/>
+                                <col style="width: 15.0%"/>
+                                <col style="width: 50.0%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Nom</p></th>
+                                <th class="head"><p>Support</p></th>
+                                <th class="head"><p>Contenu</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">status_data</span></code></p></td>
+                                <td><p>GPKG</p></td>
+                                <td><p>Table brute : une ligne par statut par taxon, 10 champs</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">status_data_joined</span></code></p></td>
+                                <td><p>GPKG</p></td>
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">status_data</span></code> enrichie avec <code
+                                        class="docutils literal notranslate"><span class="pre">nom_vern</span></code> et
+                                    <code class="docutils literal notranslate"><span class="pre">groupe</span></code>
+                                    (API TaxRef)</p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">Statuts_Pivot_{groupe}</span></code>
+                                </p></td>
+                                <td><p>Couche virtuelle QGIS</p></td>
+                                <td><p>Une couche par <code class="docutils literal notranslate"><span class="pre">statusTypeGroup</span></code>
+                                    ; colonnes = types de statuts, valeurs = codes</p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <section id="structure-de-status-data">
+                            <h3><a class="toc-backref" href="#id7" role="doc-backlink">Structure de <code
+                                    class="docutils literal notranslate"><span class="pre">status_data</span></code></a><a
+                                    class="headerlink" href="#structure-de-status-data"
+                                    title="Link to this heading">¶</a></h3>
+                            <table class="docutils align-default">
+                                <colgroup>
+                                    <col style="width: 25.0%"/>
+                                    <col style="width: 15.0%"/>
+                                    <col style="width: 60.0%"/>
+                                </colgroup>
+                                <thead>
+                                <tr class="row-odd">
+                                    <th class="head"><p>Champ</p></th>
+                                    <th class="head"><p>Type</p></th>
+                                    <th class="head"><p>Description</p></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">cdnom</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Code TaxRef du taxon</p></td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">scientificName</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Nom scientifique</p></td>
+                                </tr>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">statusTypeName</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Type de statut (ex. <em>Protection nationale</em>, <em>Directive Oiseaux</em>)
+                                    </p></td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">statusTypeGroup</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Groupe de statuts (ex. <em>Protection</em>, <em>Liste rouge</em>, <em>Réglementation</em>)
+                                    </p></td>
+                                </tr>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">statusCode</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Code du statut (ex. <em>PN</em>, <em>LC</em>, <em>EN</em>, <em>II</em>)</p>
+                                    </td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">statusName</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Libellé du statut</p></td>
+                                </tr>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">locationId</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Identifiant de localisation INPN (ex. <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">INSEED14</span></code>)</p></td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">locationName</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Nom du territoire (ex. <em>Calvados</em>)</p></td>
+                                </tr>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">statusRemarks</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Remarques (tronqué à 500 caractères)</p></td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">source</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Source bibliographique du statut (tronqué à 1 000 caractères)</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <p><code class="docutils literal notranslate"><span
+                                    class="pre">status_data_joined</span></code> reprend tous ces champs et y ajoute :
+                            </p>
+                            <table class="docutils align-default">
+                                <colgroup>
+                                    <col style="width: 25.0%"/>
+                                    <col style="width: 15.0%"/>
+                                    <col style="width: 60.0%"/>
+                                </colgroup>
+                                <thead>
+                                <tr class="row-odd">
+                                    <th class="head"><p>Champ ajouté</p></th>
+                                    <th class="head"><p>Type</p></th>
+                                    <th class="head"><p>Description</p></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="row-even">
+                                    <td><p><code class="docutils literal notranslate"><span class="pre">nom_vern</span></code>
+                                    </p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Nom vernaculaire français (API TaxRef)</p></td>
+                                </tr>
+                                <tr class="row-odd">
+                                    <td><p><code class="docutils literal notranslate"><span
+                                            class="pre">groupe</span></code></p></td>
+                                    <td><p>String</p></td>
+                                    <td><p>Groupe taxonomique — classe, ordre ou groupe selon disponibilité (API
+                                        TaxRef)</p></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </section>
+                    <section id="reference-des-fichiers-source">
+                        <h2><a class="toc-backref" href="#id8" role="doc-backlink">Référence des fichiers source</a><a
+                                class="headerlink" href="#reference-des-fichiers-source"
+                                title="Link to this heading">¶</a></h2>
+                        <table class="docutils align-default">
+                            <colgroup>
+                                <col style="width: 35.0%"/>
+                                <col style="width: 65.0%"/>
+                            </colgroup>
+                            <thead>
+                            <tr class="row-odd">
+                                <th class="head"><p>Fichier</p></th>
+                                <th class="head"><p>Rôle</p></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/ApiUtils.py</span></code>
+                                </p></td>
+                                <td><p>Collecte des <code class="docutils literal notranslate"><span
+                                        class="pre">cd_nom</span></code> et création de la session HTTP</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/LayerUtils.py</span></code>
+                                </p></td>
+                                <td><p>Export des tables vers le GeoPackage</p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/StatusApiToTable.py</span></code>
+                                </p></td>
+                                <td><p>Requêtage API Statuts, création de <code
+                                        class="docutils literal notranslate"><span class="pre">status_data</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/StatusJoinTaxref.py</span></code>
+                                </p></td>
+                                <td><p>Enrichissement API TaxRef, création de <code
+                                        class="docutils literal notranslate"><span class="pre">status_data_joined</span></code>
+                                </p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/StatusPivotByGroup.py</span></code>
+                                </p></td>
+                                <td><p>Génération des couches virtuelles pivot par groupe de statuts</p></td>
+                            </tr>
+                            <tr class="row-odd">
+                                <td><p><code class="docutils literal notranslate"><span
+                                        class="pre">biblizou_worker.py</span></code></p></td>
+                                <td><p><code class="docutils literal notranslate"><span class="pre">BdStatutsProcessingThread</span></code>
+                                    — orchestration du thread</p></td>
+                            </tr>
+                            <tr class="row-even">
+                                <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_dockwidget.py</span></code>
+                                </p></td>
+                                <td><p>Collecte des paramètres (département, couches sources) et lancement du thread</p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+
+
+                <div class="clearer"></div>
+            </div>
+        </div>
+    </div>
+    <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <div>
+                <h3><a href="index.html">Table of Contents</a></h3>
+                <ul>
+                    <li><a class="reference internal" href="#">Module BDC — Base de Données sur les statuts de
+                        Conservation</a>
+                        <ul>
+                            <li><a class="reference internal" href="#presentation">Présentation</a></li>
+                            <li><a class="reference internal" href="#flux-de-traitement">Flux de traitement</a></li>
+                            <li><a class="reference internal" href="#etape-1-requete-api-statuts-statusapitotable">Étape
+                                1 — Requête API Statuts (<code class="docutils literal notranslate"><span class="pre">StatusApiToTable</span></code>)</a>
+                            </li>
+                            <li><a class="reference internal" href="#etape-2-enrichissement-taxref-statusjointaxref">Étape
+                                2 — Enrichissement TaxRef (<code class="docutils literal notranslate"><span class="pre">StatusJoinTaxref</span></code>)</a>
+                            </li>
+                            <li><a class="reference internal" href="#etape-3-pivots-par-groupe-statuspivotbygroup">Étape
+                                3 — Pivots par groupe (<code class="docutils literal notranslate"><span class="pre">StatusPivotByGroup</span></code>)</a>
+                            </li>
+                            <li><a class="reference internal" href="#tables-et-couches-produites">Tables et couches
+                                produites</a>
+                                <ul>
+                                    <li><a class="reference internal" href="#structure-de-status-data">Structure de
+                                        <code class="docutils literal notranslate"><span class="pre">status_data</span></code></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a class="reference internal" href="#reference-des-fichiers-source">Référence des
+                                fichiers source</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+            <div>
+                <h4>Previous topic</h4>
+                <p class="topless"><a href="Taxref.html"
+                                      title="previous chapter">Module TaxRef — Consolidation taxonomique</a></p>
+            </div>
+            <div>
+                <h4>Next topic</h4>
+                <p class="topless"><a href="Interface.html"
+                                      title="next chapter">Interface utilisateur</a></p>
+            </div>
+            <div role="note" aria-label="source link">
+                <h3>This Page</h3>
+                <ul class="this-page-menu">
+                    <li><a href="_sources/Bdc.rst.txt"
+                           rel="nofollow">Show Source</a></li>
+                </ul>
+            </div>
+            <search id="searchbox" style="display: none" role="search">
+                <h3 id="searchlabel">Quick search</h3>
+                <div class="searchformwrapper">
+                    <form class="search" action="search.html" method="get">
+                        <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off"
+                               autocapitalize="off" spellcheck="false"/>
+                        <input type="submit" value="Go"/>
+                    </form>
+                </div>
+            </search>
+            <script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </div>
+    <div class="clearer"></div>
+</div>
+<div class="related" role="navigation" aria-label="Related">
+    <h3>Navigation</h3>
+    <ul>
+        <li class="right" style="margin-right: 10px">
+            <a href="genindex.html" title="General Index"
+            >index</a></li>
+        <li class="right">
+            <a href="Interface.html" title="Interface utilisateur"
+            >next</a> |
+        </li>
+        <li class="right">
+            <a href="Taxref.html" title="Module TaxRef — Consolidation taxonomique"
+            >previous</a> |
+        </li>
+        <li class="nav-item nav-item-0"><a href="index.html">Biblizou 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Module BDC — Base de Données sur les statuts de Conservation</a>
+        </li>
+    </ul>
+</div>
+<div class="footer" role="contentinfo">
+    &#169; Copyright 2013, François Botcazou.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+</div>
+</body>
+</html>
