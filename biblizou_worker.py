@@ -158,15 +158,15 @@ class FsdProcessingThread(QThread):
             self.log.emit(f"Erreur lors du chargement des couches WFS : {str(e)}")
             self.log.emit("Le traitement va continuer mais certaines couches peuvent être manquantes")
 
-    # def download_znieff(self):
-    #     self.log.emit("Téléchargement des FSD des ZNIEFF au format xml...")
-    #     if not self.working_folder:
-    #         self.log.emit("ERREUR: Dossier de travail non défini")
-    #         return False
-    #     success = znieff_download(self.working_folder)
-    #     if not success: 
-    #         self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des ZNIEFF")
-    #     return success
+    def download_znieff(self):
+        self.log.emit("Téléchargement des FSD des ZNIEFF au format xml...")
+        if not self.working_folder:
+            self.log.emit("ERREUR: Dossier de travail non défini")
+            return False
+        success = znieff_download(self.working_folder)
+        if not success:
+            self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des ZNIEFF")
+        return success
     
     def process_znieff_desc(self):
         self.log.emit("Analyse des descriptions ZNIEFF...")
@@ -188,7 +188,6 @@ class FsdProcessingThread(QThread):
             self._has_znieff_esp = True
         elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les espèces ZNIEFF")
-        # result None ou True sans données = ignoré silencieusement
 
     def process_znieff_hab(self):
         self.log.emit("Analyse des habitats ZNIEFF...")
@@ -215,15 +214,15 @@ class FsdProcessingThread(QThread):
         self.log.emit("Génération pivot habitats ZNIEFF...")
         znieff_pivot_hab(self.gpkg_path)
 
-    # def download_natura(self):
-    #     self.log.emit("Téléchargement des FSD des sites Natura 2000 au format xml...")
-    #     if not self.working_folder:
-    #         self.log.emit("ERREUR: Dossier de travail non défini")
-    #         return False
-    #     success = natura_download(self.working_folder)
-    #     if not success: 
-    #         self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des sites Natura 2000")
-    #     return success
+    def download_natura(self):
+        self.log.emit("Téléchargement des FSD des sites Natura 2000 au format xml...")
+        if not self.working_folder:
+            self.log.emit("ERREUR: Dossier de travail non défini")
+            return False
+        success = natura_download(self.working_folder)
+        if not success:
+            self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des sites Natura 2000")
+        return success
     
     def process_natura_desc(self):
         self.log.emit("Analyse des descriptions Natura 2000...")
