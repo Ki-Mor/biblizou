@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="misc/icon.svg" alt="Description" width=100>
+  <a href="https://Ki-Mor.github.io/biblizou_frontend/">
+    <img src="mon-image.png" alt="Présentation du plugin">
+  </a>
 </p>
 
 # Biblizou — Plugin QGIS
