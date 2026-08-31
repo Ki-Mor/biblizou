@@ -1,4 +1,7 @@
-# <img src="misc/icon.svg" width="100">
+<p align="center">
+  <img src="misc/icon.svg" alt="Description" width=100>
+</p>
+
 # Biblizou — Plugin QGIS
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
@@ -10,17 +13,6 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
 ## Prérequis
 
 * QGIS `3.x`
-* Extension **Processing R Provider** installée et activée via `Extensions` → `Gérer et installer les extensions`.
-
-## Configuration de R
-
-Le moteur R est indispensable au fonctionnement du module **Botazou**.
-
-1. Accéder à `Traitement` → `Options` → `Fournisseurs` → `R`.
-2. Configurer le **Dossier R** pointant vers l'exécutable local (ex: `C:\Program Files\R\R-4.x.x`).
-3. Configurer le **Dossier de scripts R** (ex: `%APPDATA%\QGIS\QGIS3\profiles\default\processing\rscripts`).
-
-*Note : Le script requis `DcaToMembershipDf.rsx` est automatiquement déployé dans ce répertoire lors de l'activation du plugin.*
 
 ## Installation
 
@@ -30,13 +22,23 @@ Le moteur R est indispensable au fonctionnement du module **Botazou**.
    * **Linux** : `~/.local/share/QGIS/QGIS3/profiles/default/python/plugins`
 3. Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` → `Installé`.
 
+## Liens utiles
+
+[![Présentation](https://img.shields.io/badge/Présentation_du_plugin-6F42C1?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/biblizou_frontend/)
+[![Documentation technique](https://img.shields.io/badge/Documentation_technique-226C61?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/biblizou/)
+[![Bug tracker](https://img.shields.io/badge/Bug_tracking-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ki-Mor/biblizou/issues)
+[![Page QGIS](https://img.shields.io/badge/Page_QGIS-589632?style=for-the-badge&logo=qgis&logoColor=white)](https://plugins.qgis.org/plugins/biblizou/)
+
 ## Contribution
 
 * **Auteur** : François Botcazou
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/botcazoufrancois/) [![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou) [![Mail Pro](https://img.shields.io/badge/Mail-purple?style=for-the-badge&logo=proton&logoColor=white)](mailto:francois.botcazou@proton.me)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/botcazoufrancois/)
+[![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou)
+[![Portfolio](https://img.shields.io/badge/Portfolio-6F42C1?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/porfolio/) [![Mail Pro](https://img.shields.io/badge/Mail-purple?style=for-the-badge&logo=proton&logoColor=white)](mailto:francois.botcazou@proton.me)
 
 * **Contributeurs** :
+
 <a href="https://github.com/Ki-Mor/biblizou/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Ki-Mor/biblizou" />
 </a>
