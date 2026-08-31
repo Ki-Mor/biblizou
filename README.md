@@ -44,7 +44,7 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 [![Bug tracker](https://img.shields.io/badge/Bug_tracking-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ki-Mor/biblizou/issues)
 [![Page QGIS](https://img.shields.io/badge/Page_QGIS-589632?style=for-the-badge&logo=qgis&logoColor=white)](https://plugins.qgis.org/plugins/biblizou/)
 
-## Contribution
+## Crédits
 
 * **Auteur** : François Botcazou
 
