@@ -1,4 +1,7 @@
 .. Biblizou documentation master file
+.. image:: ../../misc/icon.svg
+   :width: 100px
+   :align: left
 
 Biblizou — Plugin QGIS
 =======================

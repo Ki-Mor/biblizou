@@ -1,590 +1,610 @@
 <!DOCTYPE html>
-
-<html lang="en" data-content_root="./">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <title>Module TaxRef — Consolidation taxonomique &#8212; Biblizou 0.1 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Module TaxRef — Consolidation taxonomique &mdash; Biblizou 0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50"/>
-    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=2bf1fcf8"/>
+    <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e"/>
 
+
+    <script src="_static/jquery.js?v=5d32c60e"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
     <script src="_static/documentation_options.js?v=2709fde1"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html"/>
     <link rel="search" title="Search" href="search.html"/>
     <link rel="next" title="Module BDC — Base de Données sur les statuts de Conservation" href="Bdc.html"/>
     <link rel="prev" title="Module FSD — Formulaires Standards de Données" href="Fsd.html"/>
 </head>
-<body>
-<div class="related" role="navigation" aria-label="Related">
-    <h3>Navigation</h3>
-    <ul>
-        <li class="right" style="margin-right: 10px">
-            <a href="genindex.html" title="General Index"
-               accesskey="I">index</a></li>
-        <li class="right">
-            <a href="Bdc.html" title="Module BDC — Base de Données sur les statuts de Conservation"
-               accesskey="N">next</a> |
-        </li>
-        <li class="right">
-            <a href="Fsd.html" title="Module FSD — Formulaires Standards de Données"
-               accesskey="P">previous</a> |
-        </li>
-        <li class="nav-item nav-item-0"><a href="index.html">Biblizou 0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Module TaxRef — Consolidation taxonomique</a></li>
-    </ul>
-</div>
 
-<div class="document">
-    <div class="documentwrapper">
-        <div class="bodywrapper">
-            <div class="body" role="main">
-
-                <section id="module-taxref-consolidation-taxonomique">
-                    <span id="module-taxref"></span>
-                    <h1>Module TaxRef — Consolidation taxonomique<a class="headerlink"
-                                                                    href="#module-taxref-consolidation-taxonomique"
-                                                                    title="Link to this heading">¶</a></h1>
-                    <nav class="contents local" id="sommaire">
-                        <p class="topic-title">Sommaire</p>
-                        <ul class="simple">
-                            <li><p><a class="reference internal" href="#presentation" id="id1">Présentation</a></p></li>
-                            <li><p><a class="reference internal" href="#flux-de-traitement" id="id2">Flux de
-                                traitement</a></p></li>
-                            <li><p><a class="reference internal" href="#classes-et-utilitaires" id="id3">Classes et
-                                utilitaires</a></p>
-                                <ul>
-                                    <li><p><a class="reference internal" href="#apiutils-base-apiutils-py" id="id4">ApiUtils
-                                        (<code class="docutils literal notranslate"><span
-                                                class="pre">base/ApiUtils.py</span></code>)</a></p></li>
-                                    <li><p><a class="reference internal"
-                                              href="#taxrefapitotable-modules-taxrefapitotable-py" id="id5">TaxrefApiToTable
-                                        (<code class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>)</a>
-                                    </p></li>
-                                </ul>
-                            </li>
-                            <li><p><a class="reference internal" href="#endpoint-api-taxref" id="id6">Endpoint API
-                                TaxRef</a></p></li>
-                            <li><p><a class="reference internal" href="#table-produite" id="id7">Table produite</a></p>
-                            </li>
-                            <li><p><a class="reference internal" href="#reference-des-fichiers-source" id="id8">Référence
-                                des fichiers source</a></p></li>
-                        </ul>
-                    </nav>
-                    <section id="presentation">
-                        <h2><a class="toc-backref" href="#id1" role="doc-backlink">Présentation</a><a class="headerlink"
-                                                                                                      href="#presentation"
-                                                                                                      title="Link to this heading">¶</a>
-                        </h2>
-                        <p>Le module <strong>TaxRef</strong> interroge l’API REST de l’INPN pour enrichir les listes
-                            d’espèces
-                            du projet avec les données du référentiel taxonomique national <strong>TAXREF</strong>.</p>
-                        <p>Pour chaque code taxon (<code class="docutils literal notranslate"><span
-                                class="pre">cd_nom</span></code>) collecté dans les couches vectorielles désignées par
-                            l’utilisateur, le module récupère la fiche complète du taxon (noms, rang, groupes,
-                            synonymies, etc.) et l’enregistre dans la table <code
-                                    class="docutils literal notranslate"><span class="pre">data_taxref</span></code> du
-                            GeoPackage <code class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>.
-                        </p>
-                        <p>Cette table sert ensuite de <strong>table de jointure de référence</strong> pour les autres
-                            modules,
-                            notamment <a class="reference internal" href="Bdc.html#module-bdc"><span
-                                    class="std std-ref">Module BDC — Base de Données sur les statuts de Conservation</span></a>
-                            (<code class="docutils literal notranslate"><span class="pre">StatusJoinTaxref</span></code>).
-                        </p>
-                    </section>
-                    <section id="flux-de-traitement">
-                        <h2><a class="toc-backref" href="#id2" role="doc-backlink">Flux de traitement</a><a
-                                class="headerlink" href="#flux-de-traitement" title="Link to this heading">¶</a></h2>
-                        <p>Le module TaxRef est orchestré par <code class="docutils literal notranslate"><span
-                                class="pre">TaxrefProcessingThread</span></code> (<code
-                                class="docutils literal notranslate"><span class="pre">biblizou_worker.py</span></code>),
-                            un <code class="docutils literal notranslate"><span class="pre">QThread</span></code> PyQt5
-                            qui exécute une étape unique :</p>
-                        <table class="docutils align-default">
-                            <colgroup>
-                                <col style="width: 6.7%"/>
-                                <col style="width: 53.3%"/>
-                                <col style="width: 40.0%"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="row-odd">
-                                <th class="head"><p>Étape</p></th>
-                                <th class="head"><p>Description</p></th>
-                                <th class="head"><p>Classe / Fonction appelée</p></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="row-even">
-                                <td><p>1</p></td>
-                                <td><p>Consolidation des taxons via l’API TaxRef</p></td>
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">TaxrefApiToTable</span></code></p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>Le thread émet les signaux <code class="docutils literal notranslate"><span class="pre">progress(int,</span>
-                            <span class="pre">int,</span> <span class="pre">str)</span></code>, <code
-                                class="docutils literal notranslate"><span class="pre">log(str)</span></code>,
-                            <code class="docutils literal notranslate"><span class="pre">finished(str)</span></code> et
-                            <code class="docutils literal notranslate"><span class="pre">error(str)</span></code>.</p>
-                        <p><strong>Paramètres transmis par l’interface :</strong></p>
-                        <table class="docutils align-default">
-                            <colgroup>
-                                <col style="width: 30.0%"/>
-                                <col style="width: 70.0%"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="row-odd">
-                                <th class="head"><p>Clé</p></th>
-                                <th class="head"><p>Valeur</p></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">working_folder</span></code></p></td>
-                                <td><p>Chemin du dossier de travail</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">gpkg_path</span></code></p></td>
-                                <td><p><code class="docutils literal notranslate"><span class="pre">{working_folder}/biblizou.gpkg</span></code>
-                                </p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">consolidation_config</span></code></p></td>
-                                <td><p>Liste de dicts <code class="docutils literal notranslate"><span class="pre">[{'layer_id':</span>
-                                    <span class="pre">'...',</span> <span class="pre">'column':</span> <span
-                                            class="pre">'...'}]</span></code> extraite du tableau <code
-                                        class="docutils literal notranslate"><span class="pre">tableTaxref</span></code>
-                                </p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                    <section id="classes-et-utilitaires">
-                        <h2><a class="toc-backref" href="#id3" role="doc-backlink">Classes et utilitaires</a><a
-                                class="headerlink" href="#classes-et-utilitaires" title="Link to this heading">¶</a>
-                        </h2>
-                        <section id="apiutils-base-apiutils-py">
-                            <h3><a class="toc-backref" href="#id4" role="doc-backlink">ApiUtils (<code
-                                    class="docutils literal notranslate"><span
-                                    class="pre">base/ApiUtils.py</span></code>)</a><a class="headerlink"
-                                                                                      href="#apiutils-base-apiutils-py"
-                                                                                      title="Link to this heading">¶</a>
-                            </h3>
-                            <p>Module utilitaire partagé par les modules TaxRef et BDC Statuts.</p>
-                            <dl>
-                                <dt><code class="docutils literal notranslate"><span class="pre">collect_cdnom_from_config(layer_config:</span>
-                                    <span class="pre">list)</span> <span class="pre">→</span> <span
-                                            class="pre">list</span></code></dt>
-                                <dd><p>Collecte les valeurs de <code class="docutils literal notranslate"><span
-                                        class="pre">cd_nom</span></code> <strong>uniques</strong> depuis les couches du
-                                    projet QGIS
-                                    décrites dans <code class="docutils literal notranslate"><span class="pre">layer_config</span></code>.
-                                </p>
-                                    <p>Pour chaque entrée <code class="docutils literal notranslate"><span class="pre">{'layer_id',</span>
-                                        <span class="pre">'column'}</span></code> :</p>
-                                    <ol class="arabic simple">
-                                        <li><p>Récupère la couche via <code class="docutils literal notranslate"><span
-                                                class="pre">QgsProject.instance().mapLayer(layer_id)</span></code>.</p>
-                                        </li>
-                                        <li><p>Localise le champ par <code class="docutils literal notranslate"><span
-                                                class="pre">fields().lookupField(column)</span></code>.</p></li>
-                                        <li><p>Itère sur les entités et ne retient que les valeurs numériques
-                                            (nettoyage par <code class="docutils literal notranslate"><span class="pre">filter(str.isdigit,</span>
-                                                <span class="pre">...)</span></code> pour supprimer les éventuels
-                                            espaces
-                                            ou caractères parasites).</p></li>
-                                        <li><p>Dédoublonne via un <code class="docutils literal notranslate"><span
-                                                class="pre">set</span></code>.</p></li>
-                                    </ol>
-                                    <p>Retourne une liste de chaînes numériques propres.</p>
-                                </dd>
-                                <dt><code class="docutils literal notranslate"><span
-                                        class="pre">create_taxref_session()</span> <span class="pre">→</span> <span
-                                        class="pre">requests.Session</span></code></dt>
-                                <dd><p>Crée et retourne une session <code class="docutils literal notranslate"><span
-                                        class="pre">requests</span></code> préconfigurée avec l’en-tête
-                                    <code class="docutils literal notranslate"><span class="pre">accept:</span> <span
-                                            class="pre">application/hal+json;version=1</span></code> requis par l’API
-                                    TaxRef INPN.</p>
-                                </dd>
-                            </dl>
-                        </section>
-                        <section id="taxrefapitotable-modules-taxrefapitotable-py">
-                            <h3><a class="toc-backref" href="#id5" role="doc-backlink">TaxrefApiToTable (<code
-                                    class="docutils literal notranslate"><span
-                                    class="pre">modules/TaxrefApiToTable.py</span></code>)</a><a class="headerlink"
-                                                                                                 href="#taxrefapitotable-modules-taxrefapitotable-py"
-                                                                                                 title="Link to this heading">¶</a>
-                            </h3>
-                            <p>Classe principale du module TaxRef. Hérite de <code class="docutils literal notranslate"><span
-                                    class="pre">QObject</span></code> pour exposer les signaux
-                                PyQt5 <code class="docutils literal notranslate"><span
-                                        class="pre">progress_changed(int)</span></code> et <code
-                                        class="docutils literal notranslate"><span
-                                        class="pre">status_changed(str)</span></code>.</p>
-                            <p><strong>Constructeur :</strong></p>
-                            <div class="highlight-python notranslate">
-                                <div class="highlight"><pre><span></span><span class="n">TaxrefApiToTable</span><span
-                                        class="p">(</span><span class="n">gpkg_path</span><span class="p">:</span> <span
-                                        class="nb">str</span><span class="p">)</span>
-</pre>
-                                </div>
-                            </div>
-                            <p>Initialise la session HTTP via <code class="docutils literal notranslate"><span
-                                    class="pre">create_taxref_session()</span></code>.</p>
-                            <p><strong>Méthode principale :</strong> <code class="docutils literal notranslate"><span
-                                    class="pre">run(layer_config:</span> <span class="pre">list)</span> <span
-                                    class="pre">→</span> <span class="pre">tuple[bool,</span> <span
-                                    class="pre">str]</span></code></p>
-                            <p>Déroulement détaillé :</p>
-                            <ol class="arabic simple">
-                                <li><p><strong>Collecte des codes</strong> — appel à <code
-                                        class="docutils literal notranslate"><span class="pre">collect_cdnom_from_config(layer_config)</span></code>
-                                    ;
-                                    arrêt anticipé si aucun code n’est trouvé.</p></li>
-                                <li><p><strong>Requêtage API</strong> — pour chaque <code
-                                        class="docutils literal notranslate"><span class="pre">cd_nom</span></code>
-                                    unique :</p>
-                                    <ul class="simple">
-                                        <li><p>Appel <code class="docutils literal notranslate"><span
-                                                class="pre">GET</span> <span class="pre">https://taxref.mnhn.fr/api/taxa/{cd_nom}</span></code>
-                                            (timeout 10 s).</p></li>
-                                        <li><p>En cas de réponse 200, aplatissement du JSON (<code
-                                                class="docutils literal notranslate"><span class="pre">{k:</span> <span
-                                                class="pre">str(v)</span> <span class="pre">...}</span></code>)
-                                            en excluant les clés commençant par <code
-                                                    class="docutils literal notranslate"><span
-                                                    class="pre">_</span></code> (métadonnées HAL).</p></li>
-                                        <li><p>Les clés rencontrées sont accumulées dans <code
-                                                class="docutils literal notranslate"><span
-                                                class="pre">all_keys</span></code> pour construire
-                                            le schéma dynamiquement.</p></li>
-                                        <li><p>Émission de <code class="docutils literal notranslate"><span class="pre">progress_changed</span></code>
-                                            en pourcentage d’avancement.</p></li>
-                                        <li><p>Les erreurs par taxon sont journalisées sans interrompre la boucle.</p>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><p><strong>Construction du schéma de champs</strong> — tri alphabétique de toutes
-                                    les clés
-                                    collectées, avec <code class="docutils literal notranslate"><span
-                                            class="pre">cdNom</span></code> placé en première position.</p></li>
-                                <li><p><strong>Création de la couche mémoire</strong> — couche <code
-                                        class="docutils literal notranslate"><span
-                                        class="pre">&quot;None&quot;</span></code> nommée <code
-                                        class="docutils literal notranslate"><span class="pre">data_taxref</span></code>
-                                    avec un champ <code class="docutils literal notranslate"><span class="pre">QgsField(key,</span>
-                                        <span class="pre">QVariant.String)</span></code> par clé.</p></li>
-                                <li><p><strong>Export GPKG</strong> — délégation à <code
-                                        class="docutils literal notranslate"><span
-                                        class="pre">LayerUtils.save_to_gpkg()</span></code>.
-                                    Retourne <code class="docutils literal notranslate"><span class="pre">(True,</span>
-                                        <span class="pre">message)</span></code> en succès, <code
-                                            class="docutils literal notranslate"><span class="pre">(False,</span> <span
-                                            class="pre">message_erreur)</span></code> en échec.</p></li>
-                            </ol>
-                            <div class="admonition note">
-                                <p class="admonition-title">Note</p>
-                                <p>Le schéma de la table <code class="docutils literal notranslate"><span class="pre">data_taxref</span></code>
-                                    est <strong>dynamique</strong> : il dépend de l’union
-                                    de toutes les clés retournées par l’API pour l’ensemble des taxons traités.
-                                    Une clé absente pour un taxon donné produit une chaîne vide (<code
-                                            class="docutils literal notranslate"><span
-                                            class="pre">&quot;&quot;</span></code>) dans ce champ.</p>
-                            </div>
-                        </section>
-                    </section>
-                    <section id="endpoint-api-taxref">
-                        <h2><a class="toc-backref" href="#id6" role="doc-backlink">Endpoint API TaxRef</a><a
-                                class="headerlink" href="#endpoint-api-taxref" title="Link to this heading">¶</a></h2>
-                        <table class="docutils align-default">
-                            <colgroup>
-                                <col style="width: 20.0%"/>
-                                <col style="width: 80.0%"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="row-odd">
-                                <th class="head"><p>Paramètre</p></th>
-                                <th class="head"><p>Valeur</p></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="row-even">
-                                <td><p>URL</p></td>
-                                <td><p><code class="docutils literal notranslate"><span class="pre">https://taxref.mnhn.fr/api/taxa/{cd_nom}</span></code>
-                                </p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p>Méthode</p></td>
-                                <td><p><code class="docutils literal notranslate"><span class="pre">GET</span></code>
-                                </p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p>En-tête requis</p></td>
-                                <td><p><code class="docutils literal notranslate"><span class="pre">accept:</span> <span
-                                        class="pre">application/hal+json;version=1</span></code></p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p>Timeout</p></td>
-                                <td><p>10 secondes</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p>Format de réponse</p></td>
-                                <td><p>JSON (HAL+JSON)</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <p>Principaux champs retournés par l’API (liste non exhaustive) :</p>
-                        <table class="docutils align-default">
-                            <colgroup>
-                                <col style="width: 30.0%"/>
-                                <col style="width: 70.0%"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="row-odd">
-                                <th class="head"><p>Champ</p></th>
-                                <th class="head"><p>Description</p></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">cdNom</span></code>
-                                </p></td>
-                                <td><p>Code taxon (identifiant numérique)</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">cdRef</span></code>
-                                </p></td>
-                                <td><p>Code du taxon de référence (synonymie)</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">nomComplet</span></code></p></td>
-                                <td><p>Nom scientifique complet avec auteur</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">nomValide</span></code></p></td>
-                                <td><p>Nom valide selon TaxRef</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">nomVern</span></code></p></td>
-                                <td><p>Nom vernaculaire français</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">rang</span></code>
-                                </p></td>
-                                <td><p>Rang taxonomique (ES, SSES, GN…)</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">famille</span></code></p></td>
-                                <td><p>Famille</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">ordre</span></code>
-                                </p></td>
-                                <td><p>Ordre</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">classe</span></code>
-                                </p></td>
-                                <td><p>Classe</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">phylum</span></code>
-                                </p></td>
-                                <td><p>Phylum</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">regne</span></code>
-                                </p></td>
-                                <td><p>Règne</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">group1Inpn</span></code></p></td>
-                                <td><p>Groupe fonctionnel INPN (niveau 1)</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">group2Inpn</span></code></p></td>
-                                <td><p>Groupe fonctionnel INPN (niveau 2)</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                    <section id="table-produite">
-                        <h2><a class="toc-backref" href="#id7" role="doc-backlink">Table produite</a><a
-                                class="headerlink" href="#table-produite" title="Link to this heading">¶</a></h2>
-                        <p><strong>Nom dans le GeoPackage :</strong> <code class="docutils literal notranslate"><span
-                                class="pre">data_taxref</span></code></p>
-                        <p>Table attributaire sans géométrie. Le nombre et le nom des colonnes dépendent
-                            des clés retournées par l’API pour l’ensemble des <code
-                                    class="docutils literal notranslate"><span class="pre">cd_nom</span></code> traités.
-                            La colonne <code class="docutils literal notranslate"><span class="pre">cdNom</span></code>
-                            est toujours positionnée en premier.</p>
-                        <div class="admonition note">
-                            <p class="admonition-title">Note</p>
-                            <p>Si la table <code class="docutils literal notranslate"><span
-                                    class="pre">data_taxref</span></code> existe déjà dans <code
-                                    class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>,
-                                elle est
-                                <strong>écrasée</strong> (mode <code class="docutils literal notranslate"><span
-                                        class="pre">CreateOrOverwriteLayer</span></code> de <code
-                                        class="docutils literal notranslate"><span
-                                        class="pre">QgsVectorFileWriter</span></code>).
-                                Pour conserver un historique, il convient de sauvegarder le GeoPackage
-                                avant de relancer le module.</p>
-                        </div>
-                    </section>
-                    <section id="reference-des-fichiers-source">
-                        <h2><a class="toc-backref" href="#id8" role="doc-backlink">Référence des fichiers source</a><a
-                                class="headerlink" href="#reference-des-fichiers-source"
-                                title="Link to this heading">¶</a></h2>
-                        <table class="docutils align-default">
-                            <colgroup>
-                                <col style="width: 35.0%"/>
-                                <col style="width: 65.0%"/>
-                            </colgroup>
-                            <thead>
-                            <tr class="row-odd">
-                                <th class="head"><p>Fichier</p></th>
-                                <th class="head"><p>Rôle</p></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/ApiUtils.py</span></code>
-                                </p></td>
-                                <td><p>Collecte des <code class="docutils literal notranslate"><span
-                                        class="pre">cd_nom</span></code> et création de la session HTTP</p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/LayerUtils.py</span></code>
-                                </p></td>
-                                <td><p>Export de la couche vers le GeoPackage</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>
-                                </p></td>
-                                <td><p>Requêtage API et création de la table <code class="docutils literal notranslate"><span
-                                        class="pre">data_taxref</span></code></p></td>
-                            </tr>
-                            <tr class="row-odd">
-                                <td><p><code class="docutils literal notranslate"><span
-                                        class="pre">biblizou_worker.py</span></code></p></td>
-                                <td><p><code class="docutils literal notranslate"><span class="pre">TaxrefProcessingThread</span></code>
-                                    — orchestration du thread</p></td>
-                            </tr>
-                            <tr class="row-even">
-                                <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_dockwidget.py</span></code>
-                                </p></td>
-                                <td><p>Collecte des paramètres et lancement du thread depuis l’interface</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                </section>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
 
 
-                <div class="clearer"></div>
+                <a href="index.html" class="icon icon-home">
+                    Biblizou
+                </a>
+                <div role="search">
+                    <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+                        <input type="text" name="q" placeholder="Search docs" aria-label="Search docs"/>
+                        <input type="hidden" name="check_keywords" value="yes"/>
+                        <input type="hidden" name="area" value="default"/>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-            <div>
-                <h3><a href="index.html">Table of Contents</a></h3>
-                <ul>
-                    <li><a class="reference internal" href="#">Module TaxRef — Consolidation taxonomique</a>
+            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+                <p class="caption" role="heading"><span class="caption-text">Navigation générale :</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="Fsd.html">Module FSD — Formulaires
+                        Standards de Données</a></li>
+                    <li class="toctree-l1 current"><a class="current reference internal" href="#">Module TaxRef —
+                        Consolidation taxonomique</a>
                         <ul>
-                            <li><a class="reference internal" href="#presentation">Présentation</a></li>
-                            <li><a class="reference internal" href="#flux-de-traitement">Flux de traitement</a></li>
-                            <li><a class="reference internal" href="#classes-et-utilitaires">Classes et utilitaires</a>
+                            <li class="toctree-l2"><a class="reference internal" href="#presentation">Présentation</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="#flux-de-traitement">Flux de
+                                traitement</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#classes-et-utilitaires">Classes
+                                et utilitaires</a>
                                 <ul>
-                                    <li><a class="reference internal" href="#apiutils-base-apiutils-py">ApiUtils (<code
+                                    <li class="toctree-l3"><a class="reference internal"
+                                                              href="#apiutils-base-apiutils-py">ApiUtils (<code
                                             class="docutils literal notranslate"><span
                                             class="pre">base/ApiUtils.py</span></code>)</a></li>
-                                    <li><a class="reference internal"
-                                           href="#taxrefapitotable-modules-taxrefapitotable-py">TaxrefApiToTable (<code
-                                            class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>)</a>
+                                    <li class="toctree-l3"><a class="reference internal"
+                                                              href="#taxrefapitotable-modules-taxrefapitotable-py">TaxrefApiToTable
+                                        (<code class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>)</a>
                                     </li>
                                 </ul>
                             </li>
-                            <li><a class="reference internal" href="#endpoint-api-taxref">Endpoint API TaxRef</a></li>
-                            <li><a class="reference internal" href="#table-produite">Table produite</a></li>
-                            <li><a class="reference internal" href="#reference-des-fichiers-source">Référence des
-                                fichiers source</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#endpoint-api-taxref">Endpoint
+                                API TaxRef</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#table-produite">Table
+                                produite</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#reference-des-fichiers-source">Référence
+                                des fichiers source</a></li>
                         </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="Bdc.html">Module BDC — Base de Données
+                        sur les statuts de Conservation</a></li>
+                    <li class="toctree-l1"><a class="reference internal" href="Interface.html">Interface utilisateur</a>
                     </li>
                 </ul>
 
             </div>
-            <div>
-                <h4>Previous topic</h4>
-                <p class="topless"><a href="Fsd.html"
-                                      title="previous chapter">Module FSD — Formulaires Standards de Données</a></p>
-            </div>
-            <div>
-                <h4>Next topic</h4>
-                <p class="topless"><a href="Bdc.html"
-                                      title="next chapter">Module BDC — Base de Données sur les statuts de
-                    Conservation</a></p>
-            </div>
-            <div role="note" aria-label="source link">
-                <h3>This Page</h3>
-                <ul class="this-page-menu">
-                    <li><a href="_sources/Taxref.rst.txt"
-                           rel="nofollow">Show Source</a></li>
-                </ul>
-            </div>
-            <search id="searchbox" style="display: none" role="search">
-                <h3 id="searchlabel">Quick search</h3>
-                <div class="searchformwrapper">
-                    <form class="search" action="search.html" method="get">
-                        <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off"
-                               autocapitalize="off" spellcheck="false"/>
-                        <input type="submit" value="Go"/>
-                    </form>
-                </div>
-            </search>
-            <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <a href="index.html">Biblizou</a>
+        </nav>
+
+        <div class="wy-nav-content">
+            <div class="rst-content">
+                <div role="navigation" aria-label="Page navigation">
+                    <ul class="wy-breadcrumbs">
+                        <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+                        <li class="breadcrumb-item active">Module TaxRef — Consolidation taxonomique</li>
+                        <li class="wy-breadcrumbs-aside">
+                            <a href="_sources/Taxref.rst.txt" rel="nofollow"> View page source</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+                    <div itemprop="articleBody">
+
+                        <section id="module-taxref-consolidation-taxonomique">
+                            <span id="module-taxref"></span>
+                            <h1>Module TaxRef — Consolidation taxonomique<a class="headerlink"
+                                                                            href="#module-taxref-consolidation-taxonomique"
+                                                                            title="Link to this heading"></a></h1>
+                            <nav class="contents local" id="sommaire">
+                                <p class="topic-title">Sommaire</p>
+                                <ul class="simple">
+                                    <li><p><a class="reference internal" href="#presentation" id="id1">Présentation</a>
+                                    </p></li>
+                                    <li><p><a class="reference internal" href="#flux-de-traitement" id="id2">Flux de
+                                        traitement</a></p></li>
+                                    <li><p><a class="reference internal" href="#classes-et-utilitaires" id="id3">Classes
+                                        et utilitaires</a></p>
+                                        <ul>
+                                            <li><p><a class="reference internal" href="#apiutils-base-apiutils-py"
+                                                      id="id4">ApiUtils (<code
+                                                    class="docutils literal notranslate"><span class="pre">base/ApiUtils.py</span></code>)</a>
+                                            </p></li>
+                                            <li><p><a class="reference internal"
+                                                      href="#taxrefapitotable-modules-taxrefapitotable-py" id="id5">TaxrefApiToTable
+                                                (<code class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>)</a>
+                                            </p></li>
+                                        </ul>
+                                    </li>
+                                    <li><p><a class="reference internal" href="#endpoint-api-taxref" id="id6">Endpoint
+                                        API TaxRef</a></p></li>
+                                    <li><p><a class="reference internal" href="#table-produite" id="id7">Table
+                                        produite</a></p></li>
+                                    <li><p><a class="reference internal" href="#reference-des-fichiers-source" id="id8">Référence
+                                        des fichiers source</a></p></li>
+                                </ul>
+                            </nav>
+                            <section id="presentation">
+                                <h2><a class="toc-backref" href="#id1" role="doc-backlink">Présentation</a><a
+                                        class="headerlink" href="#presentation" title="Link to this heading"></a></h2>
+                                <p>Le module <strong>TaxRef</strong> interroge l’API REST de l’INPN pour enrichir les
+                                    listes d’espèces
+                                    du projet avec les données du référentiel taxonomique national
+                                    <strong>TAXREF</strong>.</p>
+                                <p>Pour chaque code taxon (<code class="docutils literal notranslate"><span class="pre">cd_nom</span></code>)
+                                    collecté dans les couches vectorielles désignées par
+                                    l’utilisateur, le module récupère la fiche complète du taxon (noms, rang, groupes,
+                                    synonymies, etc.) et l’enregistre dans la table <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">data_taxref</span></code> du GeoPackage <code
+                                            class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>.
+                                </p>
+                                <p>Cette table sert ensuite de <strong>table de jointure de référence</strong> pour les
+                                    autres modules,
+                                    notamment <a class="reference internal" href="Bdc.html#module-bdc"><span
+                                            class="std std-ref">Module BDC — Base de Données sur les statuts de Conservation</span></a>
+                                    (<code class="docutils literal notranslate"><span
+                                            class="pre">StatusJoinTaxref</span></code>).</p>
+                            </section>
+                            <section id="flux-de-traitement">
+                                <h2><a class="toc-backref" href="#id2" role="doc-backlink">Flux de traitement</a><a
+                                        class="headerlink" href="#flux-de-traitement" title="Link to this heading"></a>
+                                </h2>
+                                <p>Le module TaxRef est orchestré par <code class="docutils literal notranslate"><span
+                                        class="pre">TaxrefProcessingThread</span></code> (<code
+                                        class="docutils literal notranslate"><span class="pre">biblizou_worker.py</span></code>),
+                                    un <code class="docutils literal notranslate"><span
+                                            class="pre">QThread</span></code> PyQt5 qui exécute une étape unique :</p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 6.7%"/>
+                                        <col style="width: 53.3%"/>
+                                        <col style="width: 40.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Étape</p></th>
+                                        <th class="head"><p>Description</p></th>
+                                        <th class="head"><p>Classe / Fonction appelée</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p>1</p></td>
+                                        <td><p>Consolidation des taxons via l’API TaxRef</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">TaxrefApiToTable</span></code>
+                                        </p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p>Le thread émet les signaux <code class="docutils literal notranslate"><span
+                                        class="pre">progress(int,</span> <span class="pre">int,</span> <span
+                                        class="pre">str)</span></code>, <code class="docutils literal notranslate"><span
+                                        class="pre">log(str)</span></code>,
+                                    <code class="docutils literal notranslate"><span
+                                            class="pre">finished(str)</span></code> et <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">error(str)</span></code>.</p>
+                                <p><strong>Paramètres transmis par l’interface :</strong></p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 70.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Clé</p></th>
+                                        <th class="head"><p>Valeur</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">working_folder</span></code>
+                                        </p></td>
+                                        <td><p>Chemin du dossier de travail</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">gpkg_path</span></code></p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">{working_folder}/biblizou.gpkg</span></code>
+                                        </p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">consolidation_config</span></code>
+                                        </p></td>
+                                        <td><p>Liste de dicts <code class="docutils literal notranslate"><span
+                                                class="pre">[{'layer_id':</span> <span class="pre">'...',</span> <span
+                                                class="pre">'column':</span> <span class="pre">'...'}]</span></code>
+                                            extraite du tableau <code class="docutils literal notranslate"><span
+                                                    class="pre">tableTaxref</span></code></p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section id="classes-et-utilitaires">
+                                <h2><a class="toc-backref" href="#id3" role="doc-backlink">Classes et utilitaires</a><a
+                                        class="headerlink" href="#classes-et-utilitaires"
+                                        title="Link to this heading"></a></h2>
+                                <section id="apiutils-base-apiutils-py">
+                                    <h3><a class="toc-backref" href="#id4" role="doc-backlink">ApiUtils (<code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">base/ApiUtils.py</span></code>)</a><a class="headerlink"
+                                                                                              href="#apiutils-base-apiutils-py"
+                                                                                              title="Link to this heading"></a>
+                                    </h3>
+                                    <p>Module utilitaire partagé par les modules TaxRef et BDC Statuts.</p>
+                                    <dl>
+                                        <dt><code class="docutils literal notranslate"><span class="pre">collect_cdnom_from_config(layer_config:</span>
+                                            <span class="pre">list)</span> <span class="pre">→</span> <span class="pre">list</span></code>
+                                        </dt>
+                                        <dd><p>Collecte les valeurs de <code class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code> <strong>uniques</strong> depuis les
+                                            couches du projet QGIS
+                                            décrites dans <code class="docutils literal notranslate"><span class="pre">layer_config</span></code>.
+                                        </p>
+                                            <p>Pour chaque entrée <code class="docutils literal notranslate"><span
+                                                    class="pre">{'layer_id',</span> <span
+                                                    class="pre">'column'}</span></code> :</p>
+                                            <ol class="arabic simple">
+                                                <li><p>Récupère la couche via <code
+                                                        class="docutils literal notranslate"><span class="pre">QgsProject.instance().mapLayer(layer_id)</span></code>.
+                                                </p></li>
+                                                <li><p>Localise le champ par <code class="docutils literal notranslate"><span
+                                                        class="pre">fields().lookupField(column)</span></code>.</p></li>
+                                                <li><p>Itère sur les entités et ne retient que les valeurs numériques
+                                                    (nettoyage par <code class="docutils literal notranslate"><span
+                                                            class="pre">filter(str.isdigit,</span> <span class="pre">...)</span></code>
+                                                    pour supprimer les éventuels espaces
+                                                    ou caractères parasites).</p></li>
+                                                <li><p>Dédoublonne via un <code
+                                                        class="docutils literal notranslate"><span
+                                                        class="pre">set</span></code>.</p></li>
+                                            </ol>
+                                            <p>Retourne une liste de chaînes numériques propres.</p>
+                                        </dd>
+                                        <dt><code class="docutils literal notranslate"><span class="pre">create_taxref_session()</span>
+                                            <span class="pre">→</span> <span class="pre">requests.Session</span></code>
+                                        </dt>
+                                        <dd><p>Crée et retourne une session <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">requests</span></code> préconfigurée avec l’en-tête
+                                            <code class="docutils literal notranslate"><span class="pre">accept:</span>
+                                                <span class="pre">application/hal+json;version=1</span></code> requis
+                                            par l’API TaxRef INPN.</p>
+                                        </dd>
+                                    </dl>
+                                </section>
+                                <section id="taxrefapitotable-modules-taxrefapitotable-py">
+                                    <h3><a class="toc-backref" href="#id5" role="doc-backlink">TaxrefApiToTable (<code
+                                            class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>)</a><a
+                                            class="headerlink" href="#taxrefapitotable-modules-taxrefapitotable-py"
+                                            title="Link to this heading"></a></h3>
+                                    <p>Classe principale du module TaxRef. Hérite de <code
+                                            class="docutils literal notranslate"><span class="pre">QObject</span></code>
+                                        pour exposer les signaux
+                                        PyQt5 <code class="docutils literal notranslate"><span class="pre">progress_changed(int)</span></code>
+                                        et <code class="docutils literal notranslate"><span class="pre">status_changed(str)</span></code>.
+                                    </p>
+                                    <p><strong>Constructeur :</strong></p>
+                                    <div class="highlight-python notranslate">
+                                        <div class="highlight"><pre><span></span><span class="n">TaxrefApiToTable</span><span
+                                                class="p">(</span><span class="n">gpkg_path</span><span
+                                                class="p">:</span> <span class="nb">str</span><span class="p">)</span>
+</pre>
+                                        </div>
+                                    </div>
+                                    <p>Initialise la session HTTP via <code class="docutils literal notranslate"><span
+                                            class="pre">create_taxref_session()</span></code>.</p>
+                                    <p><strong>Méthode principale :</strong> <code class="docutils literal notranslate"><span
+                                            class="pre">run(layer_config:</span> <span class="pre">list)</span> <span
+                                            class="pre">→</span> <span class="pre">tuple[bool,</span> <span class="pre">str]</span></code>
+                                    </p>
+                                    <p>Déroulement détaillé :</p>
+                                    <ol class="arabic simple">
+                                        <li><p><strong>Collecte des codes</strong> — appel à <code
+                                                class="docutils literal notranslate"><span class="pre">collect_cdnom_from_config(layer_config)</span></code>
+                                            ;
+                                            arrêt anticipé si aucun code n’est trouvé.</p></li>
+                                        <li><p><strong>Requêtage API</strong> — pour chaque <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code> unique :</p>
+                                            <ul class="simple">
+                                                <li><p>Appel <code class="docutils literal notranslate"><span
+                                                        class="pre">GET</span> <span class="pre">https://taxref.mnhn.fr/api/taxa/{cd_nom}</span></code>
+                                                    (timeout 10 s).</p></li>
+                                                <li><p>En cas de réponse 200, aplatissement du JSON (<code
+                                                        class="docutils literal notranslate"><span
+                                                        class="pre">{k:</span> <span class="pre">str(v)</span> <span
+                                                        class="pre">...}</span></code>)
+                                                    en excluant les clés commençant par <code
+                                                            class="docutils literal notranslate"><span
+                                                            class="pre">_</span></code> (métadonnées HAL).</p></li>
+                                                <li><p>Les clés rencontrées sont accumulées dans <code
+                                                        class="docutils literal notranslate"><span
+                                                        class="pre">all_keys</span></code> pour construire
+                                                    le schéma dynamiquement.</p></li>
+                                                <li><p>Émission de <code class="docutils literal notranslate"><span
+                                                        class="pre">progress_changed</span></code> en pourcentage
+                                                    d’avancement.</p></li>
+                                                <li><p>Les erreurs par taxon sont journalisées sans interrompre la
+                                                    boucle.</p></li>
+                                            </ul>
+                                        </li>
+                                        <li><p><strong>Construction du schéma de champs</strong> — tri alphabétique de
+                                            toutes les clés
+                                            collectées, avec <code class="docutils literal notranslate"><span
+                                                    class="pre">cdNom</span></code> placé en première position.</p></li>
+                                        <li><p><strong>Création de la couche mémoire</strong> — couche <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">&quot;None&quot;</span></code> nommée <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">data_taxref</span></code>
+                                            avec un champ <code class="docutils literal notranslate"><span class="pre">QgsField(key,</span>
+                                                <span class="pre">QVariant.String)</span></code> par clé.</p></li>
+                                        <li><p><strong>Export GPKG</strong> — délégation à <code
+                                                class="docutils literal notranslate"><span class="pre">LayerUtils.save_to_gpkg()</span></code>.
+                                            Retourne <code class="docutils literal notranslate"><span
+                                                    class="pre">(True,</span> <span class="pre">message)</span></code>
+                                            en succès, <code class="docutils literal notranslate"><span class="pre">(False,</span>
+                                                <span class="pre">message_erreur)</span></code> en échec.</p></li>
+                                    </ol>
+                                    <div class="admonition note">
+                                        <p class="admonition-title">Note</p>
+                                        <p>Le schéma de la table <code class="docutils literal notranslate"><span
+                                                class="pre">data_taxref</span></code> est <strong>dynamique</strong> :
+                                            il dépend de l’union
+                                            de toutes les clés retournées par l’API pour l’ensemble des taxons traités.
+                                            Une clé absente pour un taxon donné produit une chaîne vide (<code
+                                                    class="docutils literal notranslate"><span
+                                                    class="pre">&quot;&quot;</span></code>) dans ce champ.</p>
+                                    </div>
+                                </section>
+                            </section>
+                            <section id="endpoint-api-taxref">
+                                <h2><a class="toc-backref" href="#id6" role="doc-backlink">Endpoint API TaxRef</a><a
+                                        class="headerlink" href="#endpoint-api-taxref"
+                                        title="Link to this heading"></a></h2>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 20.0%"/>
+                                        <col style="width: 80.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Paramètre</p></th>
+                                        <th class="head"><p>Valeur</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p>URL</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">https://taxref.mnhn.fr/api/taxa/{cd_nom}</span></code>
+                                        </p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p>Méthode</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">GET</span></code></p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p>En-tête requis</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">accept:</span> <span class="pre">application/hal+json;version=1</span></code>
+                                        </p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p>Timeout</p></td>
+                                        <td><p>10 secondes</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p>Format de réponse</p></td>
+                                        <td><p>JSON (HAL+JSON)</p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p>Principaux champs retournés par l’API (liste non exhaustive) :</p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 70.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Champ</p></th>
+                                        <th class="head"><p>Description</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">cdNom</span></code>
+                                        </p></td>
+                                        <td><p>Code taxon (identifiant numérique)</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">cdRef</span></code>
+                                        </p></td>
+                                        <td><p>Code du taxon de référence (synonymie)</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">nomComplet</span></code></p></td>
+                                        <td><p>Nom scientifique complet avec auteur</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">nomValide</span></code></p></td>
+                                        <td><p>Nom valide selon TaxRef</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">nomVern</span></code></p></td>
+                                        <td><p>Nom vernaculaire français</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">rang</span></code>
+                                        </p></td>
+                                        <td><p>Rang taxonomique (ES, SSES, GN…)</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">famille</span></code></p></td>
+                                        <td><p>Famille</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">ordre</span></code>
+                                        </p></td>
+                                        <td><p>Ordre</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">classe</span></code></p></td>
+                                        <td><p>Classe</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">phylum</span></code></p></td>
+                                        <td><p>Phylum</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">regne</span></code>
+                                        </p></td>
+                                        <td><p>Règne</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">group1Inpn</span></code></p></td>
+                                        <td><p>Groupe fonctionnel INPN (niveau 1)</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">group2Inpn</span></code></p></td>
+                                        <td><p>Groupe fonctionnel INPN (niveau 2)</p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section id="table-produite">
+                                <h2><a class="toc-backref" href="#id7" role="doc-backlink">Table produite</a><a
+                                        class="headerlink" href="#table-produite" title="Link to this heading"></a>
+                                </h2>
+                                <p><strong>Nom dans le GeoPackage :</strong> <code class="docutils literal notranslate"><span
+                                        class="pre">data_taxref</span></code></p>
+                                <p>Table attributaire sans géométrie. Le nombre et le nom des colonnes dépendent
+                                    des clés retournées par l’API pour l’ensemble des <code
+                                            class="docutils literal notranslate"><span class="pre">cd_nom</span></code>
+                                    traités.
+                                    La colonne <code class="docutils literal notranslate"><span class="pre">cdNom</span></code>
+                                    est toujours positionnée en premier.</p>
+                                <div class="admonition note">
+                                    <p class="admonition-title">Note</p>
+                                    <p>Si la table <code class="docutils literal notranslate"><span class="pre">data_taxref</span></code>
+                                        existe déjà dans <code class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>,
+                                        elle est
+                                        <strong>écrasée</strong> (mode <code class="docutils literal notranslate"><span
+                                                class="pre">CreateOrOverwriteLayer</span></code> de <code
+                                                class="docutils literal notranslate"><span class="pre">QgsVectorFileWriter</span></code>).
+                                        Pour conserver un historique, il convient de sauvegarder le GeoPackage
+                                        avant de relancer le module.</p>
+                                </div>
+                            </section>
+                            <section id="reference-des-fichiers-source">
+                                <h2><a class="toc-backref" href="#id8" role="doc-backlink">Référence des fichiers
+                                    source</a><a class="headerlink" href="#reference-des-fichiers-source"
+                                                 title="Link to this heading"></a></h2>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 35.0%"/>
+                                        <col style="width: 65.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Fichier</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/ApiUtils.py</span></code>
+                                        </p></td>
+                                        <td><p>Collecte des <code class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code> et création de la session HTTP</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">modules/base/LayerUtils.py</span></code>
+                                        </p></td>
+                                        <td><p>Export de la couche vers le GeoPackage</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">modules/TaxrefApiToTable.py</span></code>
+                                        </p></td>
+                                        <td><p>Requêtage API et création de la table <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">data_taxref</span></code></p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_worker.py</span></code>
+                                        </p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">TaxrefProcessingThread</span></code>
+                                            — orchestration du thread</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_dockwidget.py</span></code>
+                                        </p></td>
+                                        <td><p>Collecte des paramètres et lancement du thread depuis l’interface</p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </section>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+                        <a href="Fsd.html" class="btn btn-neutral float-left"
+                           title="Module FSD — Formulaires Standards de Données" accesskey="p" rel="prev"><span
+                                class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+                        <a href="Bdc.html" class="btn btn-neutral float-right"
+                           title="Module BDC — Base de Données sur les statuts de Conservation" accesskey="n"
+                           rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-    <div class="clearer"></div>
+
+                    <hr/>
+
+                    <div role="contentinfo">
+                        <p>&#169; Copyright 2026, François Botcazou.</p>
+                    </div>
+
+                    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+                    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+                    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+                </footer>
+            </div>
+        </div>
+    </section>
 </div>
-<div class="related" role="navigation" aria-label="Related">
-    <h3>Navigation</h3>
-    <ul>
-        <li class="right" style="margin-right: 10px">
-            <a href="genindex.html" title="General Index"
-            >index</a></li>
-        <li class="right">
-            <a href="Bdc.html" title="Module BDC — Base de Données sur les statuts de Conservation"
-            >next</a> |
-        </li>
-        <li class="right">
-            <a href="Fsd.html" title="Module FSD — Formulaires Standards de Données"
-            >previous</a> |
-        </li>
-        <li class="nav-item nav-item-0"><a href="index.html">Biblizou 0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Module TaxRef — Consolidation taxonomique</a></li>
-    </ul>
-</div>
-<div class="footer" role="contentinfo">
-    &#169; Copyright 2013, François Botcazou.
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
-</div>
+<script>
+    jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+    });
+</script>
+
 </body>
 </html>
