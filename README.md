@@ -1,10 +1,8 @@
 <p align="center">
-  <a href="https://Ki-Mor.github.io/biblizou_frontend/">
-    <img src="mon-image.png" alt="Présentation du plugin">
-  </a>
+  <a href="https://Ki-Mor.github.io/biblizou_frontend/"><img src="misc/icon.svg" alt="Description" width="100"></a>
 </p>
 
-# Biblizou — Plugin QGIS
+# **[Biblizou — Plugin QGIS](https://github.com/Ki-Mor/biblizou_frontend.io)** 
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
 * **FSD** : Moissonnage automatique des données issues des Formulaires Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
@@ -28,7 +26,11 @@ Le moteur R est indispensable au fonctionnement du module **Botazou**.
 *Note : Le script requis `DcaToMembershipDf.rsx` est automatiquement déployé dans ce répertoire lors de l'activation du plugin.* -->
 
 ## Installation
+... par Qgis
 
+Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` → `Toutes`.
+
+... par GitHub
 1. Télécharger ou cloner le dépôt.
 2. Déplacer le dossier `biblizou` dans le répertoire des extensions QGIS :
    * **Windows** : `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins`
