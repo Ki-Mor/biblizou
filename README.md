@@ -32,16 +32,19 @@ Le moteur R est indispensable au fonctionnement du module **Botazou**.
 
 ## Contribution
 
-* **Auteur** : François Botcazou — francois.botcazou@proton.me
-* **Contributeurs** : Max Tanquerel
+* **Auteur** : François Botcazou
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/botcazoufrancois/) [![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou) [![Mail Pro](https://img.shields.io/badge/Mail-purple?style=for-the-badge&logo=proton&logoColor=white)](mailto:francois.botcazou@proton.me)
+
+* **Contributeurs** :
+
+<a href="https://github.com/Ki-Mor">
+  <img src="https://github.com/Ki-Mor.png" width="40" height="40" style="border-radius:50%" alt="Ki-Mor">
+</a>
+<a href="https://github.com/Ki-Mor">
+  <img src="https://github.com/maxTanquerel.png" width="40" height="40" style="border-radius:50%" alt="maxTanquerel">
+</a>
 
 Le projet est collaboratif. Vous pouvez participer via deux canaux :
 * **Workflow Git** : Ouverture d'une *Issue* pour signaler un bug/proposer une évolution, ou soumission directe d'une *Pull Request* (PR).
 * **Contact direct** : Envoi de suggestions par e-mail si vous n'utilisez pas Git.
-
-
-## Références & Citations
-
-* **Baseflor** : Julve, P. (1998-). *Index botanique, écologique et chorologique de la flore de France*. Institut Catholique de Lille (Extrait du 06/06/2026).
-* **FactoMineR** : Lê, S., Josse, J. & Husson, F. (2008). *FactoMineR: An R Package for Multivariate Analysis*. Journal of Statistical Software, 25(1), 1-18.
-* **INPN** : Référentiel TAXREF & Base de connaissances sur les statuts de conservation des espèces.
