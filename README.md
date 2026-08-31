@@ -52,13 +52,19 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 [![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou)
 [![Portfolio](https://img.shields.io/badge/Portfolio-6F42C1?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/porfolio/) [![Mail Pro](https://img.shields.io/badge/Mail-purple?style=for-the-badge&logo=proton&logoColor=white)](mailto:francois.botcazou@proton.me)
 
-* **Contributeurs** :
+* **Contributeurs-ices** :
 
 <a href="https://github.com/Ki-Mor/biblizou/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Ki-Mor/biblizou" />
 </a>
 
+### Pour contribuer
 
 Le projet est collaboratif. Vous pouvez participer via deux canaux :
 * **Workflow Git** : Ouverture d'une *Issue* pour signaler un bug/proposer une évolution, ou soumission directe d'une *Pull Request* (PR).
 * **Contact direct** : Envoi de suggestions par e-mail si vous n'utilisez pas Git.
+
+## Licence
+
+Ce projet est sous licence GNU v3 GPL.
+Vous pouvez le partager, l’adapter et l’utiliser à des fins non commerciales, en mentionnant l’auteur original.
