@@ -13,6 +13,17 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
 ## Prérequis
 
 * QGIS `3.x`
+<!-- * Extension **Processing R Provider** installée et activée via `Extensions` → `Gérer et installer les extensions`.
+
+## Configuration de R
+
+Le moteur R est indispensable au fonctionnement du module **Botazou**.
+
+1. Accéder à `Traitement` → `Options` → `Fournisseurs` → `R`.
+2. Configurer le **Dossier R** pointant vers l'exécutable local (ex: `C:\Program Files\R\R-4.x.x`).
+3. Configurer le **Dossier de scripts R** (ex: `%APPDATA%\QGIS\QGIS3\profiles\default\processing\rscripts`).
+
+*Note : Le script requis `DcaToMembershipDf.rsx` est automatiquement déployé dans ce répertoire lors de l'activation du plugin.* -->
 
 ## Installation
 
