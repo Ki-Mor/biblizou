@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Interface utilisateur &mdash; Biblizou 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50"/>
+    <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e"/>
+
+
+    <script src="_static/jquery.js?v=5d32c60e"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="_static/documentation_options.js?v=2709fde1"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html"/>
+    <link rel="search" title="Search" href="search.html"/>
+    <link rel="prev" title="Module BDC — Base de Données sur les statuts de Conservation" href="Bdc.html"/>
+</head>
+
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
+
+
+                <a href="index.html" class="icon icon-home">
+                    Biblizou
+                </a>
+                <div role="search">
+                    <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+                        <input type="text" name="q" placeholder="Search docs" aria-label="Search docs"/>
+                        <input type="hidden" name="check_keywords" value="yes"/>
+                        <input type="hidden" name="area" value="default"/>
+                    </form>
+                </div>
+            </div>
+            <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+                <p class="caption" role="heading"><span class="caption-text">Navigation générale :</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="Fsd.html">Module FSD — Formulaires
+                        Standards de Données</a></li>
+                    <li class="toctree-l1"><a class="reference internal" href="Taxref.html">Module TaxRef —
+                        Consolidation taxonomique</a></li>
+                    <li class="toctree-l1"><a class="reference internal" href="Bdc.html">Module BDC — Base de Données
+                        sur les statuts de Conservation</a></li>
+                    <li class="toctree-l1 current"><a class="current reference internal" href="#">Interface
+                        utilisateur</a>
+                        <ul>
+                            <li class="toctree-l2"><a class="reference internal" href="#presentation-generale">Présentation
+                                générale</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#dossier-de-travail">Dossier de
+                                travail</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#onglet-fsd">Onglet FSD</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#onglet-taxref">Onglet TaxRef</a>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="#onglet-bdc-statuts">Onglet BDC
+                                Statuts</a></li>
+                            <li class="toctree-l2"><a class="reference internal"
+                                                      href="#comportement-commun-aux-threads">Comportement commun aux
+                                threads</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="#reference-des-fichiers-source">Référence
+                                des fichiers source</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+        <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+            <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+            <a href="index.html">Biblizou</a>
+        </nav>
+
+        <div class="wy-nav-content">
+            <div class="rst-content">
+                <div role="navigation" aria-label="Page navigation">
+                    <ul class="wy-breadcrumbs">
+                        <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+                        <li class="breadcrumb-item active">Interface utilisateur</li>
+                        <li class="wy-breadcrumbs-aside">
+                            <a href="_sources/Interface.rst.txt" rel="nofollow"> View page source</a>
+                        </li>
+                    </ul>
+                    <hr/>
+                </div>
+                <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+                    <div itemprop="articleBody">
+
+                        <section id="interface-utilisateur">
+                            <span id="interface"></span>
+                            <h1>Interface utilisateur<a class="headerlink" href="#interface-utilisateur"
+                                                        title="Link to this heading"></a></h1>
+                            <nav class="contents local" id="sommaire">
+                                <p class="topic-title">Sommaire</p>
+                                <ul class="simple">
+                                    <li><p><a class="reference internal" href="#presentation-generale" id="id1">Présentation
+                                        générale</a></p></li>
+                                    <li><p><a class="reference internal" href="#dossier-de-travail" id="id2">Dossier de
+                                        travail</a></p></li>
+                                    <li><p><a class="reference internal" href="#onglet-fsd" id="id3">Onglet FSD</a></p>
+                                    </li>
+                                    <li><p><a class="reference internal" href="#onglet-taxref" id="id4">Onglet
+                                        TaxRef</a></p></li>
+                                    <li><p><a class="reference internal" href="#onglet-bdc-statuts" id="id5">Onglet BDC
+                                        Statuts</a></p></li>
+                                    <li><p><a class="reference internal" href="#comportement-commun-aux-threads"
+                                              id="id6">Comportement commun aux threads</a></p></li>
+                                    <li><p><a class="reference internal" href="#reference-des-fichiers-source" id="id7">Référence
+                                        des fichiers source</a></p></li>
+                                </ul>
+                            </nav>
+                            <section id="presentation-generale">
+                                <h2><a class="toc-backref" href="#id1" role="doc-backlink">Présentation générale</a><a
+                                        class="headerlink" href="#presentation-generale"
+                                        title="Link to this heading"></a></h2>
+                                <p>Biblizou s’intègre dans QGIS sous la forme d’un <strong>panneau latéral
+                                    ancrable</strong> (<code class="docutils literal notranslate"><span class="pre">QDockWidget</span></code>),
+                                    accessible depuis le menu <span class="menuselection">Extensions ‣ Biblizou</span>.
+                                    Le panneau est défini dans <code class="docutils literal notranslate"><span
+                                            class="pre">biblizou_dockwidget_base.ui</span></code> (Qt Designer)
+                                    et piloté par <code class="docutils literal notranslate"><span class="pre">BiblizouDockWidget</span></code>
+                                    (<code class="docutils literal notranslate"><span
+                                            class="pre">biblizou_dockwidget.py</span></code>).</p>
+                                <p>Il se compose de trois zones :</p>
+                                <ul class="simple">
+                                    <li><p>Un <strong>en-tête</strong> avec le logo et un bouton <em>[i] Aide</em></p>
+                                    </li>
+                                    <li><p>Un <strong>sélecteur de dossier de travail</strong>, commun à tous les
+                                        modules</p></li>
+                                    <li><p>Un <strong>widget à onglets</strong> donnant accès aux quatre modules (FSD,
+                                        TaxRef, BDC Statuts, Botazou)</p></li>
+                                </ul>
+                                <p>Tous les traitements sont lancés dans des <code class="docutils literal notranslate"><span
+                                        class="pre">QThread</span></code> distincts afin de ne pas bloquer
+                                    l’interface QGIS. La progression est reportée dans la barre de statut principale de
+                                    QGIS
+                                    (<code class="docutils literal notranslate"><span class="pre">statusBar().showMessage()</span></code>)
+                                    et les messages détaillés dans le panneau
+                                    <span class="menuselection">Vue ‣ Panneaux ‣ Journal des messages</span> sous la
+                                    catégorie <strong>Biblizou</strong>.</p>
+                            </section>
+                            <section id="dossier-de-travail">
+                                <h2><a class="toc-backref" href="#id2" role="doc-backlink">Dossier de travail</a><a
+                                        class="headerlink" href="#dossier-de-travail" title="Link to this heading"></a>
+                                </h2>
+                                <p>Le widget <code class="docutils literal notranslate"><span
+                                        class="pre">QgsFileWidget</span></code> (<code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">mQgsFileWidget</span></code>) en mode <em>GetDirectory</em> est
+                                    commun à
+                                    l’ensemble des modules. Il désigne le dossier dans lequel :</p>
+                                <ul class="simple">
+                                    <li><p>les fichiers XML téléchargés ou déposés manuellement doivent se trouver ;</p>
+                                    </li>
+                                    <li><p>le fichier <code class="docutils literal notranslate"><span class="pre">biblizou.gpkg</span></code>
+                                        sera créé ou mis à jour par tous les modules.</p></li>
+                                </ul>
+                                <p>Une validation bloque l’exécution de tout workflow si le chemin est absent ou
+                                    invalide.</p>
+                            </section>
+                            <section id="onglet-fsd">
+                                <h2><a class="toc-backref" href="#id3" role="doc-backlink">Onglet FSD</a><a
+                                        class="headerlink" href="#onglet-fsd" title="Link to this heading"></a></h2>
+                                <p>Cet onglet permet de lancer le moissonnage des Formulaires Standards de Données
+                                    (voir <a class="reference internal" href="Fsd.html#module-fsd"><span
+                                            class="std std-ref">Module FSD — Formulaires Standards de Données</span></a>).
+                                </p>
+                                <p><strong>Widgets de saisie :</strong></p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 25.0%"/>
+                                        <col style="width: 45.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Widget (nom objet)</p></th>
+                                        <th class="head"><p>Type</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">mapLayerZnieff</span></code>
+                                        </p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">QgsMapLayerComboBox</span></code>
+                                        </p></td>
+                                        <td><p>Couche polygonale de référence pour les ZNIEFF (filtre : couches
+                                            polygonales uniquement)</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">mapLayerN2k</span></code></p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">QgsMapLayerComboBox</span></code>
+                                        </p></td>
+                                        <td><p>Couche polygonale de référence pour les sites Natura 2000 (filtre :
+                                            couches polygonales uniquement)</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">mQgsFileWidget</span></code>
+                                        </p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">QgsFileWidget</span></code>
+                                        </p></td>
+                                        <td><p>Dossier de travail contenant les fichiers XML</p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="admonition note">
+                                    <p class="admonition-title">Note</p>
+                                    <p>Les couches de référence sélectionnées dans cet onglet ne sont <strong>pas
+                                        transmises</strong> au thread
+                                        de traitement <code class="docutils literal notranslate"><span class="pre">FsdProcessingThread</span></code>
+                                        : seul le chemin <code class="docutils literal notranslate"><span class="pre">working_folder</span></code>
+                                        lui est passé.
+                                        La sélection spatiale dans <code class="docutils literal notranslate"><span
+                                                class="pre">DwlXml</span></code> s’effectue en interrogeant directement
+                                        le projet QGIS
+                                        (via <code class="docutils literal notranslate"><span class="pre">QgsProject.instance()</span></code>),
+                                        ce qui suppose que les couches WFS Patrinat sont déjà
+                                        chargées dans le projet.</p>
+                                </div>
+                                <p><strong>Validation</strong> (<code class="docutils literal notranslate"><span
+                                        class="pre">validate_fsd()</span></code>) :</p>
+                                <ul class="simple">
+                                    <li><p>La couche ZNIEFF de référence doit être sélectionnée.</p></li>
+                                    <li><p>La couche Natura 2000 de référence doit être sélectionnée.</p></li>
+                                    <li><p>Le dossier de travail doit exister sur le disque.</p></li>
+                                </ul>
+                                <p><strong>Bouton</strong> <code class="docutils literal notranslate"><span class="pre">btnRunFsd</span></code>
+                                    — <em>Lancer le moissonnage FSD</em> :</p>
+                                <ol class="arabic simple">
+                                    <li><p>Appel de <code class="docutils literal notranslate"><span class="pre">validate_fsd()</span></code>.
+                                    </p></li>
+                                    <li><p>Affichage d’une boîte de confirmation récapitulant le dossier de travail.</p>
+                                    </li>
+                                    <li><p>Instanciation de <code class="docutils literal notranslate"><span
+                                            class="pre">FsdProcessingThread</span></code> et connexion de ses signaux.
+                                    </p></li>
+                                    <li><p>Démarrage du thread ; le bouton est désactivé pendant l’exécution.</p></li>
+                                    <li><p>À la fin (signal <code class="docutils literal notranslate"><span
+                                            class="pre">finished</span></code>), réactivation du bouton et message de
+                                        succès.</p></li>
+                                </ol>
+                            </section>
+                            <section id="onglet-taxref">
+                                <h2><a class="toc-backref" href="#id4" role="doc-backlink">Onglet TaxRef</a><a
+                                        class="headerlink" href="#onglet-taxref" title="Link to this heading"></a></h2>
+                                <p>Cet onglet permet de consolider les taxons présents dans des couches du projet
+                                    avec le référentiel national TaxRef via l’API INPN
+                                    (voir <a class="reference internal" href="Taxref.html#module-taxref"><span
+                                            class="std std-ref">Module TaxRef — Consolidation taxonomique</span></a>).
+                                </p>
+                                <p><strong>Widgets de saisie :</strong></p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 25.0%"/>
+                                        <col style="width: 45.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Widget (nom objet)</p></th>
+                                        <th class="head"><p>Type</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">tableTaxref</span></code></p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QTableWidget</span></code> (3 colonnes)</p></td>
+                                        <td><p>Table de configuration des sources de <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code></p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">btnAddLayerRowTaxtef</span></code>
+                                        </p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QPushButton</span></code></p></td>
+                                        <td><p>Ajoute une ligne dans <code class="docutils literal notranslate"><span
+                                                class="pre">tableTaxref</span></code></p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p><strong>Structure du tableau ``tableTaxref``</strong> :</p>
+                                <p>Chaque ligne correspond à une source de codes taxons :</p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 10.0%"/>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 60.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Colonne</p></th>
+                                        <th class="head"><p>Type de widget</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p>0</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">QgsMapLayerComboBox</span></code>
+                                            (couches vectorielles)</p></td>
+                                        <td><p>Couche source contenant les <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code></p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p>1</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">QgsFieldComboBox</span></code>
+                                            (synchronisé avec col. 0)</p></td>
+                                        <td><p>Champ de la couche contenant les <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code></p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p>2</p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QPushButton</span></code> (icône croix)</p></td>
+                                        <td><p>Supprime la ligne</p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p>Les colonnes 0 et 1 sont extensibles ; la colonne 2 s’ajuste au contenu.</p>
+                                <p><strong>Validation</strong> (<code class="docutils literal notranslate"><span
+                                        class="pre">validate_taxref()</span></code>) :</p>
+                                <ul class="simple">
+                                    <li><p>Le dossier de travail doit être valide.</p></li>
+                                    <li><p>Au moins une ligne doit être configurée dans <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">tableTaxref</span></code>.</p></li>
+                                </ul>
+                                <p><strong>Bouton</strong> <code class="docutils literal notranslate"><span class="pre">btnRunTaxref</span></code>
+                                    — <em>Lancer la consolidation TaxRef</em> :</p>
+                                <ol class="arabic simple">
+                                    <li><p>Appel de <code class="docutils literal notranslate"><span class="pre">validate_taxref()</span></code>.
+                                    </p></li>
+                                    <li><p>Extraction des paires <code class="docutils literal notranslate"><span
+                                            class="pre">{layer_id,</span> <span class="pre">column}</span></code> depuis
+                                        <code class="docutils literal notranslate"><span class="pre">tableTaxref</span></code>
+                                        via <code class="docutils literal notranslate"><span class="pre">get_taxref_consolidation_data()</span></code>.
+                                    </p></li>
+                                    <li><p>Confirmation indiquant le nombre de couches à traiter.</p></li>
+                                    <li><p>Instanciation de <code class="docutils literal notranslate"><span
+                                            class="pre">TaxrefProcessingThread</span></code> avec les paramètres
+                                        <code class="docutils literal notranslate"><span
+                                                class="pre">working_folder</span></code>, <code
+                                                class="docutils literal notranslate"><span class="pre">consolidation_config</span></code>
+                                        et <code class="docutils literal notranslate"><span class="pre">gpkg_path</span></code>.
+                                    </p></li>
+                                    <li><p>Démarrage du thread.</p></li>
+                                </ol>
+                            </section>
+                            <section id="onglet-bdc-statuts">
+                                <h2><a class="toc-backref" href="#id5" role="doc-backlink">Onglet BDC Statuts</a><a
+                                        class="headerlink" href="#onglet-bdc-statuts" title="Link to this heading"></a>
+                                </h2>
+                                <p>Cet onglet permet d’interroger la Base de Données sur les statuts de conservation
+                                    de l’INPN et de consolider les résultats avec les taxons du projet
+                                    (voir <a class="reference internal" href="Bdc.html#module-bdc"><span
+                                            class="std std-ref">Module BDC — Base de Données sur les statuts de Conservation</span></a>).
+                                </p>
+                                <p><strong>Widgets de saisie :</strong></p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 25.0%"/>
+                                        <col style="width: 45.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Widget (nom objet)</p></th>
+                                        <th class="head"><p>Type</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">comboBoxDpt</span></code></p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QComboBox</span></code> éditable + <code
+                                                class="docutils literal notranslate"><span class="pre">QCompleter</span></code>
+                                        </p></td>
+                                        <td><p>Sélection du département de référence (filtrage par nom, stocke le <code
+                                                class="docutils literal notranslate"><span class="pre">code_insee</span></code>)
+                                        </p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">tableStat</span></code></p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QTableWidget</span></code> (3 colonnes)</p></td>
+                                        <td><p>Table de configuration des sources de <code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">cd_nom</span></code> pour les statuts</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">btnAddLayerRowStat</span></code>
+                                        </p></td>
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">QPushButton</span></code></p></td>
+                                        <td><p>Ajoute une ligne dans <code class="docutils literal notranslate"><span
+                                                class="pre">tableStat</span></code></p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p><strong>Liste déroulante département</strong> (<code
+                                        class="docutils literal notranslate"><span class="pre">comboBoxDpt</span></code>)
+                                    :</p>
+                                <p>Alimentée depuis <code class="docutils literal notranslate"><span class="pre">config/dept_fr.csv</span></code>
+                                    (colonnes <code class="docutils literal notranslate"><span
+                                            class="pre">nom_officiel</span></code>, <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">code_insee</span></code>).
+                                    La liste est rendue éditable et dotée d’un <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">QCompleter</span></code> en mode <code
+                                            class="docutils literal notranslate"><span class="pre">MatchContains</span></code>
+                                    (insensible à la casse) permettant de filtrer les départements en saisissant
+                                    n’importe quelle partie du nom.
+                                    La <strong>valeur stockée</strong> (<code class="docutils literal notranslate"><span
+                                            class="pre">currentData()</span></code>) est le <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">code_insee</span></code>, transmis à l’API.</p>
+                                <p><strong>Structure du tableau ``tableStat``</strong> : identique à <code
+                                        class="docutils literal notranslate"><span class="pre">tableTaxref</span></code>
+                                    (couche + champ + supprimer).</p>
+                                <p><strong>Validation</strong> (<code class="docutils literal notranslate"><span
+                                        class="pre">validate_stat()</span></code>) :</p>
+                                <ul class="simple">
+                                    <li><p>Le dossier de travail doit être valide.</p></li>
+                                    <li><p>Un département doit être sélectionné (<code
+                                            class="docutils literal notranslate"><span class="pre">currentData()</span></code>
+                                        non nul).</p></li>
+                                    <li><p>Au moins une ligne doit être configurée dans <code
+                                            class="docutils literal notranslate"><span
+                                            class="pre">tableStat</span></code>.</p></li>
+                                </ul>
+                                <p><strong>Bouton</strong> <code class="docutils literal notranslate"><span class="pre">btnRunStat</span></code>
+                                    — <em>Associer à la BDC</em> :</p>
+                                <ol class="arabic simple">
+                                    <li><p>Appel de <code class="docutils literal notranslate"><span class="pre">validate_stat()</span></code>.
+                                    </p></li>
+                                    <li><p>Confirmation récapitulant le département, le nombre de couches et le chemin
+                                        du GeoPackage.</p></li>
+                                    <li><p>Instanciation de <code class="docutils literal notranslate"><span
+                                            class="pre">BdStatutsProcessingThread</span></code> avec les paramètres
+                                        <code class="docutils literal notranslate"><span
+                                                class="pre">gpkg_path</span></code>, <code
+                                                class="docutils literal notranslate"><span class="pre">code_insee</span></code>
+                                        et <code class="docutils literal notranslate"><span class="pre">consolidation_config</span></code>.
+                                    </p></li>
+                                    <li><p>Démarrage du thread.</p></li>
+                                </ol>
+                            </section>
+                            <section id="comportement-commun-aux-threads">
+                                <h2><a class="toc-backref" href="#id6" role="doc-backlink">Comportement commun aux
+                                    threads</a><a class="headerlink" href="#comportement-commun-aux-threads"
+                                                  title="Link to this heading"></a></h2>
+                                <p>Les trois threads (<code class="docutils literal notranslate"><span class="pre">FsdProcessingThread</span></code>,
+                                    <code class="docutils literal notranslate"><span
+                                            class="pre">TaxrefProcessingThread</span></code>,
+                                    <code class="docutils literal notranslate"><span class="pre">BdStatutsProcessingThread</span></code>)
+                                    partagent le même schéma de signaux et de réponses UI :</p>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 30.0%"/>
+                                        <col style="width: 70.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Signal émis par le thread</p></th>
+                                        <th class="head"><p>Comportement dans <code
+                                                class="docutils literal notranslate"><span class="pre">BiblizouDockWidget</span></code>
+                                        </p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">progress(step,</span>
+                                            <span class="pre">total,</span> <span class="pre">message)</span></code></p>
+                                        </td>
+                                        <td><p>Affichage dans <code class="docutils literal notranslate"><span
+                                                class="pre">iface.mainWindow().statusBar()</span></code> : <em>“Biblizou
+                                            : [message] ([step]/[total])”</em></p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span
+                                                class="pre">log(message)</span></code></p></td>
+                                        <td><p>Écriture dans <code class="docutils literal notranslate"><span
+                                                class="pre">QgsMessageLog</span></code> sous la catégorie
+                                            <em>Biblizou</em> (niveau Info)</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">finished(message)</span></code>
+                                        </p></td>
+                                        <td><p>Réactivation du bouton lanceur + <code
+                                                class="docutils literal notranslate"><span class="pre">QMessageBox.information</span></code>
+                                        </p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">error(message)</span></code>
+                                        </p></td>
+                                        <td><p>Réactivation de tous les boutons + <code
+                                                class="docutils literal notranslate"><span class="pre">QMessageBox.critical</span></code>
+                                        </p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <p>À la fermeture du panneau (<code class="docutils literal notranslate"><span
+                                        class="pre">closeEvent</span></code>), le signal <code
+                                        class="docutils literal notranslate"><span
+                                        class="pre">closingPlugin</span></code> est émis
+                                    pour permettre au plugin principal (<code class="docutils literal notranslate"><span
+                                            class="pre">biblizou.py</span></code>) de nettoyer ses références.</p>
+                            </section>
+                            <section id="reference-des-fichiers-source">
+                                <h2><a class="toc-backref" href="#id7" role="doc-backlink">Référence des fichiers
+                                    source</a><a class="headerlink" href="#reference-des-fichiers-source"
+                                                 title="Link to this heading"></a></h2>
+                                <table class="docutils align-default">
+                                    <colgroup>
+                                        <col style="width: 40.0%"/>
+                                        <col style="width: 60.0%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr class="row-odd">
+                                        <th class="head"><p>Fichier</p></th>
+                                        <th class="head"><p>Rôle</p></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_dockwidget_base.ui</span></code>
+                                        </p></td>
+                                        <td><p>Définition Qt Designer du panneau (widgets, layout, styles QSS)</p></td>
+                                    </tr>
+                                    <tr class="row-odd">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">biblizou_dockwidget.py</span></code>
+                                        </p></td>
+                                        <td><p>Logique de l’interface : validation, collecte des paramètres, gestion des
+                                            threads</p></td>
+                                    </tr>
+                                    <tr class="row-even">
+                                        <td><p><code class="docutils literal notranslate"><span class="pre">config/dept_fr.csv</span></code>
+                                        </p></td>
+                                        <td><p>Liste des départements français (<code
+                                                class="docutils literal notranslate"><span
+                                                class="pre">nom_officiel</span></code>, <code
+                                                class="docutils literal notranslate"><span class="pre">code_insee</span></code>)
+                                        </p></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </section>
+
+
+                    </div>
+                </div>
+                <footer>
+                    <div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+                        <a href="Bdc.html" class="btn btn-neutral float-left"
+                           title="Module BDC — Base de Données sur les statuts de Conservation" accesskey="p"
+                           rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+                    </div>
+
+                    <hr/>
+
+                    <div role="contentinfo">
+                        <p>&#169; Copyright 2026, François Botcazou.</p>
+                    </div>
+
+                    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+                    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+                    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+                </footer>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    jQuery(function () {
+        SphinxRtdTheme.Navigation.enable(true);
+    });
+</script>
+
+</body>
+</html>

@@ -1,4 +1,7 @@
 .. Biblizou documentation master file
+.. image:: ../../misc/icon.svg
+   :width: 100px
+   :align: left
 
 Biblizou — Plugin QGIS
 =======================
@@ -16,10 +19,12 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
 
 .. toctree::
    :maxdepth: 2
+   :caption: Navigation générale :
 
-.. contents:: Table des matières
-   :depth: 2
-   :local:
+   Fsd
+   Taxref
+   Bdc
+   Interface
 
 
 Prérequis
