@@ -41,7 +41,7 @@ Le moteur R est indispensable au fonctionnement du module **Botazou**.
 <a href="https://github.com/Ki-Mor">
   <img src="https://github.com/Ki-Mor.png" width="40" height="40" style="border-radius:50%" alt="Ki-Mor">
 </a>
-<a href="https://github.com/Ki-Mor">
+<a href="https://github.com/maxTanquerel">
   <img src="https://github.com/maxTanquerel.png" width="40" height="40" style="border-radius:50%" alt="maxTanquerel">
 </a>
 
