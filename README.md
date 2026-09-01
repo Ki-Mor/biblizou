@@ -75,3 +75,4 @@ Le projet est collaboratif. Vous pouvez participer via deux canaux :
 
 Ce projet est sous licence GNU v3 GPL.
 Vous pouvez le partager, l’adapter et l’utiliser à des fins non commerciales, en mentionnant l’auteur original.
+https://www.gnu.org/licenses/gpl-3.0.html#license-text
