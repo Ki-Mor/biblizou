@@ -35,7 +35,7 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 2. Déplacer le dossier `biblizou` dans le répertoire des extensions QGIS :
    * **Windows** : `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins`
    * **Linux** : `~/.local/share/QGIS/QGIS3/profiles/default/python/plugins`
-3. Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` → `Installé`.
+3. Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` → `Installées`.
 
 ## Liens utiles
 
