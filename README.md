@@ -10,6 +10,13 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
 * **BDC** : Interrogation de l'API de l'INPN pour consolider les statuts de protection et de conservation des espèces.
 <!-- **Botazou** : Regroupement automatisé des espèces de la flore par affinités écologiques (analyses multivariées). -->
 
+## Progrès
+  - <img src="https://img.shields.io/badge/Avancement-██████████_100%25-brightgreen" alt="Avancement 100%"> : Module de moissonnage des FSD - moissonnage automatique des données issues des Formulaires Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l’aire d’étude choisie.
+  - <img src="https://img.shields.io/badge/Avancement-█████████░_90%25-green" alt="Avancement 090%"> : Module d'enrichissement TAXREF - interrogation de l’API de l’INPN pour extraire les référentiels taxonomiques officiels.
+  - <img src="https://img.shields.io/badge/Avancement-█████████░_90%25-green" alt="Avancement 090%"> : Module d'enrichissement BDC - interrogation de l’API de l’INPN pour consolider les statuts de protection et de conservation des espèces.
+  - <img src="https://img.shields.io/badge/Avancement-█████░░░░░_50%25-orange" alt="Avancement 050%"> : Module Botazou - regroupement automatisé des espèces de la flore par affinités écologiques
+  - <img src="https://img.shields.io/badge/Avancement-░░░░░░░░░░_00%25-red" alt="Avancement 000%"> : Migration vers Qgis4
+
 ## Prérequis
 
 * QGIS `3.x`
