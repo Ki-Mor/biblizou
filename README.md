@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="https://Ki-Mor.github.io/biblizou_frontend/"><img src="misc/icon.svg" alt="Description" width="100"></a>
+  <a href="https://ki-mor.github.io/biblizou_frontend/"><img src="misc/icon.svg" alt="biblizou_frontend" width="100"></a>
 </p>
 
-# **[Biblizou — Plugin QGIS](https://github.io/Ki-Mor/biblizou_frontend/)**
+# **[Biblizou — Plugin QGIS](https://ki-mor.github.io/biblizou_frontend/)**
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
 * **FSD** : Moissonnage automatique des données issues des Formulaires Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
