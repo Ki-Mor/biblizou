@@ -62,7 +62,7 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 * **Contributeurs-ices** :
 
 <a href="https://github.com/Ki-Mor/biblizou/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Ki-Mor/biblizou" />
+  <img src="https://contrib.rocks/image?repo=Ki-Mor/biblizou&anon=0" />
 </a>
 
 ### Pour contribuer
