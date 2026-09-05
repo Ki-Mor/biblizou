@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://ki-mor.github.io/biblizou_frontend/"><img src="misc/icon.svg" alt="biblizou_frontend" width="100"></a>
+  <a href="https://ki-mor.github.io/biblizou_frontend/"><img src="../misc/icon.svg" alt="biblizou_frontend" width="100"></a>
 </p>
 
 # **[Biblizou — Plugin QGIS](https://ki-mor.github.io/biblizou_frontend/)**
