@@ -5,9 +5,13 @@
 # **[Biblizou — Plugin QGIS](https://ki-mor.github.io/biblizou_frontend/)**
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
-* **FSD** : Moissonnage automatique des données issues des Formulaires Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
-* **TaxRef** : Interrogation de l'API de l'INPN (Inventaire National du Patrimoine Naturel) pour extraire les référentiels taxonomiques officiels.
-* **BDC** : Interrogation de l'API de l'INPN pour consolider les statuts de protection et de conservation des espèces.
+
+* **[FSD](https://ki-mor.github.io/biblizou/Fsd.html)** : Moissonnage automatique des données issues des Formulaires
+  Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
+* **[TAXREF](https://ki-mor.github.io/biblizou/Taxref.html)** : Interrogation de l'API de l'INPN (Inventaire National du
+  Patrimoine Naturel) pour extraire les référentiels taxonomiques officiels.
+* **[BDC](https://ki-mor.github.io/biblizou/Bdc.html)*** : Interrogation de l'API de l'INPN pour consolider les statuts
+  de protection et de conservation des espèces.
 <!-- **Botazou** : Regroupement automatisé des espèces de la flore par affinités écologiques (analyses multivariées). -->
 
 ## Progrès
