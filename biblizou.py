@@ -64,7 +64,6 @@ class Biblizou:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Biblizou')
-        # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'Biblizou')
         self.toolbar.setObjectName(u'Biblizou')
 
@@ -191,7 +190,6 @@ class Biblizou:
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)
 
             # show the dockwidget
-            # TODO: fix to allow choice of dock location
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
         else:
