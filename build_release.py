@@ -28,19 +28,19 @@ from pathlib import Path
 # garder les traductions compilées .qm pour les utilisateurs finaux).
 EXCLUDE_PATTERNS = [
     "i18n", "i18n/*", "*.ts", "*.pro",  # sources de traduction Qt Linguist
-    "scripts", "scripts/*",
-    "test", "test/*", "tests", "tests/*",
-    "pb_tool.cfg",
-    "pylintrc", ".pylintrc",
+    "scripts", "scripts/*",  # répertoire scripts et fichiers associés
+    "test", "test/*",  # répertoire test et fichiers associés
+    "help", "help/*"  # répertoire help et fichiers associés
+            "pb_tool.cfg",
+    "pylintrc", ".pylintrc",  # outils pylint
     "Makefile",
     "requirements-dev.txt",
-    ".git", ".git/*", ".gitignore", ".gitattributes",
-    ".github", ".github/*",
-    ".vscode", ".vscode/*", ".idea", ".idea/*",
-    "*.pyc", "__pycache__", "__pycache__/*",
+    ".git", ".git/*", ".gitignore", ".gitattributes", ".github", ".github/*",  # répertoire et fichiers git
+    ".vscode", ".vscode/*", ".idea", ".idea/*", "*.pyc", "__pycache__", "__pycache__/*", ".Rproj.user",
+    ".Rproj.user/*"  # répertoire et fichiers IDE
     "*.zip",
     "dist", "dist/*",
-    "build_release.py"
+    "build_release.py"  # ce fichier
 ]
 
 
