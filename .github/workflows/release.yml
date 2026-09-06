@@ -18,7 +18,7 @@ jobs:
           python-version: '3.x'
 
       - name: Construire le zip épuré
-        run: python3 build_release.py . --output dist --name biblizou
+        run: python3 build_release.py . --output dist --name Biblizou
 
       - name: Publier la release GitHub
         uses: softprops/action-gh-release@v2
