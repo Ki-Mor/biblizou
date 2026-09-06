@@ -23,9 +23,9 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python,biodiversité,données,faune,flore,fonge,habitats,botanique
 
-homepage=http://homepage
+homepage=https://ki-mor.github.io/biblizou_frontend/
 category=Plugins
 icon=icon.png
 # experimental flag
