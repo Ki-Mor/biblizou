@@ -63,10 +63,11 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 [![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou)
 [![Portfolio](https://img.shields.io/badge/Portfolio-6F42C1?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/porfolio/) [![Mail Pro](https://img.shields.io/badge/Mail-purple?style=for-the-badge&logo=proton&logoColor=white)](mailto:francois.botcazou@proton.me)
 
-* **Remerciement** :
+* **Remerciements** :
 
-[![ExEco environement](https://www.execo-env.fr/wp-content/uploads/2018/04/logo.png.webp)](https://www.execo-env.fr/) Un grand merci à ExEco Environnement, qui m'emploi et qui m'a laissé le temps et la liberté de m'engager dans ce genre de projet aussi sur mes heures de travail !
-Un grand merci aussi à l'Inventaire National du Patrimoine Naturel-INPN qui fournit toutes les ressources nécessaires à ce projet (et à d'autres) 💚 
+Un grand merci à Un grand merci à Un grand merci à [![ExEco environnement](https://img.shields.io/badge/ExEco_environnement-7FB539?style=flat)](https://www.execo-env.fr/), qui m'emploie et qui m'a laissé le temps et la liberté de m'engager dans ce projet sur mes heures de travail ! <br> 
+Un grand merci aussi à l'*Inventaire National du Patrimoine Naturel* (INPN) qui fournit toutes les ressources nécessaires à ce projet (et à d'autres) 💚  <br>
+Merci à MaxTanquerel pour ses conseils avisés
 
 * **Contributeurs-ices** :
 
