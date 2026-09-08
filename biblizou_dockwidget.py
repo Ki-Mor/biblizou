@@ -130,12 +130,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         except Exception as e:
             QgsMessageLog.logMessage(f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou", level=Qgis.Warning)
 
-    def get_fsd_parameters(self):
-        """Récupère les données saisies par l'utilisateur pour le workflow FSD."""
-        # On ne passe que le working_folder, pas les objets layer
-        return {
-            'working_folder': self.mQgsFileWidget.filePath()
-        }
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
