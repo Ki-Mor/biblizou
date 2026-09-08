@@ -90,7 +90,8 @@ class FsdProcessingThread(QThread):
                 ("Configuration des connexions WFS", self.setup_wfs_connections),
                 ("Chargement des couches WFS", self.load_wfs_layers),
 
-                # ("Téléchargement ZNIEFF", self.download_znieff),
+                # TODO checkbox cBN2K de l'ui activée comme condition d'execution de la pipeline
+                ("Téléchargement ZNIEFF", self.download_znieff),
                 ("Traitement descriptions ZNIEFF", self.process_znieff_desc),
                 ("Traitement espèces ZNIEFF", self.process_znieff_esp),
                 ("Traitement habitats ZNIEFF", self.process_znieff_hab),
