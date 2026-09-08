@@ -137,7 +137,8 @@ class FsdProcessingThread(QThread):
                 self.log.emit("Avertissement : Certaines connexions WFS n'ont pas pu être ajoutées")
             else:
                 self.log.emit("Connexions WFS configurées avec succès")
-                
+            return success
+
         except Exception as e:
             self.log.emit(f"Erreur lors de la configuration WFS : {str(e)}")
             self.log.emit("Le traitement va continuer mais certaines connexions peuvent être manquantes")
