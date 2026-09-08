@@ -14,83 +14,86 @@ from qgis.core import (
 
 
 class DelDwlXml:
+    """
+        Utilitaire de nettoyage du dossier de travail après un moissonnage FSD réussi.
+
+        Méthodes :
+            run_with_path(folder_path) → supprime tous les *.xml du dossier donné
+            log(message, level)        → journalisation QGIS
+        """
+
     def __init__(self):
         """Initialisation de la classe."""
-        self.processed_files = 0
+        self.deleted_files = 0
 
-        # self.gpkg_path = None
-        # self.gpkg_saved = False
+    def log(self):
+        "Enregistre un message dans le journal Qgis"
+        QgsMessageLog.logMessage(
+            f"[{self.__class__.__name__}]: {message}",
+            "Biblizou",
+            level=level
+        )
 
-        def run(self):
-            """
-                    Point d'entrée
-                    Args:
-                        folder_path (str): Chemin du dossier contenant les fichiers XML
-                    Returns:
-                        bool: True si le traitement a réussi, False sinon
-                    """
-            if not folder_path:
-                QgsMessageLog.logMessage(
-                    "DelDwlXml: Aucun dossier spécifié",
-                    "Biblizou",
-                    level=ML_WARNING
-                )
+    def run_with_path(self):
+        """
+                Point d'entrée
+                Args:
+                    folder_path (str): Chemin du dossier contenant les fichiers XML
+                Returns:
+                    bool: True si le traitement a réussi, False sinon
+                """
+        self.deleted_files = 0
+
+        if not folder_path:
+            self.log(f"Aucun dossier spécifié", Qgis.Warning)
+            return False
+
+        if not os.path.isdir(folder_path):
+            QgsMessageLog.logMessage(
+                self.log(f"Dossier introuvable: {folder_path}", Qgis.Warning)
+            return False
+
+        try:
+            # 1. Suppression des fichiers
+            xml_files = [
+                f for f in os.listdir(folder_path)
+                if f.endswith('.xml') and os.path.isfile(os.path.join(folder_path, f))
+            ]
+
+            if not xml_files:
+                self.log(f"Aucun fichier XML trouvée dans {folder_path}", Qgis.Warning)
                 return False
-            if not os.path.isdir(folder_path):
-                QgsMessageLog.logMessage(
-                    f"DelDwlXml: Dossier introuvable: {folder_path}",
-                    "Biblizou",
-                    level=ML_WARNING
-                )
-                return False
-            try:
-                # 1. Traitement des fichiers
-                DwlXml = self.process_folder(folder_path)
 
-                if not DwlXml:
-                    QgsMessageLog.logMessage(
-                        f"DelDwlXml: Aucun fichier XML trouvée dans {folder_path}",
-                        "Biblizou",
-                        level=ML_WARNING
-                    )
-                    return False
+            # 2. Suppression des fichiers
+            for file_name in xml_files:
+                file_path = os.path.join(folder_path, file_name)
+                try:
+                    os.remove(file_path)
+                    self.deleted_files += 1
+                except OSError as e:
+                    self.log(f"Impossible de supprimer {file_name} : {str(e)}, Qgis.Warning")
 
-                # 2. Suppression des fichiers
-
-                # 3. Log du résumé
-                QgsMessageLog.logMessage(
-                    f"DelDwlXml: Traitement terminé - "
-                    f"{self.processed_files} fichiers supprimés",
-                    "Biblizou",
-                    level=ML_SUCCESS
-                )
-                return True
+                if self.deleted_files > 0
+                    sef.log(f"Nettoyage terminé - {self.deleted_files}/{len(xml_files)} fichiersxml supprimés",
+                            Qgis.success)
+                    return True, self.deleted_files
+                else:
+                    self.log(f"Échec du nettoyage : aucun fichier supprimé", Qgis.critical)
+                    return False, 0
 
         except Exception as e:
-        QgsMessageLog.logMessage(
-            f"DelDwlXml: Erreur lors du traitement: {str(e)}",
-            "Biblizou",
-            level=ML_CRITICAL
-        )
-        return False
-
-    def process_xml_file(self, xml_path):
-        """Traite un fichier XML individuel."""
-        DwlXml = []
+            self.log(f"Erreur lors du traitement: {str(e)}", Qgis.Critical)
+            return False.self.deleted_files
 
 
-
-        return DwlXml
-
-
-def run_module(folder_path):
+def run_module_with_path(folder_path):
     """
     Fonction d'exécution pour BiblizouMain.
 
     Args:
         folder_path (str): Chemin du dossier contenant les fichiers XML
     Returns:
-        bool: True si le traitement a réussi, False sinon
+        tuple: (bool, int) — succès de l'opération, nombre de fichiers supprimés
     """
-    module = NaturaXmlToLayerDesc()
+    module = DelDwlXml()
     return module.run_with_path(folder_path)
