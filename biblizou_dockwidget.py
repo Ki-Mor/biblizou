@@ -133,6 +133,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         except Exception as e:
             QgsMessageLog.logMessage(f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou", level=Qgis.Warning)
 
+    def open_help_link(self):
+        """Ouvre la documentation du plugin dans le navigateur par défaut."""
+        QDesktopServices.openUrl(QUrl("https://ki-mor.github.io/biblizou_frontend/"))
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
