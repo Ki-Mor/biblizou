@@ -214,7 +214,7 @@ class FsdProcessingThread(QThread):
             self.log.emit("Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot espèces ZNIEFF...")
-        znieff_pivot_esp(self.gpkg_path)
+        return znieff_pivot_esp(self.gpkg_path)
 
     def pivot_znieff_hab(self):
         if not self._has_znieff_hab:
