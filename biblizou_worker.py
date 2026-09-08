@@ -95,7 +95,8 @@ class FsdProcessingThread(QThread):
                 ("Traitement espèces ZNIEFF", self.process_znieff_esp),
                 ("Traitement habitats ZNIEFF", self.process_znieff_hab),
 
-                # ("Téléchargement Natura 2000", self.download_natura),
+                # TODO checkbox cBZnieff de l'ui activée comme condition d'execution de la pipeline
+                ("Téléchargement Natura 2000", self.download_natura),
                 ("Traitement descriptions Natura 2000", self.process_natura_desc),
                 ("Traitement espèces Natura 2000", self.process_natura_esp),
                 ("Traitement habitats Natura 2000", self.process_natura_hab),
