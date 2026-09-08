@@ -210,6 +210,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # On ne passe que le working_folder
         params = {
             'working_folder': self.mQgsFileWidget.filePath()
+            'clean_xml_after_run': self.cBDelDwlXml.isChecked()
         }
         
         QgsMessageLog.logMessage(f"Params avant création thread: {params}", "Biblizou", level=Qgis.Info)
