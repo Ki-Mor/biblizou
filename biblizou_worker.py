@@ -163,6 +163,7 @@ class FsdProcessingThread(QThread):
         except Exception as e:
             self.log.emit(f"Erreur lors du chargement des couches WFS : {str(e)}")
             self.log.emit("Le traitement va continuer mais certaines couches peuvent être manquantes")
+            return False
 
     def download_znieff(self):
         self.log.emit("Téléchargement des FSD des ZNIEFF au format xml...")
