@@ -36,12 +36,12 @@ class DelDwlXml:
 
     def run_with_path(self, folder_path: str) -> tuple:
         """
-                Point d'entrée
-                Args:
-                    folder_path (str): Chemin du dossier contenant les fichiers XML
-                Returns:
-                    bool: True si le traitement a réussi, False sinon
-                """
+        Point d'entrée
+        Args:
+            folder_path (str): Chemin du dossier contenant les fichiers XML
+        Returns:
+            tuple: (bool, int) — succès de l'opération, nombre de fichiers supprimés
+        """
         self.deleted_files = 0
 
         if not folder_path:
