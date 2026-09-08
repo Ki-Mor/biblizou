@@ -207,7 +207,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if not self.validate_fsd():
             return
 
-        # On ne passe que le working_folder
         params = {
             'working_folder': self.mQgsFileWidget.filePath()
             'clean_xml_after_run': self.cBDelDwlXml.isChecked()
