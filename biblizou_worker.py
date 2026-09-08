@@ -221,7 +221,7 @@ class FsdProcessingThread(QThread):
             self.log.emit("Pivot habitats ZNIEFF ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot habitats ZNIEFF...")
-        znieff_pivot_hab(self.gpkg_path)
+        return znieff_pivot_hab(self.gpkg_path)
 
     def download_natura(self):
         self.log.emit("Téléchargement des FSD des sites Natura 2000 au format xml...")
