@@ -112,7 +112,9 @@ class FsdProcessingThread(QThread):
             for i, (step_name, step_function) in enumerate(steps, 1):
                 self.progress.emit(i, total_steps, step_name)
                 self.log.emit(f"--- Début : {step_name} ---")
-                step_function()
+                result = step_function()
+                if result is False:
+                    self.all_steps_ok = False
                 self.log.emit(f"--- Terminé : {step_name} ---")
                 
             self.finished.emit("Moissonnage FSD terminé avec succès !")
