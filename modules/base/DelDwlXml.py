@@ -49,9 +49,8 @@ class DelDwlXml:
             return False, 0
 
         if not os.path.isdir(folder_path):
-            QgsMessageLog.logMessage(
-                self.log(f"Dossier introuvable: {folder_path}", Qgis.Warning)
-            return False
+            self.log(f"Dossier introuvable : {folder_path}", Qgis.Warning)
+            return False, 0
 
         try:
             # 1. Suppression des fichiers
