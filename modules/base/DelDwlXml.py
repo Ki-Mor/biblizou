@@ -6,9 +6,7 @@ Description : Option pour supprimer les xml téléchargés à la fin de la pipel
 """
 import os
 from qgis.core import (
-    QgsProject,
-    QgsFeature,
-    QgsField,
+    Qgis,
     QgsMessageLog,
 )
 
