@@ -83,8 +83,8 @@ class DelDwlXml:
                 return False, 0
 
         except Exception as e:
-            self.log(f"Erreur lors du traitement: {str(e)}", Qgis.Critical)
-            return False.self.deleted_files
+            self.log(f"Erreur lors du nettoyage : {str(e)}", Qgis.Critical)
+            return False, self.deleted_files
 
 
 def run_module_with_path(folder_path):
