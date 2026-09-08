@@ -24,9 +24,12 @@
 import os
 from qgis.PyQt import QtGui, QtWidgets, QtCore, uic
 from qgis.PyQt.QtCore import pyqtSignal, QSize, Qt
+from qgis.PyQt.QtGui import QDesktopServices
+from qgis.PyQt.QtCore import QUrl
 from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
 from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
+
 
 
 # Importation du thread de traitement depuis le script biblizou.py

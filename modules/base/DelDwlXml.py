@@ -53,7 +53,6 @@ class DelDwlXml:
             return False, 0
 
         try:
-            # 1. Suppression des fichiers
             xml_files = [
                 f for f in os.listdir(folder_path)
                 if f.endswith('.xml') and os.path.isfile(os.path.join(folder_path, f))
@@ -63,7 +62,6 @@ class DelDwlXml:
                 self.log(f"Aucun fichier XML trouvé dans {folder_path}", Qgis.Warning)
                 return False, 0
 
-            # 2. Suppression des fichiers
             for file_name in xml_files:
                 file_path = os.path.join(folder_path, file_name)
                 try:
