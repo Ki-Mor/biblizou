@@ -265,6 +265,7 @@ class FsdProcessingThread(QThread):
             self._has_natura_hab = True
         elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les habitats Natura 2000")
+        return result
 
     def pivot_natura_esp(self):
         if not self._has_natura_esp:
