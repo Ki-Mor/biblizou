@@ -207,6 +207,7 @@ class FsdProcessingThread(QThread):
             self._has_znieff_hab = True
         elif result is False:
             self.log.emit("Avertissement : Échec partiel sur les habitats ZNIEFF")
+        return result
 
     def pivot_znieff_esp(self):
         if not self._has_znieff_esp:
