@@ -369,7 +369,7 @@ QMessageBox QPushButton:hover {
            <widget class="QgsMapLayerComboBox" name="mapLayerZnieff"/>
           </item>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBox_3">
+           <widget class="QCheckBox" name="cBDelDwlXml">
             <property name="text">
              <string/>
             </property>
