@@ -86,6 +86,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
+
+        # Bouton info
+        self.btnInfo.clicked.connect(self.open_help_link)
         
         # Variables pour stocker les threads
         self.fsd_thread = None
