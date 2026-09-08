@@ -107,6 +107,7 @@ class FsdProcessingThread(QThread):
             self._has_znieff_hab = False
             self._has_natura_esp = False
             self._has_natura_hab = False
+            self.all_steps_ok = True
 
             total_steps = len(steps)
             for i, (step_name, step_function) in enumerate(steps, 1):
