@@ -142,6 +142,7 @@ class FsdProcessingThread(QThread):
         except Exception as e:
             self.log.emit(f"Erreur lors de la configuration WFS : {str(e)}")
             self.log.emit("Le traitement va continuer mais certaines connexions peuvent être manquantes")
+            return False
 
     def load_wfs_layers(self):
         """Charge les couches WFS nécessaires pour le moissonnage"""
