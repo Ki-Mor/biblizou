@@ -1,0 +1,202 @@
+/* --- 1. CONFIGURATIONS GÉNÉRALES --- */
+
+/* Champs texte */
+QLineEdit {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3D8C70;
+}
+
+/* Tableaux */
+QTableWidget {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    selection-background-color: #3D8C70;
+    selection-color: #ffffff;
+}
+
+QHeaderView::section {
+    padding: 6px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    font-weight: bold;
+}
+
+/* Onglets */
+QTabWidget::pane {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    top: -1px;
+}
+
+QTabBar::tab {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom-color: transparent;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 8px 16px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    color: #3D8C70;
+    border-top: 2px solid #3D8C70;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: rgba(61, 140, 112, 0.1);
+}
+
+
+/* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
+
+QComboBox {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+
+QComboBox:hover {
+    border: 1px solid #3D8C70;
+}
+
+QComboBox QAbstractItemView {
+    selection-background-color: #3D8C70;
+    selection-color: #ffffff;
+}
+
+/* Bouton contenant la flèche (Cadre arrondi avec fond vert émeraude) */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 24px;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #3D8C70;
+}
+
+QComboBox::drop-down:hover {
+    background-color: #43997b;
+}
+
+/* Flèche utilisant le fichier de ressources QRC */
+QComboBox::down-arrow {
+    image: url(:/plugins/biblizou/misc/arrowDown.png);
+    width: 12px;
+    height: 12px;
+}
+
+/* --- 3. BOUTONS PAR DÉFAUT --- */
+
+QPushButton {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    color: #000000;
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+QPushButton:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #50b08f,
+        stop:1 #43997b
+    );
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #2f6d57,
+        stop:1 #357a62
+    );
+    padding-top: 9px;
+    padding-bottom: 7px;
+}
+
+QPushButton:disabled {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- 4. CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
+
+/* Conteneur de l'en-tête */
+QFrame#headerFrame {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Bouton Info (Style "Ghost" Émeraude - Outrepasse le style QPushButton général) */
+QPushButton#btnInfo {
+    font-weight: bold;
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid #10b981;
+    border-radius: 6px;
+    color: #10b981;
+    padding: 6px 14px;
+    min-height: 24px;
+}
+
+QPushButton#btnInfo:hover {
+    background-color: rgba(16, 185, 129, 0.25);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+
+QPushButton#btnInfo:pressed {
+    background-color: rgba(16, 185, 129, 0.4);
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding-top: 7px;
+    padding-bottom: 5px;
+}
+
+/* Composants spécifiques QGIS */
+QgsFileWidget QPushButton,
+QgsMapLayerComboBox QPushButton,
+QgsMapLayerComboBox QToolButton {
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: inherit;
+    font-weight: normal;
+}
+
+QgsFileWidget QPushButton:hover,
+QgsMapLayerComboBox QPushButton:hover,
+QgsMapLayerComboBox QToolButton:hover {
+    border-color: #3D8C70;
+    color: #3D8C70;
+    background-color: rgba(61, 140, 112, 0.05);
+}
+
+/* Messages d'alerte (QMessageBox) */
+QMessageBox QPushButton {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    color: #ffffff;
+    padding: 4px 14px;
+}
+
+QMessageBox QPushButton:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #50b08f,
+        stop:1 #43997b
+    );
+}

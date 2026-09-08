@@ -24,9 +24,12 @@
 import os
 from qgis.PyQt import QtGui, QtWidgets, QtCore, uic
 from qgis.PyQt.QtCore import pyqtSignal, QSize, Qt
+from qgis.PyQt.QtGui import QDesktopServices
+from qgis.PyQt.QtCore import QUrl
 from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
 from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
+
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -86,6 +89,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
+
+        # Bouton info
+        self.btnInfo.clicked.connect(self.open_help_link)
         
         # Variables pour stocker les threads
         self.fsd_thread = None
@@ -130,12 +136,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         except Exception as e:
             QgsMessageLog.logMessage(f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou", level=Qgis.Warning)
 
-    def get_fsd_parameters(self):
-        """Récupère les données saisies par l'utilisateur pour le workflow FSD."""
-        # On ne passe que le working_folder, pas les objets layer
-        return {
-            'working_folder': self.mQgsFileWidget.filePath()
-        }
+    def open_help_link(self):
+        """Ouvre la documentation du plugin dans le navigateur par défaut."""
+        QDesktopServices.openUrl(QUrl("https://ki-mor.github.io/biblizou_frontend/"))
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
@@ -213,9 +216,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if not self.validate_fsd():
             return
 
-        # On ne passe que le working_folder
         params = {
-            'working_folder': self.mQgsFileWidget.filePath()
+            'working_folder': self.mQgsFileWidget.filePath(),
+            'clean_xml_after_run': self.cBDelDwlXml.isChecked()
         }
         
         QgsMessageLog.logMessage(f"Params avant création thread: {params}", "Biblizou", level=Qgis.Info)
