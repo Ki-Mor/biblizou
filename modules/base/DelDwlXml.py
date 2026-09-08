@@ -60,8 +60,8 @@ class DelDwlXml:
             ]
 
             if not xml_files:
-                self.log(f"Aucun fichier XML trouvée dans {folder_path}", Qgis.Warning)
-                return False
+                self.log(f"Aucun fichier XML trouvé dans {folder_path}", Qgis.Warning)
+                return False, 0
 
             # 2. Suppression des fichiers
             for file_name in xml_files:
