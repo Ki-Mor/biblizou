@@ -45,8 +45,8 @@ class DelDwlXml:
         self.deleted_files = 0
 
         if not folder_path:
-            self.log(f"Aucun dossier spécifié", Qgis.Warning)
-            return False
+            self.log("Aucun dossier spécifié", Qgis.Warning)
+            return False, 0
 
         if not os.path.isdir(folder_path):
             QgsMessageLog.logMessage(
