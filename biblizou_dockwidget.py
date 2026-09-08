@@ -208,7 +208,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return
 
         params = {
-            'working_folder': self.mQgsFileWidget.filePath()
+            'working_folder': self.mQgsFileWidget.filePath(),
             'clean_xml_after_run': self.cBDelDwlXml.isChecked()
         }
         
