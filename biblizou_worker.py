@@ -158,6 +158,7 @@ class FsdProcessingThread(QThread):
                 self.log.emit("Avertissement : Certaines couches WFS n'ont pas pu être chargées")
             else:
                 self.log.emit("Couches WFS chargées avec succès")
+            return success
 
         except Exception as e:
             self.log.emit(f"Erreur lors du chargement des couches WFS : {str(e)}")
