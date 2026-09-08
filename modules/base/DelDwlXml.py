@@ -72,13 +72,15 @@ class DelDwlXml:
                 except OSError as e:
                     self.log(f"Impossible de supprimer {file_name} : {str(e)}", Qgis.Warning)
 
-                if self.deleted_files > 0
-                    sef.log(f"Nettoyage terminé - {self.deleted_files}/{len(xml_files)} fichiersxml supprimés",
-                            Qgis.success)
-                    return True, self.deleted_files
-                else:
-                    self.log(f"Échec du nettoyage : aucun fichier supprimé", Qgis.critical)
-                    return False, 0
+            if self.deleted_files > 0:
+                self.log(
+                    f"Nettoyage terminé — {self.deleted_files}/{len(xml_files)} fichiers XML supprimés",
+                    Qgis.Success
+                )
+                return True, self.deleted_files
+            else:
+                self.log("Échec du nettoyage : aucun fichier supprimé", Qgis.Critical)
+                return False, 0
 
         except Exception as e:
             self.log(f"Erreur lors du traitement: {str(e)}", Qgis.Critical)
