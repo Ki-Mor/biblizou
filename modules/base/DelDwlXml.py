@@ -34,7 +34,7 @@ class DelDwlXml:
             level=level
         )
 
-    def run_with_path(self):
+    def run_with_path(self, folder_path: str) -> tuple:
         """
                 Point d'entrée
                 Args:
