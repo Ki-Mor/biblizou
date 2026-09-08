@@ -277,7 +277,7 @@ class FsdProcessingThread(QThread):
     def pivot_natura_hab(self):
         if not self._has_natura_hab:
             self.log.emit("Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
-            return 
+            return None
         self.log.emit("Génération pivot habitats Natura...")
         natura_pivot_hab(self.gpkg_path)
 
