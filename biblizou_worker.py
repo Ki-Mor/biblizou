@@ -86,6 +86,16 @@ class FsdProcessingThread(QThread):
 
             self.log.emit(f"Dossier de travail: {self.working_folder}")
 
+            # Récupération des couches de référence (aire d'étude)
+            self.znieff_layer = self.params.get('znieff_layer')
+            self.natura_layer = self.params.get('natura_layer')
+            if not self.znieff_layer:
+                self.error.emit("Paramètre 'znieff_layer' manquant ou vide dans les paramètres")
+                return
+            if not self.natura_layer:
+                self.error.emit("Paramètre 'natura_layer' manquant ou vide dans les paramètres")
+                return
+
             steps = [
                 ("Configuration des connexions WFS", self.setup_wfs_connections),
                 ("Chargement des couches WFS", self.load_wfs_layers),
