@@ -396,6 +396,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
+    # TODO Unifier proprement : une seule méthode on_error(self, error_message, button=None) où button est le bouton spécifique à réactiver, appelée avec le bon bouton à chaque connexion (self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref)))
     def on_error_stat(self, error_message):
         """Action en cas d'erreur du workflow BD Statuts."""
         self.btnRunStat.setEnabled(True)
