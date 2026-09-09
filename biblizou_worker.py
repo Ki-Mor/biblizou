@@ -198,7 +198,7 @@ class FsdProcessingThread(QThread):
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini")
             return False
-        success = znieff_download(self.working_folder)
+        success = znieff_download(self.znieff_layer, self.working_folder)
         if not success:
             self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des ZNIEFF")
         return success
