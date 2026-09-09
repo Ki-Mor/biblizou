@@ -68,6 +68,8 @@ class FsdProcessingThread(QThread):
         self.iface = iface
         # Initialisation des variables d'instance
         self.working_folder = None
+        self.znieff_layer = None
+        self.natura_layer = None
 
     def run(self):
         try:
