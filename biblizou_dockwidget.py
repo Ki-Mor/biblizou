@@ -295,6 +295,22 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
         self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(step)
+        self.labelProgressStatus.setText(message)
+
+    def _show_progress(self, total):
+        """Affiche et initialise la barre de progression globale."""
+        self.progressBarGlobal.setVisible(True)
+        self.progressBarGlobal.setMinimum(0)
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(0)
+        self.labelProgressStatus.setText("Démarrage...")
+
+    def _hide_progress(self):
+        """Masque la barre de progression globale et réinitialise le libellé."""
+        self.progressBarGlobal.setVisible(False)
+        self.labelProgressStatus.clear()
 
     def log_to_qgis(self, message):
         """Envoie les logs vers le panneau QGIS."""
