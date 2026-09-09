@@ -37,7 +37,7 @@ try:
     from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
 except ImportError:
     from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
-    
+
 import sys
 from . import resources as resources_rc
 sys.modules['resources_rc'] = resources_rc
@@ -58,27 +58,36 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
         # http://doc.qt.io/qt-5/designer-using-a-ui-file.html
-        
-        # #widgets-and-dialogs-with-auto-connect
+
+        # widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        
-        # Configuration du tableau TaxRef
+        # Initialisation des widgets spécifiques à QGIS
+        self.setup_custom_widgets()
+
+        # Configuration onglet FSD
+        ## Connexion des boutons
+        self.btnRunFsd.clicked.connect(self.run_fsd_process)
+
+        # ----------
+
+        # Configuration onglet TaxRef
+        ## Connexion des boutons
+        self.btnRunTaxref.clicked.connect(self.run_taxref_process)
+        ## Configuration du tableau TaxRef
         header = self.tableTaxref.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        
-        # Connexion du bouton d'ajout de ligne pour TaxRef
+        ## Connexion du bouton d'ajout de ligne pour TaxRef
         self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
-        
-        # Initialisation des widgets spécifiques à QGIS
-        self.setup_custom_widgets()
 
-        # Connexion des boutons (Noms basés sur le nouveau fichier .ui)
-        self.btnRunFsd.clicked.connect(self.run_fsd_process)
-        self.btnRunTaxref.clicked.connect(self.run_taxref_process)
+        #----------
+
+        # Configuration onglet BDC
+        ## Connexion des boutons
         self.btnRunStat.clicked.connect(self.run_stat_process)
-        
+        # Liste déroulante département (filtrable, stocke code_insee)
+        self.setup_department_combo()
         # Tableau BD Statuts (même principe que TaxRef)
         self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
         header_stat = self.tableStat.horizontalHeader()
@@ -86,24 +95,23 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        
-        # Liste déroulante département (filtrable, stocke code_insee)
-        self.setup_department_combo()
+
+        #----------
 
         # Bouton info
         self.btnInfo.clicked.connect(self.open_help_link)
-        
+
         # Variables pour stocker les threads
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
-        
+
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
         # Filtrer pour ne montrer que les couches polygonales
         self.mapLayerN2k.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.mapLayerZnieff.setFilters(QgsMapLayerProxyModel.PolygonLayer)
-        
+
         # Configurer le sélecteur de dossier
         self.mQgsFileWidget.setStorageMode(QgsFileWidget.GetDirectory)
         self.mQgsFileWidget.setDialogTitle("Sélectionner le dossier de travail")
@@ -128,10 +136,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             c = QCompleter(self.comboBoxDpt.model())
             c.setFilterMode(Qt.MatchContains)
             c.setCaseSensitivity(Qt.CaseInsensitive)
-            
+
             # Forcer la vue de complétion à adopter le style de liste
             c.popup().setStyleSheet(self.comboBoxDpt.styleSheet())
-            
+
             self.comboBoxDpt.setCompleter(c)
         except Exception as e:
             QgsMessageLog.logMessage(f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou", level=Qgis.Warning)
@@ -148,7 +156,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             errors.append("Couche ZNIEFF manquante.")
         if not self.mapLayerN2k.currentLayer():
             errors.append("Couche Natura 2000 manquante.")
-        
+
         working_folder = self.mQgsFileWidget.filePath()
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
@@ -162,20 +170,20 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Ajoute une ligne au tableau de consolidation TaxRef."""
         row = self.tableTaxref.rowCount()
         self.tableTaxref.insertRow(row)
-        
+
         lyr_cb = QgsMapLayerComboBox()
         lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
         fld_cb = QgsFieldComboBox()
         fld_cb.setLayer(lyr_cb.currentLayer())
         lyr_cb.layerChanged.connect(fld_cb.setLayer)
-        
+
         btn_del = QPushButton()
         icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
         btn_del.setIcon(QtGui.QIcon(icon_path))
         btn_del.setIconSize(QtCore.QSize(16, 16))
         btn_del.setMaximumWidth(30)
         btn_del.clicked.connect(lambda: self.tableTaxref.removeRow(self.tableTaxref.indexAt(btn_del.pos()).row()))
-        
+
         self.tableTaxref.setCellWidget(row, 0, lyr_cb)
         self.tableTaxref.setCellWidget(row, 1, fld_cb)
         self.tableTaxref.setCellWidget(row, 2, btn_del)
@@ -186,7 +194,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         for row in range(self.tableTaxref.rowCount()):
             lyr_widget = self.tableTaxref.cellWidget(row, 0)
             fld_widget = self.tableTaxref.cellWidget(row, 1)
-            
+
             if lyr_widget and lyr_widget.currentLayer():
                 data.append({
                     'layer_id': lyr_widget.currentLayer().id(),
@@ -201,7 +209,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
-        
+
         consolidation_data = self.get_taxref_consolidation_data()
         if not consolidation_data:
             errors.append("Aucune couche à consolider avec TaxRef.")
@@ -218,29 +226,31 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         params = {
             'working_folder': self.mQgsFileWidget.filePath(),
-            'clean_xml_after_run': self.cBDelDwlXml.isChecked()
+            'clean_xml_after_run': self.cBDelDwlXml.isChecked(),
+            'znieff_layer': self.mapLayerZnieff.currentLayer(),
+            'natura_layer': self.mapLayerN2k.currentLayer(),
         }
-        
+
         QgsMessageLog.logMessage(f"Params avant création thread: {params}", "Biblizou", level=Qgis.Info)
         QgsMessageLog.logMessage(f"Working folder: {params.get('working_folder')}", "Biblizou", level=Qgis.Info)
-        
+
         # Confirmation
         msg = f"Lancer le moissonnage des données FSD ?\n\nDossier : {params['working_folder']}"
-        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg, 
+        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg,
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        
+
         if reply == QtWidgets.QMessageBox.Yes:
             self.btnRunFsd.setEnabled(False)
-            
+
             # Initialisation du thread FSD
             self.fsd_thread = FsdProcessingThread(params, self.iface)
-            
+
             # Connexion des signaux du thread
             self.fsd_thread.progress.connect(self.update_status_bar)
             self.fsd_thread.log.connect(self.log_to_qgis)
             self.fsd_thread.finished.connect(self.on_fsd_finished)
             self.fsd_thread.error.connect(self.on_error)
-            
+
             self.fsd_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Traitement FSD démarré...", level=Qgis.Info)
 
@@ -254,24 +264,24 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             'consolidation_config': self.get_taxref_consolidation_data(),
             'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(), "biblizou.gpkg")
         }
-        
+
         # Confirmation
         msg = f"Lancer la consolidation avec TaxRef ?\n\n{len(params['consolidation_config'])} couche(s) à traiter"
-        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg, 
+        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg,
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        
+
         if reply == QtWidgets.QMessageBox.Yes:
             self.btnRunTaxref.setEnabled(False)
-            
+
             # Initialisation du thread TaxRef
             self.taxref_thread = TaxrefProcessingThread(params, self.iface)
-            
+
             # Connexion des signaux du thread
             self.taxref_thread.progress.connect(self.update_status_bar)
             self.taxref_thread.log.connect(self.log_to_qgis)
             self.taxref_thread.finished.connect(self.on_taxref_finished)
             self.taxref_thread.error.connect(self.on_error)
-            
+
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
 
@@ -392,7 +402,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.btnRunTaxref.setEnabled(True)
         self.btnRunStat.setEnabled(True)
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
-    
+
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
