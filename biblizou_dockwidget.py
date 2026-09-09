@@ -387,6 +387,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
         self.stat_thread.error.connect(self.on_error_stat)
+
+        self._show_progress(len(steps_list_length_if_known_or_1))
+
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou", "Workflow BD Statuts démarré...", level=Qgis.Info)
 
