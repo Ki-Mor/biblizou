@@ -69,6 +69,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # Initialisation des widgets spécifiques à QGIS
         self.setup_custom_widgets()
 
+        # Bouton info
+        self.btnInfo.clicked.connect(self.open_help_link)
+
+        # ----------
+
         # Configuration onglet FSD
         ## Connexion des boutons
         self.btnRunFsd.clicked.connect(self.run_fsd_process)
