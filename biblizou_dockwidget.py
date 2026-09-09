@@ -400,6 +400,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_error_stat(self, error_message):
         """Action en cas d'erreur du workflow BD Statuts."""
         self.btnRunStat.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur BD Statuts", error_message)
 
     def on_error(self, error_message):
