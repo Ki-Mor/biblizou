@@ -44,7 +44,7 @@ from .modules.ZnieffXmlToLayerEsp import run_module_with_path as znieff_process_
 from .modules.ZnieffPivotEspeces import run_module as znieff_pivot_esp
 
 # Nettoyage des XML téléchargés
-from .modules.base.DelDwlXml import run_module_with_path as clean_xml_files
+from modules.base.DelDwlXml import run_module_with_path as clean_xml_files
 
 # API TaxRef -> table data_taxref
 from .modules.TaxrefApiToTable import TaxrefApiToTable
