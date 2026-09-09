@@ -256,6 +256,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.fsd_thread.finished.connect(self.on_fsd_finished)
             self.fsd_thread.error.connect(self.on_error)
 
+            self._show_progress(1)
+
             self.fsd_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Traitement FSD démarré...", level=Qgis.Info)
 
