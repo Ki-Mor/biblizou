@@ -408,6 +408,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.btnRunFsd.setEnabled(True)
         self.btnRunTaxref.setEnabled(True)
         self.btnRunStat.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
     def closeEvent(self, event):
