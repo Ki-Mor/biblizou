@@ -291,7 +291,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
 
     def update_status_bar(self, step, total, message):
-        """Affiche la progression dans la barre de message de QGIS."""
+        """Affiche la progression dans la barre de message de QGIS et dans le dock."""
         self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
 
     def log_to_qgis(self, message):
