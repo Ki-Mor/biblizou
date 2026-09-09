@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-       <width>434</width>
-       <height>557</height>
+       <width>424</width>
+       <height>528</height>
    </rect>
   </property>
   <property name="styleSheet">
@@ -222,25 +222,6 @@ QMessageBox QPushButton:hover {
     <string notr="true"/>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QLabel" name="labelDirectory">
-      <property name="font">
-       <font>
-        <pointsize>8</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-        <underline>false</underline>
-        <kerning>false</kerning>
-       </font>
-      </property>
-      <property name="text">
-       <string>Sélectionner un dossier de travail</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="font">
@@ -274,8 +255,16 @@ QMessageBox QPushButton:hover {
           </property>
              <item row="4" column="1">
                  <widget class="QLabel" name="labelCleanXml">
+                     <property name="font">
+                         <font>
+                             <pointsize>8</pointsize>
+                         </font>
+                     </property>
                      <property name="text">
                          <string>Supprimer les fichiers XML après traitement</string>
+                     </property>
+                     <property name="wordWrap">
+                         <bool>true</bool>
                      </property>
                  </widget>
              </item>
@@ -291,10 +280,19 @@ QMessageBox QPushButton:hover {
                      <property name="text">
                          <string>Aire d'étude pour les ZNIEFF</string>
                      </property>
+                     <property name="wordWrap">
+                         <bool>true</bool>
+                     </property>
                  </widget>
              </item>
              <item row="1" column="0">
                  <widget class="QCheckBox" name="cBZnieff">
+                     <property name="maximumSize">
+                         <size>
+                             <width>15</width>
+                             <height>16777215</height>
+                         </size>
+                     </property>
                      <property name="text">
                          <string/>
                      </property>
@@ -360,10 +358,19 @@ QMessageBox QPushButton:hover {
             <property name="text">
                 <string>Aire d'étude pour les sites Natura 2000</string>
             </property>
+                     <property name="wordWrap">
+                         <bool>true</bool>
+            </property>
            </widget>
           </item>
              <item row="4" column="0">
                  <widget class="QCheckBox" name="cBDelDwlXml">
+                     <property name="maximumSize">
+                         <size>
+                             <width>15</width>
+                             <height>16777215</height>
+                         </size>
+                     </property>
             <property name="text">
              <string/>
             </property>
@@ -374,6 +381,11 @@ QMessageBox QPushButton:hover {
           </item>
              <item row="3" column="1">
                  <widget class="QLabel" name="labelFsdOptions">
+                     <property name="font">
+                         <font>
+                             <pointsize>8</pointsize>
+                         </font>
+                     </property>
                      <property name="text">
                          <string>Options</string>
                      </property>
@@ -381,6 +393,12 @@ QMessageBox QPushButton:hover {
              </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="cBN2K">
+               <property name="maximumSize">
+                   <size>
+                       <width>15</width>
+                       <height>16777215</height>
+                   </size>
+               </property>
             <property name="text">
              <string/>
             </property>
@@ -925,67 +943,6 @@ QMessageBox QPushButton:hover {
       </widget>
      </widget>
     </item>
-    <item row="4" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="btnInfo">
-        <property name="minimumSize">
-         <size>
-          <width>10</width>
-          <height>38</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>[i] Aide</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnOption">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QgsFileWidget" name="mQgsFileWidget"/>
-      </item>
-     </layout>
-    </item>
     <item row="0" column="0">
      <widget class="QFrame" name="frameBandeau">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -993,14 +950,14 @@ QMessageBox QPushButton:hover {
         <widget class="QLabel" name="labelIcon">
          <property name="minimumSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+              <width>20</width>
+              <height>20</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+              <width>20</width>
+              <height>20</height>
           </size>
          </property>
          <property name="styleSheet">
@@ -1025,7 +982,7 @@ QMessageBox QPushButton:hover {
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>25</height>
+              <height>20</height>
           </size>
          </property>
          <property name="palette">
@@ -1172,6 +1129,113 @@ QMessageBox QPushButton:hover {
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+       <item row="5" column="0">
+           <widget class="QProgressBar" name="progressBarGlobal">
+               <property name="enabled">
+                   <bool>true</bool>
+               </property>
+               <property name="value">
+                   <number>24</number>
+               </property>
+               <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="textVisible">
+                   <bool>false</bool>
+               </property>
+           </widget>
+       </item>
+       <item row="2" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                   <widget class="QLabel" name="labelDirectory">
+                       <property name="font">
+                           <font>
+                               <pointsize>8</pointsize>
+                               <weight>50</weight>
+                               <bold>false</bold>
+                               <underline>false</underline>
+                               <kerning>false</kerning>
+                           </font>
+                       </property>
+                       <property name="text">
+                           <string>Sélectionner un dossier de travail</string>
+                       </property>
+                       <property name="wordWrap">
+                           <bool>true</bool>
+                       </property>
+                   </widget>
+               </item>
+               <item>
+                   <widget class="QgsFileWidget" name="mQgsFileWidget"/>
+               </item>
+           </layout>
+       </item>
+       <item row="6" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                   <widget class="QPushButton" name="btnInfo">
+                       <property name="minimumSize">
+                           <size>
+                               <width>10</width>
+                               <height>38</height>
+                           </size>
+                       </property>
+                       <property name="maximumSize">
+                           <size>
+                               <width>150</width>
+                               <height>40</height>
+                           </size>
+                       </property>
+                       <property name="font">
+                           <font>
+                               <pointsize>8</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                           </font>
+                       </property>
+                       <property name="text">
+                           <string>[i] Aide</string>
+                       </property>
+                   </widget>
+               </item>
+               <item>
+                   <widget class="QPushButton" name="btnOption">
+                       <property name="text">
+                           <string/>
+                       </property>
+                       <property name="icon">
+                           <iconset resource="resources.qrc">
+                               <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
+                           </iconset>
+                       </property>
+                   </widget>
+               </item>
+               <item>
+                   <spacer name="horizontalSpacer">
+                       <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                           <size>
+                               <width>40</width>
+                               <height>20</height>
+                           </size>
+                       </property>
+                   </spacer>
+               </item>
+           </layout>
+       </item>
+       <item row="4" column="0">
+           <widget class="QLabel" name="labelProgressStatus">
+               <property name="text">
+                   <string/>
+               </property>
+               <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
      </widget>
     </item>
    </layout>

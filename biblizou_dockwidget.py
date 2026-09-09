@@ -61,8 +61,18 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+
+        # Initialisation de la progress bar
+        self.progressBarGlobal.setVisible(False)
+        self.labelProgressStatus.clear()
+
         # Initialisation des widgets spécifiques à QGIS
         self.setup_custom_widgets()
+
+        # Bouton info
+        self.btnInfo.clicked.connect(self.open_help_link)
+
+        # ----------
 
         # Configuration onglet FSD
         ## Connexion des boutons
@@ -95,11 +105,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-
-        #----------
-
-        # Bouton info
-        self.btnInfo.clicked.connect(self.open_help_link)
 
         # Variables pour stocker les threads
         self.fsd_thread = None
@@ -251,6 +256,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.fsd_thread.finished.connect(self.on_fsd_finished)
             self.fsd_thread.error.connect(self.on_error)
 
+            self._show_progress(1)
+
             self.fsd_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Traitement FSD démarré...", level=Qgis.Info)
 
@@ -282,12 +289,32 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.finished.connect(self.on_taxref_finished)
             self.taxref_thread.error.connect(self.on_error)
 
+            self._show_progress(len(steps_list_length_if_known_or_1))
+
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
 
+    # Progress Bar
+
     def update_status_bar(self, step, total, message):
-        """Affiche la progression dans la barre de message de QGIS."""
+        """Affiche la progression dans la barre de message de QGIS et dans le dock."""
         self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(step)
+        self.labelProgressStatus.setText(message)
+
+    def _show_progress(self, total):
+        """Affiche et initialise la barre de progression globale."""
+        self.progressBarGlobal.setVisible(True)
+        self.progressBarGlobal.setMinimum(0)
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(0)
+        self.labelProgressStatus.setText("Démarrage...")
+
+    def _hide_progress(self):
+        """Masque la barre de progression globale et réinitialise le libellé."""
+        self.progressBarGlobal.setVisible(False)
+        self.labelProgressStatus.clear()
 
     def log_to_qgis(self, message):
         """Envoie les logs vers le panneau QGIS."""
@@ -296,12 +323,14 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_fsd_finished(self, message):
         """Action à la fin du traitement FSD."""
         self.btnRunFsd.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
     def on_taxref_finished(self, message):
         """Action à la fin de la consolidation TaxRef."""
         self.btnRunTaxref.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
@@ -382,18 +411,24 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
         self.stat_thread.error.connect(self.on_error_stat)
+
+        self._show_progress(len(steps_list_length_if_known_or_1))
+
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou", "Workflow BD Statuts démarré...", level=Qgis.Info)
 
     def on_stat_finished(self, message):
         """Action à la fin du workflow BD Statuts."""
         self.btnRunStat.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
+    # TODO Unifier proprement : une seule méthode on_error(self, error_message, button=None) où button est le bouton spécifique à réactiver, appelée avec le bon bouton à chaque connexion (self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref)))
     def on_error_stat(self, error_message):
         """Action en cas d'erreur du workflow BD Statuts."""
         self.btnRunStat.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur BD Statuts", error_message)
 
     def on_error(self, error_message):
@@ -401,6 +436,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.btnRunFsd.setEnabled(True)
         self.btnRunTaxref.setEnabled(True)
         self.btnRunStat.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
     def closeEvent(self, event):
