@@ -24,7 +24,7 @@ class DelDwlXml:
         """Initialisation de la classe."""
         self.deleted_files = 0
 
-    def log(self):
+    def log(self, message, level=Qgis.Info):
         "Enregistre un message dans le journal Qgis"
         QgsMessageLog.logMessage(
             f"[{self.__class__.__name__}]: {message}",
