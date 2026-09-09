@@ -307,6 +307,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_taxref_finished(self, message):
         """Action à la fin de la consolidation TaxRef."""
         self.btnRunTaxref.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
