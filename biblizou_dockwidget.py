@@ -106,11 +106,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
-        #----------
-
-        # Bouton info
-        self.btnInfo.clicked.connect(self.open_help_link)
-
         # Variables pour stocker les threads
         self.fsd_thread = None
         self.taxref_thread = None
