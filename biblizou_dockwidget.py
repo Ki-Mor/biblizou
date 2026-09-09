@@ -287,6 +287,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.finished.connect(self.on_taxref_finished)
             self.taxref_thread.error.connect(self.on_error)
 
+            self._show_progress(len(steps_list_length_if_known_or_1))
+
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
 
