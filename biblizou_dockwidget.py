@@ -301,6 +301,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_fsd_finished(self, message):
         """Action à la fin du traitement FSD."""
         self.btnRunFsd.setEnabled(True)
+        self._hide_progress()
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
