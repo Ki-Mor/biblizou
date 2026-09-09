@@ -256,7 +256,7 @@ class FsdProcessingThread(QThread):
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini")
             return False
-        success = natura_download(self.working_folder)
+        success = natura_download(self.natura_layer, self.working_folder)
         if not success:
             self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des sites Natura 2000")
         return success
