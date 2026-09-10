@@ -177,7 +177,7 @@ de l'INPN et de consolider les résultats avec les taxons du projet
 
 **Liste déroulante département** (``comboBoxDpt``) :
 
-Alimentée depuis ``config/dept_fr.csv`` (colonnes ``nom_officiel``, ``code_insee``).
+Alimentée depuis ``data/dept_fr.csv`` (colonnes ``nom_officiel``, ``code_insee``).
 La liste est rendue éditable et dotée d'un ``QCompleter`` en mode ``MatchContains``
 (insensible à la casse) permettant de filtrer les départements en saisissant
 n'importe quelle partie du nom.
@@ -238,5 +238,5 @@ Référence des fichiers source
      - Définition Qt Designer du panneau (widgets, layout, styles QSS)
    * - ``biblizou_dockwidget.py``
      - Logique de l'interface : validation, collecte des paramètres, gestion des threads
-   * - ``config/dept_fr.csv``
+   * - ``data/dept_fr.csv``
      - Liste des départements français (``nom_officiel``, ``code_insee``)
