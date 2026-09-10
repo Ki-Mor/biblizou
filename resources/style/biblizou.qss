@@ -1,4 +1,4 @@
-/* --- 1. CONFIGURATIONS GÉNÉRALES --- */
+/* --- CONFIGURATIONS GÉNÉRALES --- */
 
 /* Champs texte */
 QLineEdit {
