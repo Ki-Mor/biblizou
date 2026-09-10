@@ -29,7 +29,7 @@ from qgis.PyQt.QtCore import QUrl
 from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
 from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
-
+from .utils.styles import apply_stylesheet
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -61,6 +61,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        apply_stylesheet(self)
 
         # Initialisation de la progress bar
         self.progressBarGlobal.setVisible(False)
@@ -124,7 +125,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def setup_department_combo(self):
         """Remplit le combo Département depuis dept_fr.csv (nom_officiel affiché, code_insee stocké). Liste filtrable."""
         import csv
-        csv_path = os.path.join(os.path.dirname(__file__), "config", "dept_fr.csv")
+        csv_path = os.path.join(os.path.dirname(__file__), "data", "dept_fr.csv")
         self.comboBoxDpt.clear()
         if not os.path.isfile(csv_path):
             QgsMessageLog.logMessage("Biblizou: dept_fr.csv introuvable", "Biblizou", level=Qgis.Warning)
