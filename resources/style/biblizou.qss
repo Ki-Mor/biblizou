@@ -92,7 +92,7 @@ QComboBox::down-arrow {
     height: 12px;
 }
 
-/* --- 3. BOUTONS PAR DÉFAUT --- */
+/* --- BOUTONS PAR DÉFAUT --- */
 
 QPushButton {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
