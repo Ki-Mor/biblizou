@@ -61,6 +61,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        apply_stylesheet(self)
 
         # Initialisation de la progress bar
         self.progressBarGlobal.setVisible(False)
