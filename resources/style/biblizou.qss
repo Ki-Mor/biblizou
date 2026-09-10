@@ -159,7 +159,22 @@ QCheckBox::indicator:checked {
 
 /* --- PROGRESS BAR PAR DÉFAUT --- */
 
-/* --- 4. CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
+QProgressBar {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border-radius: 4px;
+}
+
+/* --- CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
 
 /* Conteneur de l'en-tête */
 QFrame#headerFrame {
