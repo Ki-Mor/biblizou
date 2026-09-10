@@ -69,7 +69,16 @@ QGroupBox::title {
     color: #2c3e50;
 }
 
-/* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
+/* Style spécifique pour les sous-groupes imbriqués (hors listes rouges) */
+QGroupBox#gBDirHabAnnexes {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.01);
+    margin-top: 4px;
+    padding: 4px;
+}
+
+
+/* --- COMBOBOX (MENUS DÉROULANTS) --- */
 
 QComboBox {
     border: 1px solid rgba(0, 0, 0, 0.2);
