@@ -31,8 +31,6 @@ from . import resources
 from .biblizou_dockwidget import BiblizouDockWidget
 import os.path
 
-# Import the styleSheet for the ui
-from .utils.styles import apply_stylesheet
 
 class Biblizou:
     """QGIS Plugin Implementation."""
