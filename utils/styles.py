@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+/***************************************************************************
+ Styles
+                                 A QGIS plugin
+ Moissonnage bibliographique automatisé
+                             -------------------
+        begin                : 2026-09-10
+        copyright            : (C) 2026 by François Botcazou
+        email                : francois.botcazou@proton.me
+ ***************************************************************************/
+Description : Charge et applique la feuille de style resources/biblizou.qss
+"""
+
 import os
 
 
