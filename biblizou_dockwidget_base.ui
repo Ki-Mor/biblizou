@@ -6,213 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-       <width>424</width>
-       <height>528</height>
+    <width>424</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="styleSheet">
-   <string notr="true">/* --- 1. CONFIGURATIONS GÉNÉRALES --- */
-
-/* Champs texte */
-QLineEdit {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    padding: 6px;
-}
-
-QLineEdit:focus {
-    border: 1px solid #3D8C70;
-}
-
-/* Tableaux */
-QTableWidget {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    selection-background-color: #3D8C70;
-    selection-color: #ffffff;
-}
-
-QHeaderView::section {
-    padding: 6px;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-    font-weight: bold;
-}
-
-/* Onglets */
-QTabWidget::pane {
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    top: -1px;
-}
-
-QTabBar::tab {
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-bottom-color: transparent;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    padding: 8px 16px;
-    margin-right: 2px;
-}
-
-QTabBar::tab:selected {
-    color: #3D8C70;
-    border-top: 2px solid #3D8C70;
-    font-weight: bold;
-}
-
-QTabBar::tab:hover:!selected {
-    background-color: rgba(61, 140, 112, 0.1);
-}
-
-
-/* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
-
-QComboBox {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    padding: 5px 10px;
-}
-
-QComboBox:hover {
-    border: 1px solid #3D8C70;
-}
-
-QComboBox QAbstractItemView {
-    selection-background-color: #3D8C70;
-    selection-color: #ffffff;
-}
-
-/* Bouton contenant la flèche (Cadre arrondi avec fond vert émeraude) */
-QComboBox::drop-down {
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    width: 24px;
-    border: none;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
-    border-top-right-radius: 5px;   
-    border-bottom-right-radius: 5px;
-    background-color: #3D8C70;      
-}
-
-QComboBox::drop-down:hover {
-    background-color: #43997b;      
-}
-
-/* Flèche utilisant le fichier de ressources QRC */
-QComboBox::down-arrow {
-    image: url(:/plugins/biblizou/misc/arrowDown.png);
-    width: 12px;
-    height: 12px;
-}
-
-/* --- 3. BOUTONS PAR DÉFAUT --- */
-
-QPushButton {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #479e80,
-        stop:1 #3D8C70
-    );
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    color: #000000;
-    font-weight: bold;
-    padding: 8px 16px;
-}
-
-QPushButton:hover {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #50b08f,
-        stop:1 #43997b
-    );
-}
-
-QPushButton:pressed {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #2f6d57,
-        stop:1 #357a62
-    );
-    padding-top: 9px;
-    padding-bottom: 7px;
-}
-
-QPushButton:disabled {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-
-/* --- 4. CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
-
-/* Conteneur de l'en-tête */
-QFrame#headerFrame {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 10px;
-}
-
-/* Bouton Info (Style &quot;Ghost&quot; Émeraude - Outrepasse le style QPushButton général) */
-QPushButton#btnInfo {
-    font-weight: bold;
-    background-color: rgba(16, 185, 129, 0.1);
-    border: 1px solid #10b981;
-    border-radius: 6px;
-    color: #10b981;
-    padding: 6px 14px;
-    min-height: 24px;
-}
-
-QPushButton#btnInfo:hover {
-    background-color: rgba(16, 185, 129, 0.25);
-    border: 1px solid #10b981;
-    color: #10b981;
-}
-
-QPushButton#btnInfo:pressed {
-    background-color: rgba(16, 185, 129, 0.4);
-    border: 1px solid #10b981;
-    color: #10b981;
-    padding-top: 7px;
-    padding-bottom: 5px;
-}
-
-/* Composants spécifiques QGIS */
-QgsFileWidget QPushButton,
-QgsMapLayerComboBox QPushButton,
-QgsMapLayerComboBox QToolButton {
-    background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    padding: 4px 10px;
-    color: inherit;
-    font-weight: normal;
-}
-
-QgsFileWidget QPushButton:hover,
-QgsMapLayerComboBox QPushButton:hover,
-QgsMapLayerComboBox QToolButton:hover {
-    border-color: #3D8C70;
-    color: #3D8C70;
-    background-color: rgba(61, 140, 112, 0.05);
-}
-
-/* Messages d'alerte (QMessageBox) */
-QMessageBox QPushButton {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #479e80,
-        stop:1 #3D8C70
-    );
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 6px;
-    color: #ffffff;
-    padding: 4px 14px;
-}
-
-QMessageBox QPushButton:hover {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #50b08f,
-        stop:1 #43997b
-    );
-}</string>
+   <string notr="true"/>
   </property>
   <property name="windowTitle">
    <string>Biblizou</string>
@@ -253,55 +52,55 @@ QMessageBox QPushButton:hover {
           <property name="verticalSpacing">
            <number>6</number>
           </property>
-             <item row="4" column="1">
-                 <widget class="QLabel" name="labelCleanXml">
-                     <property name="font">
-                         <font>
-                             <pointsize>8</pointsize>
-                         </font>
-                     </property>
-                     <property name="text">
-                         <string>Supprimer les fichiers XML après traitement</string>
-                     </property>
-                     <property name="wordWrap">
-                         <bool>true</bool>
-                     </property>
-                 </widget>
-             </item>
-             <item row="1" column="1">
-                 <widget class="QLabel" name="labelZnieff">
-                     <property name="font">
-                         <font>
-                             <pointsize>8</pointsize>
-                             <weight>50</weight>
-                             <bold>false</bold>
-                         </font>
-                     </property>
-                     <property name="text">
-                         <string>Aire d'étude pour les ZNIEFF</string>
-                     </property>
-                     <property name="wordWrap">
-                         <bool>true</bool>
-                     </property>
-                 </widget>
-             </item>
-             <item row="1" column="0">
-                 <widget class="QCheckBox" name="cBZnieff">
-                     <property name="maximumSize">
-                         <size>
-                             <width>15</width>
-                             <height>16777215</height>
-                         </size>
-                     </property>
-                     <property name="text">
-                         <string/>
-                     </property>
-                     <property name="checked">
-                         <bool>true</bool>
-                     </property>
-                 </widget>
-             </item>
-             <item row="5" column="2">
+          <item row="4" column="1">
+           <widget class="QLabel" name="labelCleanXml">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Supprimer les fichiers XML après traitement</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="labelZnieff">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Aire d'étude pour les ZNIEFF</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="cBZnieff">
+            <property name="maximumSize">
+             <size>
+              <width>15</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
            <spacer name="verticalSpacer_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -317,7 +116,7 @@ QMessageBox QPushButton:hover {
             </property>
            </spacer>
           </item>
-             <item row="6" column="2">
+          <item row="6" column="2">
            <widget class="QPushButton" name="btnRunFsd">
             <property name="font">
              <font>
@@ -343,11 +142,11 @@ QMessageBox QPushButton:hover {
             </property>
            </widget>
           </item>
-             <item row="0" column="2">
-                 <widget class="QgsMapLayerComboBox" name="mapLayerN2k"/>
-             </item>
-             <item row="0" column="1">
-                 <widget class="QLabel" name="labelN2k">
+          <item row="0" column="2">
+           <widget class="QgsMapLayerComboBox" name="mapLayerN2k"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="labelN2k">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -356,21 +155,21 @@ QMessageBox QPushButton:hover {
              </font>
             </property>
             <property name="text">
-                <string>Aire d'étude pour les sites Natura 2000</string>
+             <string>Aire d'étude pour les sites Natura 2000</string>
             </property>
-                     <property name="wordWrap">
-                         <bool>true</bool>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-             <item row="4" column="0">
-                 <widget class="QCheckBox" name="cBDelDwlXml">
-                     <property name="maximumSize">
-                         <size>
-                             <width>15</width>
-                             <height>16777215</height>
-                         </size>
-                     </property>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="cBDelDwlXml">
+            <property name="maximumSize">
+             <size>
+              <width>15</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -379,26 +178,26 @@ QMessageBox QPushButton:hover {
             </property>
            </widget>
           </item>
-             <item row="3" column="1">
-                 <widget class="QLabel" name="labelFsdOptions">
-                     <property name="font">
-                         <font>
-                             <pointsize>8</pointsize>
-                         </font>
-                     </property>
-                     <property name="text">
-                         <string>Options</string>
-                     </property>
-                 </widget>
-             </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="labelFsdOptions">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Options</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="cBN2K">
-               <property name="maximumSize">
-                   <size>
-                       <width>15</width>
-                       <height>16777215</height>
-                   </size>
-               </property>
+            <property name="maximumSize">
+             <size>
+              <width>15</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -410,10 +209,10 @@ QMessageBox QPushButton:hover {
           <item row="1" column="2">
            <widget class="QgsMapLayerComboBox" name="mapLayerZnieff"/>
           </item>
-             <item row="2" column="0" colspan="3">
-                 <widget class="Line" name="line">
-                     <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
+          <item row="2" column="0" colspan="3">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -950,14 +749,14 @@ QMessageBox QPushButton:hover {
         <widget class="QLabel" name="labelIcon">
          <property name="minimumSize">
           <size>
-              <width>20</width>
-              <height>20</height>
+           <width>20</width>
+           <height>20</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-              <width>20</width>
-              <height>20</height>
+           <width>20</width>
+           <height>20</height>
           </size>
          </property>
          <property name="styleSheet">
@@ -982,7 +781,7 @@ QMessageBox QPushButton:hover {
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-              <height>20</height>
+           <height>20</height>
           </size>
          </property>
          <property name="palette">
@@ -1131,111 +930,111 @@ QMessageBox QPushButton:hover {
       </layout>
      </widget>
     </item>
-       <item row="5" column="0">
-           <widget class="QProgressBar" name="progressBarGlobal">
-               <property name="enabled">
-                   <bool>true</bool>
-               </property>
-               <property name="value">
-                   <number>24</number>
-               </property>
-               <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-               <property name="textVisible">
-                   <bool>false</bool>
-               </property>
-           </widget>
-       </item>
-       <item row="2" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <item>
-                   <widget class="QLabel" name="labelDirectory">
-                       <property name="font">
-                           <font>
-                               <pointsize>8</pointsize>
-                               <weight>50</weight>
-                               <bold>false</bold>
-                               <underline>false</underline>
-                               <kerning>false</kerning>
-                           </font>
-                       </property>
-                       <property name="text">
-                           <string>Sélectionner un dossier de travail</string>
-                       </property>
-                       <property name="wordWrap">
-                           <bool>true</bool>
-                       </property>
-                   </widget>
-               </item>
-               <item>
-                   <widget class="QgsFileWidget" name="mQgsFileWidget"/>
-               </item>
-           </layout>
-       </item>
-       <item row="6" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                   <widget class="QPushButton" name="btnInfo">
-                       <property name="minimumSize">
-                           <size>
-                               <width>10</width>
-                               <height>38</height>
-                           </size>
-                       </property>
-                       <property name="maximumSize">
-                           <size>
-                               <width>150</width>
-                               <height>40</height>
-                           </size>
-                       </property>
-                       <property name="font">
-                           <font>
-                               <pointsize>8</pointsize>
-                               <weight>75</weight>
-                               <bold>true</bold>
-                           </font>
-                       </property>
-                       <property name="text">
-                           <string>[i] Aide</string>
-                       </property>
-                   </widget>
-               </item>
-               <item>
-                   <widget class="QPushButton" name="btnOption">
-                       <property name="text">
-                           <string/>
-                       </property>
-                       <property name="icon">
-                           <iconset resource="resources.qrc">
-                               <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
-                           </iconset>
-                       </property>
-                   </widget>
-               </item>
-               <item>
-                   <spacer name="horizontalSpacer">
-                       <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                           <size>
-                               <width>40</width>
-                               <height>20</height>
-                           </size>
-                       </property>
-                   </spacer>
-               </item>
-           </layout>
-       </item>
-       <item row="4" column="0">
-           <widget class="QLabel" name="labelProgressStatus">
-               <property name="text">
-                   <string/>
-               </property>
-               <property name="alignment">
-                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
+    <item row="5" column="0">
+     <widget class="QProgressBar" name="progressBarGlobal">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <property name="textVisible">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="labelDirectory">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+          <underline>false</underline>
+          <kerning>false</kerning>
+         </font>
+        </property>
+        <property name="text">
+         <string>Sélectionner un dossier de travail</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QgsFileWidget" name="mQgsFileWidget"/>
+      </item>
+     </layout>
+    </item>
+    <item row="6" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btnInfo">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>[i] Aide</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnOption">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
+         </iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="labelProgressStatus">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
      </widget>
     </item>
    </layout>
