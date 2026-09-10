@@ -30,6 +30,7 @@ from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
 from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 from .utils.styles import apply_stylesheet
+from qgis.PyQt.QtWidgets import QStyleFactory
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -61,6 +62,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.setStyle(QStyleFactory.create("Fusion"))
         apply_stylesheet(self)
 
         # Initialisation de la progress bar

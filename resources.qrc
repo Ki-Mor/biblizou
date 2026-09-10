@@ -1,8 +1,8 @@
 <RCC>
   <qresource prefix="/plugins/biblizou">
     <file>misc/gear.png</file>
-    <file>biblizouStyleSheet.css</file>
     <file>icon.png</file>
+    <file>resources/style/biblizou.qss</file>
     <file>iconUi.png</file>
     <file>misc/arrowDown.png</file>
     <file>misc/INPN_logo.png</file>

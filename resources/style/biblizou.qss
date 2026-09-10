@@ -1,4 +1,4 @@
-/* --- 1. CONFIGURATIONS GÉNÉRALES --- */
+/* --- CONFIGURATIONS GÉNÉRALES --- */
 
 /* Champs texte */
 QLineEdit {
@@ -51,8 +51,34 @@ QTabBar::tab:hover:!selected {
     background-color: rgba(61, 140, 112, 0.1);
 }
 
+/* --- GROUPES DE SÉLECTION GÉNÉRAUX (QGroupBox) --- */
+QGroupBox {
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+}
 
-/* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 12px;
+    padding: 0 4px;
+    color: #2c3e50;
+}
+
+/* Style spécifique pour les sous-groupes imbriqués (hors listes rouges) */
+QGroupBox#gBDirHabAnnexes {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: rgba(0, 0, 0, 0.01);
+    margin-top: 4px;
+    padding: 4px;
+}
+
+
+/* --- COMBOBOX (MENUS DÉROULANTS) --- */
 
 QComboBox {
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -92,7 +118,7 @@ QComboBox::down-arrow {
     height: 12px;
 }
 
-/* --- 3. BOUTONS PAR DÉFAUT --- */
+/* --- BOUTONS PAR DÉFAUT --- */
 
 QPushButton {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
@@ -128,8 +154,53 @@ QPushButton:disabled {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* --- CHECKBOX PAR DÉFAUT --- */
 
-/* --- 4. CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
+QCheckBox::indicator:unchecked {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+QCheckBox:hover {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+            stop:0 #50b08f,
+            stop:1 #d0d0d0
+        );
+    border-radius: 8px;
+}
+
+QCheckBox::indicator:checked {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    image: url(:/plugins/biblizou/misc/arrowDown.png);
+    width: 12px;
+    height: 12px;
+}
+
+/* --- PROGRESS BAR PAR DÉFAUT --- */
+
+QProgressBar {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
+        stop:0 #479e80,
+        stop:1 #3D8C70
+    );
+    border-radius: 4px;
+}
+
+/* --- CONFIGURATIONS SPÉCIFIQUES (HAUTE PRIORITÉ) --- */
 
 /* Conteneur de l'en-tête */
 QFrame#headerFrame {
