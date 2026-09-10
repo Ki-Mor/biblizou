@@ -29,7 +29,7 @@ from qgis.PyQt.QtCore import QUrl
 from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
 from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
-
+from .utils.styles import apply_stylesheet
 
 
 # Importation du thread de traitement depuis le script biblizou.py
