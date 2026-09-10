@@ -51,6 +51,23 @@ QTabBar::tab:hover:!selected {
     background-color: rgba(61, 140, 112, 0.1);
 }
 
+/* --- GROUPES DE SÉLECTION GÉNÉRAUX (QGroupBox) --- */
+QGroupBox {
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 12px;
+    padding: 0 4px;
+    color: #2c3e50;
+}
 
 /* --- 2. COMBOBOX (MENUS DÉROULANTS) --- */
 
