@@ -3,10 +3,20 @@
 Auteur : ExEco Environnement - François Botcazou
 Nom : PivotLayer.py
 Groupe : base
-Description : Classe abstraite (ABC) pour la création de tableaux croisés dynamiques (pivots)
-              à partir de couches QGIS. Les colonnes représentent les sites, les lignes les entités
-              (habitats ou espèces).
+Description : Classe abstraite mutualisée pour la création de tableaux croisés dynamiques (pivots)
+à partir de couches QGIS. Les colonnes représentent les sites, les lignes les entités
+(habitats ou espèces).
+
+Méthodes concrètes (mutualisées) :
+    run(), load_source_layer(), create_virtual_layer(), remove_accents()
+
+Méthodes abstraites (à implémenter dans chaque classe enfant) :
+    get_source_layer_name() → nom de la couche source dans le projet QGIS
+    get_output_layer_name() → nom de la couche pivot à créer
+    get_site_keys()         → tuple (code_field, name_field) pour extraire les sites
+    build_pivot_query()     → requête SQL complète du pivot
 """
+
 import os
 import unicodedata
 from abc import ABC, abstractmethod
@@ -14,22 +24,9 @@ from abc import ABC, abstractmethod
 from qgis.core import QgsVectorLayer, QgsMessageLog, QgsProject, Qgis
 from .LayerUtils import LayerUtils
 
+from ...settings.biblizou_settings import get_gpkg_filename
 
 class PivotLayer(ABC):
-    """
-    Classe abstraite mutualisée pour la création de tableaux croisés dynamiques (pivots)
-    à partir de couches QGIS. Les colonnes représentent les sites, les lignes les entités
-    (habitats ou espèces).
-
-    Méthodes concrètes (mutualisées) :
-        run(), load_source_layer(), create_virtual_layer(), remove_accents()
-
-    Méthodes abstraites (à implémenter dans chaque classe enfant) :
-        get_source_layer_name() → nom de la couche source dans le projet QGIS
-        get_output_layer_name() → nom de la couche pivot à créer
-        get_site_keys()         → tuple (code_field, name_field) pour extraire les sites
-        build_pivot_query()     → requête SQL complète du pivot
-    """
 
     # -----------------------------------------------------------------------
 
@@ -132,7 +129,7 @@ class PivotLayer(ABC):
             if not project_dir:
                 self.log("Projet non sauvegardé et aucun chemin gpkg fourni", Qgis.Warning)
                 return
-            gpkg_path = os.path.join(project_dir, "biblizou.gpkg")
+            gpkg_path = os.path.join(project_dir, get_gpkg_filename())
 
         success, err_msg = LayerUtils.save_to_gpkg(layer, gpkg_path)
 

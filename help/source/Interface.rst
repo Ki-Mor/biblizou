@@ -18,15 +18,20 @@ et piloté par ``BiblizouDockWidget`` (``biblizou_dockwidget.py``).
 
 Il se compose de trois zones :
 
-- Un **en-tête** avec le logo et un bouton *[i] Aide*
+- Un **en-tête** avec le logo et le titre
 - Un **sélecteur de dossier de travail**, commun à tous les modules
-- Un **widget à onglets** donnant accès aux quatre modules (FSD, TaxRef, BDC Statuts, Botazou)
+- Un **widget à onglets** donnant accès aux quatre modules (FSD, TaxRef, BDC Statuts)
+- Un **pied-de-page** avec un bouton *[i] Aide* et un bouton *options* signalé par un
+figuré d'engrenage
 
 Tous les traitements sont lancés dans des ``QThread`` distincts afin de ne pas bloquer
 l'interface QGIS. La progression est reportée dans la barre de statut principale de QGIS
 (``statusBar().showMessage()``) et les messages détaillés dans le panneau
 :menuselection:`Vue --> Panneaux --> Journal des messages` sous la catégorie **Biblizou**.
 
+Une barre de chargement apparait en pied-de-page lors des traitements et disparait lorsque
+les traitements sont terminés ou interrompus.
+Le **dernier message d'étape** s'affiche également au-dessus de la barre de progression
 
 Dossier de travail
 ------------------

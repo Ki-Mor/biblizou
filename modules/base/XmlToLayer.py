@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
 from .LayerUtils import LayerUtils
 
+from ...settings.biblizou_settings import get_gpkg_filename
 
 class XmlToLayer(ABC):
     """
@@ -80,7 +81,7 @@ class XmlToLayer(ABC):
             temp_layer = self.create_temp_layer(data)
             temp_layer.setName(self.get_layer_name())
 
-            self.gpkg_path = os.path.join(folder_path, "biblizou.gpkg")
+            self.gpkg_path = os.path.join(folder_path, get_gpkg_filename())
             self.save_to_geopackage(temp_layer)
 
             if self.gpkg_saved:
