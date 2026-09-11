@@ -27,6 +27,8 @@ from qgis.PyQt.QtCore import QThread, pyqtSignal
 # WFS Manager
 from .modules.WfsManager import setup_wfs_connections, load_wfs_layers
 
+# Settings
+
 # Import des modules Natura 2000
 from .modules.NaturaDwlXml import run_module_with_path as natura_download
 from .modules.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
@@ -54,6 +56,7 @@ from .modules.StatusApiToTable import run as status_api_to_table
 from .modules.StatusJoinTaxref import run as status_join_taxref
 from .modules.StatusPivotByGroup import run as status_pivot_by_group
 
+from .settings.biblizou_settings import get_gpkg_filename
 
 class FsdProcessingThread(QThread):
     """Thread gérant le workflow complet des données FSD (Natura 2000 + ZNIEFF)."""
@@ -84,7 +87,7 @@ class FsdProcessingThread(QThread):
 
             # Stockage dans la variable d'instance pour utilisation dans toutes les méthodes
             self.working_folder = working_folder
-            self.gpkg_path = os.path.join(working_folder, "biblizou.gpkg")
+            self.gpkg_path = os.path.join(working_folder, get_gpkg_filename())
 
             self.log.emit(f"Dossier de travail: {self.working_folder}")
 

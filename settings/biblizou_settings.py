@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-/***************************************************************************
- BiblizouSettings
-                                 A QGIS plugin
- Moissonnage bibliographique automatisé
-                             -------------------
-        begin                : 2026-09-10
-        copyright            : (C) 2026 by François Botcazou
-        email                : francois.botcazou@proton.me
- ***************************************************************************/
+Auteur : François Botcazou
+Nom : biblizou_settings.py
+Groupe : Options
 Description : Centralise la lecture/écriture des réglages généraux du plugin
               (QgsSettings), pour éviter de disperser les clés et valeurs
               par défaut dans chaque module.
 """
 
 import re
-
 from qgis.core import QgsSettings
 
 SETTINGS_KEY_GPKG_NAME = "biblizou/gpkg_name"
@@ -25,23 +18,21 @@ DEFAULT_GPKG_NAME = "biblizou.gpkg"
 _INVALID_CHARS_RE = re.compile(r'[\\/:*?"<>|]')
 
 
-def sanitize_gpkg_name(name):
+def get_invalid_chars(name):
     """
-    Nettoie un nom de GeoPackage saisi par l'utilisateur :
-    - retire les caractères invalides pour un nom de fichier,
-    - force l'extension .gpkg,
-    - retombe sur DEFAULT_GPKG_NAME si le résultat est vide.
+    Retourne l'ensemble des caractères interdits présents dans `name`
+    (ensemble vide si le nom est valide). Utilisable tel quel pour
+    construire le message de l'info-bulle plus tard.
     """
+    return set(_INVALID_CHARS_RE.findall(name or ""))
+
+
+def is_valid_gpkg_name(name):
+    """Un nom est valide s'il n'est pas vide (une fois nettoyé des espaces) et ne contient aucun caractère interdit."""
     name = (name or "").strip()
-    name = _INVALID_CHARS_RE.sub("", name)
-
     if not name:
-        return DEFAULT_GPKG_NAME
-
-    if not name.lower().endswith(".gpkg"):
-        name += ".gpkg"
-
-    return name
+        return False
+    return not get_invalid_chars(name)
 
 
 def get_gpkg_filename():
@@ -51,6 +42,6 @@ def get_gpkg_filename():
 
 def set_gpkg_filename(name):
     """Nettoie puis enregistre le nom du GeoPackage. Retourne le nom final enregistré."""
-    clean_name = sanitize_gpkg_name(name)
+    clean_name = get_gpkg_filename()
     QgsSettings().setValue(SETTINGS_KEY_GPKG_NAME, clean_name)
     return clean_name

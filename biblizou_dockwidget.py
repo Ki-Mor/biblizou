@@ -31,6 +31,7 @@ from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 from .utils.styles import apply_stylesheet
 from qgis.PyQt.QtWidgets import QStyleFactory
+from .biblizou_dialog_options import BiblizouDialogOptions
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -74,6 +75,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # Bouton info
         self.btnInfo.clicked.connect(self.open_help_link)
+
+        # Bouton options générales
+        self.btnOption.clicked.connect(self.open_options_dialog)
 
         # ----------
 
@@ -155,6 +159,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_help_link(self):
         """Ouvre la documentation du plugin dans le navigateur par défaut."""
         QDesktopServices.openUrl(QUrl("https://ki-mor.github.io/biblizou_frontend/"))
+
+    def open_options_dialog(self):
+        """Ouvre la fenêtre des réglages généraux du plugin."""
+        dialog = BiblizouDialogOptions(parent=self)
+        dialog.exec_()
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
@@ -272,7 +281,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         params = {
             'working_folder': self.mQgsFileWidget.filePath(),
             'consolidation_config': self.get_taxref_consolidation_data(),
-            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(), "biblizou.gpkg")
+            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(), get_gpkg_filename())
         }
 
         # Confirmation
@@ -296,8 +305,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
-
-    # Progress Bar
 
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
@@ -392,7 +399,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         working_folder = self.mQgsFileWidget.filePath()
         params = {
             "working_folder": working_folder,
-            "gpkg_path": os.path.join(working_folder, "biblizou.gpkg"),
+            "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
             "code_insee": self.comboBoxDpt.currentData(),
             "consolidation_config": self.get_stat_config()
         }
