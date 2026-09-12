@@ -17,8 +17,8 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QVariant, pyqtSignal, QObject
 
-from .base.ApiUtils import collect_cdnom_from_config, create_taxref_session
-from .base.LayerUtils import LayerUtils
+from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from ..base.LayerUtils import LayerUtils
 
 
 class TaxrefApiToTable(QObject):

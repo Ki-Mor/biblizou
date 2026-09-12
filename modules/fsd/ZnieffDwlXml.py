@@ -6,7 +6,7 @@ Groupe : FSD
 Description : Module pour télécharger les xml des zonages ZNIEFF dans un périmètre donné.
 """
 
-from .base.DwlXml import DwlXml
+from ..base.DwlXml import DwlXml
 
 
 class ZnieffDwlXml(DwlXml):

@@ -25,38 +25,38 @@ import os
 from qgis.PyQt.QtCore import QThread, pyqtSignal
 
 # WFS Manager
-from .modules.WfsManager import setup_wfs_connections, load_wfs_layers
+from .modules.fsd.WfsManager import setup_wfs_connections, load_wfs_layers
 
 # Settings
+from .settings.biblizou_settings import get_gpkg_filename
 
 # Import des modules Natura 2000
-from .modules.NaturaDwlXml import run_module_with_path as natura_download
-from .modules.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
-from .modules.NaturaXmlToLayerHab import run_module_with_path as natura_process_hab
-from .modules.NaturaPivotHabitats import run_module as natura_pivot_hab
-from .modules.NaturaXmlToLayerEsp import run_module_with_path as natura_process_esp
-from .modules.NaturaPivotEspeces import run_module as natura_pivot_esp
+from .modules.fsd.NaturaDwlXml import run_module_with_path as natura_download
+from .modules.fsd.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
+from .modules.fsd.NaturaXmlToLayerHab import run_module_with_path as natura_process_hab
+from .modules.fsd.NaturaPivotHabitats import run_module as natura_pivot_hab
+from .modules.fsd.NaturaXmlToLayerEsp import run_module_with_path as natura_process_esp
+from .modules.fsd.NaturaPivotEspeces import run_module as natura_pivot_esp
 
 # Import des modules ZNIEFF
-from .modules.ZnieffDwlXml import run_module_with_path as znieff_download
-from .modules.ZnieffXmlToLayerDesc import run_module_with_path as znieff_process_desc
-from .modules.ZnieffXmlToLayerHab import run_module_with_path as znieff_process_hab
-from .modules.ZnieffPivotHabitats import run_module as znieff_pivot_hab
-from .modules.ZnieffXmlToLayerEsp import run_module_with_path as znieff_process_esp
-from .modules.ZnieffPivotEspeces import run_module as znieff_pivot_esp
+from .modules.fsd.ZnieffDwlXml import run_module_with_path as znieff_download
+from .modules.fsd.ZnieffXmlToLayerDesc import run_module_with_path as znieff_process_desc
+from .modules.fsd.ZnieffXmlToLayerHab import run_module_with_path as znieff_process_hab
+from .modules.fsd.ZnieffPivotHabitats import run_module as znieff_pivot_hab
+from .modules.fsd.ZnieffXmlToLayerEsp import run_module_with_path as znieff_process_esp
+from .modules.fsd.ZnieffPivotEspeces import run_module as znieff_pivot_esp
 
 # Nettoyage des XML téléchargés
 from .modules.base.DelDwlXml import run_module_with_path as clean_xml_files
 
 # API TaxRef -> table data_taxref
-from .modules.TaxrefApiToTable import TaxrefApiToTable
+from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
 
 # BD Statuts (API TaxRef Statuts)
-from .modules.StatusApiToTable import run as status_api_to_table
-from .modules.StatusJoinTaxref import run as status_join_taxref
-from .modules.StatusPivotByGroup import run as status_pivot_by_group
+from .modules.bdc.StatusApiToTable import run as status_api_to_table
+from .modules.bdc.StatusJoinTaxref import run as status_join_taxref
+from .modules.bdc.StatusPivotByGroup import run as status_pivot_by_group
 
-from .settings.biblizou_settings import get_gpkg_filename
 
 class FsdProcessingThread(QThread):
     """Thread gérant le workflow complet des données FSD (Natura 2000 + ZNIEFF)."""

@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 from qgis.PyQt.QtCore import QVariant
 
-from .base.XmlToLayer import XmlToLayer
+from ..base.XmlToLayer import XmlToLayer
 
 
 class ZnieffXmlToLayerHab(XmlToLayer):
