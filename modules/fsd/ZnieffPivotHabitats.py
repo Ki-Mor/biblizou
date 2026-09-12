@@ -7,7 +7,7 @@ Description : Module pour créer un tableau croisé dynamique (pivot) des habita
               Transforme la table longue en format large avec une ZNIEFF par colonne.
 """
 
-from .base.PivotLayer import PivotLayer
+from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
 
 

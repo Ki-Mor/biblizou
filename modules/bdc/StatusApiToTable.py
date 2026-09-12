@@ -20,8 +20,8 @@ from qgis.core import (
 )
 from qgis.PyQt.QtCore import QVariant
 
-from .base.ApiUtils import collect_cdnom_from_config, create_taxref_session
-from .base.LayerUtils import LayerUtils
+from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from ..base.LayerUtils import LayerUtils
 
 API_BASE = "https://taxref.mnhn.fr/api/status/search/lines"
 BATCH_SIZE = 50

@@ -12,7 +12,7 @@ Description : Module pour créer un tableau croisé dynamique (pivot) unique des
               - Tri par GROUPE puis par nom_complet (ascendant).
 """
 
-from .base.PivotLayer import PivotLayer
+from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
 
 

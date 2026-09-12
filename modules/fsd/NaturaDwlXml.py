@@ -6,7 +6,7 @@ Groupe : FSD
 Description : Module pour télécharger les xml des zonages Natura dans un périmètre donné.
 """
 
-from .base.DwlXml import DwlXml
+from ..base.DwlXml import DwlXml
 
 
 class NaturaDwlXml(DwlXml):
