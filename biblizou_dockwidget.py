@@ -32,6 +32,8 @@ from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 from .utils.styles import apply_stylesheet
 from qgis.PyQt.QtWidgets import QStyleFactory
 from .biblizou_dialog_options import BiblizouDialogOptions
+from .biblizou_dialog_patri import BiblizouDialogPatri
+
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -112,6 +114,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+            self.btnPatri.clicked.connect(self.open_patri_dialog)
 
         # Variables pour stocker les threads
         self.fsd_thread = None
@@ -163,6 +166,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_options_dialog(self):
         """Ouvre la fenêtre des réglages généraux du plugin."""
         dialog = BiblizouDialogOptions(parent=self)
+        dialog.exec_()
+
+    def open_patri_dialog(self):
+        """Ouvre la fenêtre des réglages généraux du plugin."""
+        dialog = BiblizouDialogPatri(parent=self)
         dialog.exec_()
 
     def validate_fsd(self):
