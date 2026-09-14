@@ -94,34 +94,44 @@ class FsdProcessingThread(QThread):
             # Récupération des couches de référence (aire d'étude)
             self.znieff_layer = self.params.get('znieff_layer')
             self.natura_layer = self.params.get('natura_layer')
-            if not self.znieff_layer:
+            self.run_znieff = self.params.get('run_znieff', True)
+            self.run_natura = self.params.get('run_natura', True)
+            if self.run_znieff and not self.znieff_layer:
                 self.error.emit("Paramètre 'znieff_layer' manquant ou vide dans les paramètres")
                 return
-            if not self.natura_layer:
+            if self.run_natura and not self.natura_layer:
                 self.error.emit("Paramètre 'natura_layer' manquant ou vide dans les paramètres")
                 return
 
             steps = [
                 ("Configuration des connexions WFS", self.setup_wfs_connections),
                 ("Chargement des couches WFS", self.load_wfs_layers),
-
-                # TODO checkbox cBN2K de l'ui activée comme condition d'execution de la pipeline
-                ("Téléchargement ZNIEFF", self.download_znieff),
-                ("Traitement descriptions ZNIEFF", self.process_znieff_desc),
-                ("Traitement espèces ZNIEFF", self.process_znieff_esp),
-                ("Traitement habitats ZNIEFF", self.process_znieff_hab),
-
-                # TODO checkbox cBZnieff de l'ui activée comme condition d'execution de la pipeline
-                ("Téléchargement Natura 2000", self.download_natura),
-                ("Traitement descriptions Natura 2000", self.process_natura_desc),
-                ("Traitement espèces Natura 2000", self.process_natura_esp),
-                ("Traitement habitats Natura 2000", self.process_natura_hab),
-
-                ("Pivot des espèces déterminantes des ZNIEFF", self.pivot_znieff_esp),
-                ("Pivot des habitats des ZNIEFF", self.pivot_znieff_hab),
-                ("Pivot des espèces Natura 2000", self.pivot_natura_esp),
-                ("Pivot des habitats Natura 2000", self.pivot_natura_hab),
             ]
+
+            if self.run_znieff:
+                steps.append(("Téléchargement ZNIEFF", self.download_znieff))
+                steps.append(("Traitement descriptions ZNIEFF", self.process_znieff_desc))
+                steps.append(("Traitement espèces ZNIEFF", self.process_znieff_esp))
+                steps.append(("Traitement habitats ZNIEFF", self.process_znieff_hab))
+            else:
+                self.log.emit("Bloc ZNIEFF ignoré (case cBZnieff décochée)")
+
+            if self.run_natura:
+                steps.append(("Téléchargement Natura 2000", self.download_natura))
+                steps.append(("Traitement descriptions Natura 2000", self.process_natura_desc))
+                steps.append(("Traitement espèces Natura 2000", self.process_natura_esp))
+                steps.append(("Traitement habitats Natura 2000", self.process_natura_hab))
+            else:
+                self.log.emit("Bloc Natura 2000 ignoré (case cBN2K décochée)")
+
+            if self.run_znieff:
+                steps.append(("Pivot des espèces déterminantes des ZNIEFF", self.pivot_znieff_esp))
+                steps.append(("Pivot des habitats des ZNIEFF", self.pivot_znieff_hab))
+
+            if self.run_natura:
+                steps.append(("Pivot des espèces Natura 2000", self.pivot_natura_esp))
+                steps.append(("Pivot des habitats Natura 2000", self.pivot_natura_hab))
+
             # Flags pour bloquer les pivots si aucune donnée en amont
             self._has_znieff_esp = False
             self._has_znieff_hab = False
