@@ -70,7 +70,8 @@ QGroupBox::title {
 }
 
 /* Style spécifique pour les sous-groupes imbriqués (hors listes rouges) */
-QGroupBox#gBDirHabAnnexes {
+QGroupBox#gBDH,
+QGroupBox#gBDO {
     border: 1px solid rgba(0, 0, 0, 0.08);
     background-color: rgba(0, 0, 0, 0.01);
     margin-top: 4px;
@@ -156,32 +157,28 @@ QPushButton:disabled {
 
 /* --- CHECKBOX PAR DÉFAUT --- */
 
-QCheckBox::indicator:unchecked {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-QCheckBox:hover {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-            stop:0 #50b08f,
-            stop:1 #d0d0d0
-        );
-    border-radius: 8px;
-}
-
-QCheckBox::indicator:checked {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1,
-        stop:0 #479e80,
-        stop:1 #3D8C70
-    );
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
-    image: url(:/plugins/biblizou/misc/arrowDown.png);
+QCheckBox::indicator, QGroupBox::indicator {
     width: 12px;
     height: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    background-color: #ffffff;
 }
+
+QCheckBox::indicator:hover, QGroupBox::indicator:hover {
+    border: 1px solid #3D8C70;
+    background-color: rgba(61, 140, 112, 0.05);
+}
+
+QCheckBox::indicator:checked, QGroupBox::indicator:checked {
+    background-color: #3D8C70;
+    border: 1px solid #3D8C70;
+    image: url(:/plugins/biblizou/misc/arrowDown.png);
+}
+
+QCheckBox::indicator:disabled, QGroupBox::indicator:disabled {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
 
 /* --- PROGRESS BAR PAR DÉFAUT --- */
 

@@ -40,7 +40,6 @@ class BiblizouDialogOptions(QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         super(BiblizouDialogOptions, self).__init__(parent)
         self.setupUi(self)
-
         # Pré-remplissage avec la valeur actuellement enregistrée
         self.leGpkgName.setText(get_gpkg_filename())
 

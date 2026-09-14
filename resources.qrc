@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/biblizou">
+      <file>misc/help.svg</file>
     <file>misc/gear.png</file>
     <file>icon.png</file>
     <file>resources/style/biblizou.qss</file>

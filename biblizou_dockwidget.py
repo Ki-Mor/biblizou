@@ -31,7 +31,7 @@ from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 from .utils.styles import apply_stylesheet
 from qgis.PyQt.QtWidgets import QStyleFactory
-from .biblizou_dialog_options import BiblizouDialogOptions
+
 
 
 # Importation du thread de traitement depuis le script biblizou.py
@@ -43,6 +43,8 @@ except ImportError:
 import sys
 from . import resources as resources_rc
 sys.modules['resources_rc'] = resources_rc
+from .biblizou_dialog_options import BiblizouDialogOptions
+from .biblizou_dialog_patri import BiblizouDialogPatri
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'biblizou_dockwidget_base.ui'))
@@ -113,6 +115,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
             header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
+        # le bouton patri ouvre biblizou_dialog_patri
+        self.btnPatri.clicked.connect(self.open_patri_dialog)
+        # Le bouton patri est dépendant de l'état de la checkbox patri
+        self.cBPatri.toggled.connect(self.btnPatri.setEnabled)
+
         # Variables pour stocker les threads
         self.fsd_thread = None
         self.taxref_thread = None
@@ -163,6 +170,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_options_dialog(self):
         """Ouvre la fenêtre des réglages généraux du plugin."""
         dialog = BiblizouDialogOptions(parent=self)
+        dialog.exec_()
+
+    def open_patri_dialog(self):
+        """Ouvre la fenêtre des réglages généraux du plugin."""
+        dialog = BiblizouDialogPatri(parent=self)
         dialog.exec_()
 
     def validate_fsd(self):
