@@ -266,7 +266,7 @@
         </property>
         <property name="icon">
          <iconset resource="resources.qrc">
-          <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
+             <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
          </iconset>
         </property>
        </widget>
@@ -297,7 +297,12 @@
          </font>
         </property>
         <property name="text">
-         <string>[i] Aide</string>
+            <string>Aide</string>
+        </property>
+           <property name="icon">
+               <iconset resource="resources.qrc">
+                   <normaloff>:/plugins/biblizou/misc/help.svg</normaloff>:/plugins/biblizou/misc/help.svg
+               </iconset>
         </property>
        </widget>
       </item>
@@ -648,7 +653,7 @@
             </property>
             <property name="icon">
              <iconset resource="resources.qrc">
-              <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
+                 <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png
              </iconset>
             </property>
            </widget>
@@ -1058,7 +1063,7 @@
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>misc/data-add.png</normaloff>misc/data-add.png
+                 <normaloff>misc/data-add.png</normaloff>misc/data-add.png
              </iconset>
             </property>
            </widget>
