@@ -18,6 +18,10 @@ class BiblizouDialogPatri(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         super(BiblizouDialogPatri, self).__init__(parent)
         self.setupUi(self)
+        self.gBListeRougeMond.set_statuts_coches([])
+        self.gBListeRougeEuro.set_statuts_coches([])
+        self.gBListeRougeNat.set_statuts_coches(["NT", "VU", "EN", "CR"])
+        self.gBListeRougeReg.set_statuts_coches(["NT", "VU", "EN", "CR"])
         self.setup_collapsible_groupbox(self.gBConventionInternationales)
         self.setup_collapsible_groupbox(self.gBDirEuro)
         self.setup_collapsible_groupbox(self.gBProtection)
