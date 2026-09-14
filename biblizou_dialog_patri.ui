@@ -467,7 +467,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="cBListeRougeMond">
             <property name="maximumSize">
              <size>
               <width>25</width>
@@ -520,7 +520,7 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="labelListeRougeMond">
             <property name="text">
              <string>Liste Rouge mondiale</string>
             </property>
@@ -530,7 +530,7 @@
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="labelListeRougeEuro">
             <property name="text">
              <string>Liste Rouge européenne</string>
             </property>
@@ -540,7 +540,7 @@
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="labelListeRougeNat">
             <property name="text">
              <string>Liste Rouge nationale</string>
             </property>
@@ -550,7 +550,7 @@
            </widget>
           </item>
           <item row="4" column="2">
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="labelListeRougeReg">
             <property name="text">
              <string>Liste Rouge régionale</string>
             </property>
@@ -560,7 +560,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBox_2">
+           <widget class="QCheckBox" name="cBListeRougeEuro">
             <property name="maximumSize">
              <size>
               <width>25</width>
@@ -573,7 +573,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QCheckBox" name="checkBox_3">
+           <widget class="QCheckBox" name="cBListeRougeNat">
             <property name="maximumSize">
              <size>
               <width>25</width>
@@ -589,7 +589,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QCheckBox" name="checkBox_4">
+           <widget class="QCheckBox" name="cBListeRougeReg">
             <property name="maximumSize">
              <size>
               <width>25</width>
