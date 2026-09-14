@@ -119,6 +119,21 @@ QComboBox::down-arrow {
     height: 12px;
 }
 
+QComboBox:disabled {
+    background-color: #f0f0f0;
+    color: #a0a0a0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+QComboBox::drop-down:disabled {
+    background-color: #b0c4de; /* Vert/Gris assombri ou gris éteint pour le bouton */
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+QComboBox::down-arrow:disabled {
+    opacity: 0.4; /* Opacité réduite pour la flèche */
+}
+
 /* --- BOUTONS PAR DÉFAUT --- */
 
 QPushButton {

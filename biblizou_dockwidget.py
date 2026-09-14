@@ -86,9 +86,12 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # Configuration onglet FSD
         ## Connexion des boutons
         self.btnRunFsd.clicked.connect(self.run_fsd_process)
+
         # mapLayerN2k est dépendant de l'état de la checkbox ZNIEFF --- idem mapLayerZnieff / cBZnieff
         self.cBZnieff.toggled.connect(self.mapLayerZnieff.setEnabled)
+        self.mapLayerZnieff.setEnabled(self.cBZnieff.isChecked())
         self.cBN2K.toggled.connect(self.mapLayerN2k.setEnabled)
+        self.mapLayerN2k.setEnabled(self.cBN2K.isChecked())
 
 
         # ----------
