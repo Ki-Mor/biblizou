@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>BiblizouDockWidgetBase</class>
  <widget class="QDockWidget" name="BiblizouDockWidgetBase">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -1048,6 +1051,9 @@
           </item>
           <item row="5" column="2">
            <widget class="QPushButton" name="btnPatri">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -1068,7 +1074,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Ajouter une source personnalisée</string>
+             <string>Ajouter une table</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
