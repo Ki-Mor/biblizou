@@ -10,12 +10,13 @@ import os
 from qgis.PyQt import uic, QtWidgets
 from .settings.biblizou_settings import (
     # imports des statuts boolean
-    DEFAULT_BERNE, DEFAULT_CITES, DEFAULT_BONN,
-    DEFAULT_DH2, DEFAULT_DH4, DEFAULT_DO1, DEFAULT_DO4,
-    DEFAULT_PN, DEFAULT_PR, DEFAULT_ZDET,
+    DEFAULT_BERNE, DEFAULT_CITES, DEFAULT_BONN,  # Conventions internationales
+    DEFAULT_DH2, DEFAULT_DH4, DEFAULT_DO1, DEFAULT_DO4,  # Directives Européennes
+    DEFAULT_PN, DEFAULT_PR,  # Espèces protégées
+    DEFAULT_ZDET,  # Déterminantes de ZNIEFF
     get_status_bool, set_status_bool,
 
-    # imports des statuts list
+    # imports des statuts list (listes rouges)
     DEFAULT_LR_MOND, DEFAULT_LR_EURO,
     DEFAULT_LR_NAT, DEFAULT_LR_REG,
     get_lr_statuts, set_lr_statuts
@@ -40,26 +41,6 @@ class BiblizouDialogPatri(QtWidgets.QDialog, FORM_CLASS):
 
         # 3. Connecter le bouton Reset
         self.btnReset.clicked.connect(self.reset_to_defaults)
-
-        self.setup_collapsible_groupbox(self.gBConventionsInternationales)
-        self.setup_collapsible_groupbox(self.gBDirEuro)
-        self.setup_collapsible_groupbox(self.gBProtection)
-        self.setup_collapsible_groupbox(self.gBListesRouges)
-        self.setup_collapsible_groupbox(self.gBZnieff)
-
-    def setup_collapsible_groupbox(self, groupbox):
-        groupbox.setCheckable(True)
-        groupbox.initial_max_height = groupbox.maximumHeight()
-
-        def toggle_group(is_checked):
-            if is_checked:
-                groupbox.setMaximumHeight(
-                    groupbox.initial_max_height if groupbox.initial_max_height != 16777215 else 1000)
-            else:
-                groupbox.setMaximumHeight(24)
-
-        groupbox.toggled.connect(toggle_group)
-        toggle_group(groupbox.isChecked())
 
     def load_settings(self):
         """Applique les valeurs enregistrées dans QgsSettings (ou valeurs par défaut)."""
