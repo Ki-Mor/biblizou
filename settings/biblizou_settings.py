@@ -17,6 +17,22 @@ DEFAULT_GPKG_NAME = "biblizou.gpkg"
 # Caractères interdits dans un nom de fichier (Windows étant le plus restrictif)
 _INVALID_CHARS_RE = re.compile(r'[\\/:*?"<>|]')
 
+# État par défaut des checkbox (checked/unchecked) statuts dans biblizou_dialog_patri
+DEFAULT_BERNE = False
+DEFAULT_CITES = False
+DEFAULT_BONN = False
+DEFAULT_DH2 = True
+DEFAULT_DH4 = False
+DEFAULT_DO1 = True
+DEFAULT_DO4 = False
+DEFAULT_PN = True
+DEFAULT_PR = True
+DEFAULT_ZDET = True
+DEFAULT_LR_MOND = []
+DEFAULT_LR_EURO = []
+DEFAULT_LR_NAT = ["NT", "VU", "EN", "CR"]
+DEFAULT_LR_REG = ["NT", "VU", "EN", "CR"]
+
 
 def get_invalid_chars(name):
     """
