@@ -86,6 +86,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # Configuration onglet FSD
         ## Connexion des boutons
         self.btnRunFsd.clicked.connect(self.run_fsd_process)
+        # mapLayerN2k est dépendant de l'état de la checkbox ZNIEFF --- idem mapLayerZnieff / cBZnieff
+        self.cBZnieff.toggled.connect(self.mapLayerZnieff.setEnabled)
+        self.cBN2K.toggled.connect(self.mapLayerN2k.setEnabled)
+
 
         # ----------
 
@@ -181,9 +185,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Valide la saisie avant exécution du workflow FSD."""
         errors = []
 
-        if not self.mapLayerZnieff.currentLayer():
+        if self.cBZnieff.isChecked() and not self.mapLayerZnieff.currentLayer():
             errors.append("Couche ZNIEFF manquante.")
-        if not self.mapLayerN2k.currentLayer():
+        if self.cBN2K.isChecked() and not self.mapLayerN2k.currentLayer():
             errors.append("Couche Natura 2000 manquante.")
 
         working_folder = self.mQgsFileWidget.filePath()
@@ -258,6 +262,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             'clean_xml_after_run': self.cBDelDwlXml.isChecked(),
             'znieff_layer': self.mapLayerZnieff.currentLayer(),
             'natura_layer': self.mapLayerN2k.currentLayer(),
+            'run_znieff': self.cBZnieff.isChecked(),
+            'run_natura': self.cBN2K.isChecked(),
         }
 
         QgsMessageLog.logMessage(f"Params avant création thread: {params}", "Biblizou", level=Qgis.Info)
