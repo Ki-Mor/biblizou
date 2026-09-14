@@ -31,8 +31,6 @@ from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
 from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
 from .utils.styles import apply_stylesheet
 from qgis.PyQt.QtWidgets import QStyleFactory
-from .biblizou_dialog_options import BiblizouDialogOptions
-from .biblizou_dialog_patri import BiblizouDialogPatri
 
 
 
@@ -45,6 +43,8 @@ except ImportError:
 import sys
 from . import resources as resources_rc
 sys.modules['resources_rc'] = resources_rc
+from .biblizou_dialog_options import BiblizouDialogOptions
+from .biblizou_dialog_patri import BiblizouDialogPatri
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'biblizou_dockwidget_base.ui'))
