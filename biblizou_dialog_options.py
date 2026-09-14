@@ -40,13 +40,6 @@ class BiblizouDialogOptions(QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         super(BiblizouDialogOptions, self).__init__(parent)
         self.setupUi(self)
-
-        # Set default values for Listes Rouges
-        self.gBListeRougeMond.set_statuts_coches([])
-        self.gBListeRougeEuro.set_statuts_coches([])
-        self.gBListeRougeNat.set_statuts_coches(["NT", "VU", "EN", "CR"])
-        self.gBListeRougeReg.set_statuts_coches(["NT", "VU", "EN", "CR"])
-
         # Pré-remplissage avec la valeur actuellement enregistrée
         self.leGpkgName.setText(get_gpkg_filename())
 
