@@ -70,7 +70,8 @@ QGroupBox::title {
 }
 
 /* Style spécifique pour les sous-groupes imbriqués (hors listes rouges) */
-QGroupBox#gBDirHabAnnexes {
+QGroupBox#gBDH,
+QGroupBox#gBDO {
     border: 1px solid rgba(0, 0, 0, 0.08);
     background-color: rgba(0, 0, 0, 0.01);
     margin-top: 4px;
