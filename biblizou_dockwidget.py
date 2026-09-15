@@ -287,7 +287,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.fsd_thread.progress.connect(self.update_status_bar)
             self.fsd_thread.log.connect(self.log_to_qgis)
             self.fsd_thread.finished.connect(self.on_fsd_finished)
-            self.fsd_thread.error.connect(self.on_error)
+            self.fsd_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunFsd))
 
             self._show_progress(1)
 
@@ -320,7 +320,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.progress.connect(self.update_status_bar)
             self.taxref_thread.log.connect(self.log_to_qgis)
             self.taxref_thread.finished.connect(self.on_taxref_finished)
-            self.taxref_thread.error.connect(self.on_error)
+            self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref))
 
             self._show_progress(len(steps_list_length_if_known_or_1))
 
@@ -441,7 +441,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.progress.connect(self.update_status_bar)
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
-        self.stat_thread.error.connect(self.on_error_stat)
+        self.stat_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunStat))
 
         self._show_progress(len(steps_list_length_if_known_or_1))
 
@@ -455,18 +455,13 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         QtWidgets.QMessageBox.information(self, "Succès", message)
         self.iface.mainWindow().statusBar().clearMessage()
 
-    # TODO Unifier proprement : une seule méthode on_error(self, error_message, button=None) où button est le bouton spécifique à réactiver, appelée avec le bon bouton à chaque connexion (self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref)))
-    def on_error_stat(self, error_message):
-        """Action en cas d'erreur du workflow BD Statuts."""
-        self.btnRunStat.setEnabled(True)
+    def on_error(self, error_message, button=None):
+        """Action générique en cas d'erreur d'un thread de traitement."""
+        if button is not None:
+            button.setEnabled(True)
         self._hide_progress()
-        QtWidgets.QMessageBox.critical(self, "Erreur BD Statuts", error_message)
+        QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
-    def on_error(self, error_message):
-        """Action en cas d'erreur."""
-        self.btnRunFsd.setEnabled(True)
-        self.btnRunTaxref.setEnabled(True)
-        self.btnRunStat.setEnabled(True)
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
