@@ -158,8 +158,10 @@ class FsdProcessingThread(QThread):
             elif not self.all_steps_ok:
                 self.log.emit("Nettoyage des fichiers XML ignoré : au moins une étape du traitement a échoué")
 
-            self.finished.emit("Moissonnage FSD terminé avec succès !")
-            #TODO Amélioration possible du message final ("succès" vs "avec avertissements") selon self.all_steps_ok
+            if self.all_steps_ok:
+                self.finished.emit("Moissonnage FSD terminé avec succès !")
+            else:
+                self.finished.emit("Moissonnage FSD terminé avec des avertissements — voir le journal pour le détail.")
 
         except Exception as e:
             self.error.emit(f"Erreur critique dans le workflow FSD : {str(e)}")
