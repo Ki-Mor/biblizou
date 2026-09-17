@@ -57,10 +57,26 @@ def build_bullet(citation_text: str) -> str:
 
 
 def update_readme(citation: str):
+    resolved_path = os.path.abspath(README_PATH)
+    print(f"Chemin résolu : {resolved_path}")
+    print(f"Le fichier existe : {os.path.exists(resolved_path)}")
+
     with open(README_PATH, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    pattern = r'<!-- TAXREF_START -->.*?<!-- TAXREF_END'
+    pattern = r'<!-- TAXREF_START -->.*?<!-- TAXREF_END -->'
+    match_found = re.search(pattern, content, flags=re.DOTALL)
+    print(f"Pattern trouvé dans le contenu lu : {match_found is not None}")
+
+    bullet = build_bullet(citation)
+    replacement = f'<!-- TAXREF_START -->\n{bullet}\n<!-- TAXREF_END -->'
+    updated_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+    print(f"Contenu réellement modifié : {content != updated_content}")
+
+    with open(README_PATH, 'w', encoding='utf-8') as f:
+        f.write(updated_content)
+    print("Écriture effectuée.")
 
 if __name__ == "__main__":
     citation = fetch_citation()
