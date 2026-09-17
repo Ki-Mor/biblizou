@@ -89,8 +89,5 @@ https://www.gnu.org/licenses/gpl-3.0.html#license-text
 
 ## Ressources bibliographiques
 
-<!-- TAXREF_START -->
-<!-- TAXREF_END -->
-
-Index botanique, écologique et chorologique de la flore de France [Extrait du programme Catminat, programme personnel de Ph. Julve]. (Phytosociological, Ecological and botanical data upon French flora, with statistics).
-Citation : "Julve, Ph., 2024 ff. - Baseflor. Index botanique, écologique et chorologique de la flore de France. Version : 01 juin 2024. https://www.tela-botanica.org/projets/phytosociologie
+* **TAXREF** [Eds] 2025. TAXREF v18.0, **référentiel taxonomique pour la France**. PatriNat (OFB-CNRS-MNHN-IRD), Muséum national d'Histoire naturelle, Paris. Archive de téléchargement contenant 8 fichiers générés le 9 janvier 2025. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu
+* **Julve, Ph**., 2024 ff. - **Baseflor**. Index botanique, écologique et chorologique de la flore de France. Version : 01 juin 2024. https://www.tela-botanica.org/projets/phytosociologie
