@@ -89,5 +89,5 @@ https://www.gnu.org/licenses/gpl-3.0.html#license-text
 
 ## Ressources bibliographiques
 
-* **TAXREF** [Eds] 2025. TAXREF v18.0, **référentiel taxonomique pour la France**. PatriNat (OFB-CNRS-MNHN-IRD), Muséum national d'Histoire naturelle, Paris. Archive de téléchargement contenant 8 fichiers générés le 9 janvier 2025. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu
+* **TAXREF** [Eds] 2025. TAXREF v18.0, **référentiel taxonomique pour la France**. PatriNat (OFB-CNRS-MNHN-IRD), Muséum national d'Histoire naturelle, Paris. Archive de téléchargement contenant 8 fichiers générés le 9 janvier 2025. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu -TEST
 * **Julve, Ph**., 2024 ff. - **Baseflor**. Index botanique, écologique et chorologique de la flore de France. Version : 01 juin 2024. https://www.tela-botanica.org/projets/phytosociologie
