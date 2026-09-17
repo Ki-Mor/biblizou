@@ -86,3 +86,11 @@ Le projet est collaboratif. Vous pouvez participer via deux canaux :
 Ce projet est sous licence GNU v3 GPL.
 Vous pouvez le partager, l’adapter et l’utiliser à des fins non commerciales, en mentionnant l’auteur original.
 https://www.gnu.org/licenses/gpl-3.0.html#license-text
+
+## Ressources bibliographiques
+
+<!-- TAXREF_START -->
+<!-- TAXREF_END -->
+
+Index botanique, écologique et chorologique de la flore de France [Extrait du programme Catminat, programme personnel de Ph. Julve]. (Phytosociological, Ecological and botanical data upon French flora, with statistics).
+Citation : "Julve, Ph., 2024 ff. - Baseflor. Index botanique, écologique et chorologique de la flore de France. Version : 01 juin 2024. https://www.tela-botanica.org/projets/phytosociologie

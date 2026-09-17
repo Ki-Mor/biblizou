@@ -1,0 +1,60 @@
+name: Update TAXREF Citation
+
+on:
+  schedule:
+    # S'exécute le 1er du mois à 00:00 UTC
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Permet de le lancer manuellement depuis GitHub
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Fetch TAXREF info & Update README
+        run: |
+          python -c "
+          import urllib.request
+          import json
+          import re
+
+          # Requête sur l'API publique de l'INPN
+          url = 'https://taxref.mnhn.fr/taxref-web/api/taxa/version'
+          req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+
+          try:
+              with urllib.request.urlopen(req) as response:
+                  data = json.loads(response.read().decode())
+                  # Adaptez selon la structure du JSON retourné par l'API
+                  version = data.get('version', 'v18.0') 
+                  year = data.get('year', '2025')
+          except Exception:
+              # Fallback basique
+              version, year = 'dernière version', '2025'
+
+          citation = f'TAXREF [Eds] ({year}). **TAXREF {version}**, référentiel taxonomique pour la France. PatriNat (OFB-CNRS-MNHN-IRD), Muséum national d\'Histoire naturelle, Paris. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu'
+
+          # Remplacement du texte entre les balises
+          with open('.github/README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          pattern = r'<!-- TAXREF_START -->.*?<!-- TAXREF_END -->'
+          replacement = f'<!-- TAXREF_START -->\n{citation}\n<!-- TAXREF_END -->'
+          updated_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+          with open('.github/README.md', 'w', encoding='utf-8') as f:
+              f.write(updated_content)
+          "
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: mise à jour de la citation TAXREF"
+          file_pattern: .github/README.md
