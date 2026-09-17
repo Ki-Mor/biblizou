@@ -180,6 +180,14 @@ class DwlXml(ABC):
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()
 
+                content_type = response.headers.get('Content-Type', '')
+                content_start = response.content[:200].lstrip()
+                if 'xml' not in content_type.lower() and not content_start.startswith(b'<?xml'):
+                    raise requests.exceptions.RequestException(
+                        f"Réponse HTTP 200 mais contenu non-XML (Content-Type: '{content_type}') "
+                        f"— le service source est peut-être indisponible : {url}"
+                    )
+
                 with open(save_path, 'wb') as f:
                     f.write(response.content)
 
@@ -192,6 +200,7 @@ class DwlXml(ABC):
                 wait_time = 2 ** attempt
                 self.log(f"Échec tentative {attempt} : {str(e)}", Qgis.Warning)
                 time.sleep(wait_time)
+                response.headers.get('Content-Type', '')
 
         self.log(f"Échec après {retries} tentatives : {url}", Qgis.Critical)
         return False
