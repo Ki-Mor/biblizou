@@ -57,7 +57,7 @@ jobs:
           "
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
             commit-message: "chore: mise à jour citation TAXREF"
             title: "chore: mise à jour automatique de la citation TAXREF"
