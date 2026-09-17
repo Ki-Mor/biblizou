@@ -10,7 +10,7 @@ Biblizou génère automatiquement une base de données bibliographique via quatr
   Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
 * **[TAXREF](https://ki-mor.github.io/biblizou/Taxref.html)** : Interrogation de l'API de l'INPN (Inventaire National du
   Patrimoine Naturel) pour extraire les référentiels taxonomiques officiels.
-* **[BDC](https://ki-mor.github.io/biblizou/Bdc.html)*** : Interrogation de l'API de l'INPN pour consolider les statuts
+* **[BDC](https://ki-mor.github.io/biblizou/Bdc.html)** : Interrogation de l'API de l'INPN pour consolider les statuts
   de protection et de conservation des espèces.
 <!-- **Botazou** : Regroupement automatisé des espèces de la flore par affinités écologiques (analyses multivariées). -->
 
