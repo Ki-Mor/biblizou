@@ -56,8 +56,11 @@ jobs:
               f.write(updated_content)
           "
 
-      - name: Commit and Push changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
         with:
-          commit_message: "chore: mise à jour de la citation TAXREF"
-          file_pattern: .github/README.md
+            commit-message: "chore: mise à jour citation TAXREF"
+            title: "chore: mise à jour automatique de la citation TAXREF"
+            body: "Mise à jour automatique de la référence bibliographique TAXREF."
+            branch: "update-taxref-citation"
+            delete-branch: true
