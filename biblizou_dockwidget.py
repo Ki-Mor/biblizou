@@ -131,6 +131,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
+        self.patri_conditions = []
 
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
