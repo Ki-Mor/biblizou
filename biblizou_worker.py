@@ -411,8 +411,20 @@ class BdStatutsProcessingThread(QThread):
                 return
             self.log.emit(msg)
 
-            # 2. Jointure status_data + data_taxref -> status_data_joined
-            self.progress.emit(2, 4, "Jointure avec data_taxref")
+            # 2. (Optionnel) Jointure status_data + patri -> status_data
+            self.progress.emit(2, 5, "Correspondance des espèces patrimoniales")
+            conditions = self.params.get("conditions") or []
+            if conditions:
+                ok, msg = status_join_patri(gpkg_path, conditions, "status_data", log_callback=log_cb)
+                if not ok:
+                    self.log.emit(f"Avertissement : {msg}")
+                else:
+                    self.log.emit(msg)
+            else:
+                self.log.emit("Étape ignorée")
+
+            # 3. Jointure status_data + data_taxref -> status_data_joined
+            self.progress.emit(3, 5, "Jointure avec data_taxref")
             ok, msg = status_join_taxref(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
