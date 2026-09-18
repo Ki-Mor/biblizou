@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
+Auteur : François Botcazou
 Nom : LayerUtils.py
 Groupe : base
 Description : Classe utilitaire centralisant la gestion, la validation, le chargement,

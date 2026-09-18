@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Auteur : ExEco Environnement - François Botcazou
+Auteur : François Botcazou
 Nom : PivotLayer.py
 Groupe : base
 Description : Classe abstraite mutualisée pour la création de tableaux croisés dynamiques (pivots)
