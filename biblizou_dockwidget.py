@@ -422,7 +422,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "working_folder": working_folder,
             "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
             "code_insee": self.comboBoxDpt.currentData(),
-            "consolidation_config": self.get_stat_config()
+            "consolidation_config": self.get_stat_config(),
+            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
+
         }
         msg = (
             f"Lancer le workflow BD Statuts ?\n\n"
