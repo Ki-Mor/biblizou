@@ -462,8 +462,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
-        self._hide_progress()
-        QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
