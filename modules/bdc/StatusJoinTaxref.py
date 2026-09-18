@@ -2,7 +2,7 @@
 """
 Auteur : François Botcazou
 Nom : StatusJoinTaxref.py
-Groupe : Status
+Groupe : bdc
 Description : Enrichit la table status_data avec nom vernaculaire et groupe taxonomique
               obtenus par requête API TaxRef (GET taxa/{cd_nom}), comme TaxrefApiToTable.
               Enregistre le résultat dans biblizou.gpkg|status_data_joined.
