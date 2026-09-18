@@ -1,3 +1,14 @@
+"""
+Auteur : François Botcazou
+Nom : update_taxref_citation.py
+Groupe : .github/scripts
+Description : Utilitaire pour mettre à jour la citation de taxref dans README.md par scrapping de https://taxref.mnhn.fr/taxref-web/about#cite_taxref,
+issu d'une tentative échouée d'automatisation (blocage par IP des runners GitHub Actions).
+Le script doit/peut être lancé de manière autonome de temps en temps [if __name__ == "__main__":].
+"""
+
+# TODO on garde en tête la possibilité d'un runner auto-hébergé pour plus tard, au moment de la migration GitLab
+
 import json
 import os
 import re

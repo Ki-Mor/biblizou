@@ -131,6 +131,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
+        self.patri_conditions = []
 
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
@@ -180,9 +181,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         dialog.exec_()
 
     def open_patri_dialog(self):
-        """Ouvre la fenêtre des réglages généraux du plugin."""
+        """Ouvre la fenêtre des réglages patri du plugin (onglet status)."""
         dialog = BiblizouDialogPatri(parent=self)
-        dialog.exec_()
+        if dialog.exec_():
+            self.patri_conditions = dialog.get_filter_conditions()
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
@@ -422,8 +424,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "working_folder": working_folder,
             "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
             "code_insee": self.comboBoxDpt.currentData(),
-            "consolidation_config": self.get_stat_config()
+            "consolidation_config": self.get_stat_config(),
+            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
         }
+
         msg = (
             f"Lancer le workflow BD Statuts ?\n\n"
             f"Département : {self.comboBoxDpt.currentText()} (code {params['code_insee']})\n"
@@ -459,9 +463,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Action générique en cas d'erreur d'un thread de traitement."""
         if button is not None:
             button.setEnabled(True)
-        self._hide_progress()
-        QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
-
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
 

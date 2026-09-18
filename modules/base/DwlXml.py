@@ -1,5 +1,5 @@
 """
-Auteur : ExEco Environnement - François Botcazou
+Auteur : François Botcazou
 Nom : DwlXml.py
 Groupe : base
 Description : Classe abstraite (ABC) mutualisée pour l'extraction de données

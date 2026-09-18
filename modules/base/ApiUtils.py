@@ -1,5 +1,5 @@
 """
-Auteur : ExEco Environnement - François Botcazou
+Auteur : François Botcazou
 Nom : ApiUtils.py
 Groupe : base
 Description : Utilitaire pour les scripts API

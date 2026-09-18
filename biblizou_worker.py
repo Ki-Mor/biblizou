@@ -56,6 +56,7 @@ from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
 from .modules.bdc.StatusApiToTable import run as status_api_to_table
 from .modules.bdc.StatusJoinTaxref import run as status_join_taxref
 from .modules.bdc.StatusPivotByGroup import run as status_pivot_by_group
+from .modules.bdc.StatusJoinPatri import run as status_join_patri
 
 
 class FsdProcessingThread(QThread):
@@ -401,7 +402,7 @@ class BdStatutsProcessingThread(QThread):
                 self.progress.emit(current, total, msg)
 
             # 1. API -> status_data dans GPKG
-            self.progress.emit(1, 4, "Requête API Statuts (département)")
+            self.progress.emit(1, 5, "Requête API Statuts (département)")
             ok, msg = status_api_to_table(
                 gpkg_path, code_insee, layer_config,
                 progress_callback=progress_cb, log_callback=log_cb
@@ -411,8 +412,20 @@ class BdStatutsProcessingThread(QThread):
                 return
             self.log.emit(msg)
 
-            # 2. Jointure status_data + data_taxref -> status_data_joined
-            self.progress.emit(2, 4, "Jointure avec data_taxref")
+            # 2. (Optionnel) Jointure status_data + patri -> status_data
+            self.progress.emit(2, 5, "Correspondance des espèces patrimoniales")
+            conditions = self.params.get("conditions") or []
+            if conditions:
+                ok, msg = status_join_patri(gpkg_path, conditions, "status_data", log_callback=log_cb)
+                if not ok:
+                    self.log.emit(f"Avertissement : {msg}")
+                else:
+                    self.log.emit(msg)
+            else:
+                self.log.emit("Étape ignorée")
+
+            # 3. Jointure status_data + data_taxref -> status_data_joined
+            self.progress.emit(3, 5, "Jointure avec data_taxref")
             ok, msg = status_join_taxref(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
@@ -420,15 +433,16 @@ class BdStatutsProcessingThread(QThread):
             else:
                 self.log.emit(msg)
 
-            # 3. Tables pivot par groupe
-            self.progress.emit(3, 4, "Création des tables pivot par groupe")
+            # 4. Tables pivot par groupe
+            self.progress.emit(4, 5, "Création des tables pivot par groupe")
             ok, msg = status_pivot_by_group(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
             else:
                 self.log.emit(msg)
 
-            self.progress.emit(4, 4, "Terminé")
+            # 5. Fin
+            self.progress.emit(5, 5, "Terminé")
             self.finished.emit("Workflow BD Statuts terminé avec succès.")
         except Exception as e:
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
