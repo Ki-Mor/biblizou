@@ -428,7 +428,8 @@ class BdStatutsProcessingThread(QThread):
             else:
                 self.log.emit(msg)
 
-            self.progress.emit(4, 4, "Terminé")
+            # 5. Fin
+            self.progress.emit(5, 5, "Terminé")
             self.finished.emit("Workflow BD Statuts terminé avec succès.")
         except Exception as e:
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
