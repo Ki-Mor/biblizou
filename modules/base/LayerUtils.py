@@ -87,3 +87,30 @@ class LayerUtils:
             return True, ""
         else:
             return False, msg
+
+    @staticmethod
+    def add_computed_fields(layer: QgsVectorLayer, new_fields, compute_fn, output_name=None) -> QgsVectorLayer | None:
+        if not layer or not layer.isValid():
+            return None
+
+        fs = layer.fields()
+        out_fields = [QgsField(f.name(), f.type()) for f in fs] + new_fields
+
+        temp = QgsVectorLayer("None", layer.name() if output_name is None else output_name, "memory")
+        temp.dataProvider().addAttributes(out_fields)
+        temp.updateFields()
+
+        count = 0
+
+        for feat in layer.getFeatures():
+            computed_values = compute_fn(feat)
+
+            new_feat = QgsFeature(temp.fields())
+            new_feat.setAttributes(list(feat.attributes()) + computed_values)
+            temp.dataProvider().addFeature(new_feat)
+            count += 1
+
+        if count == 0:
+            return None
+
+        return temp
