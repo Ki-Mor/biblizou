@@ -180,7 +180,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         dialog.exec_()
 
     def open_patri_dialog(self):
-        """Ouvre la fenêtre des réglages généraux du plugin."""
+        """Ouvre la fenêtre des réglages patri du plugin (onglet status)."""
         dialog = BiblizouDialogPatri(parent=self)
         if dialog.exec_():
             self.patri_conditions = dialog.get_filter_conditions()
