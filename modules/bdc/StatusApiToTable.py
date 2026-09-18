@@ -2,7 +2,7 @@
 """
 Auteur : François Botcazou
 Nom : StatusApiToTable.py
-Groupe : Status
+Groupe : bdc
 Description : Interroge l'API TaxRef Statuts (locationId=INSEED + code département),
               une ligne par statut par espèce. Enregistre la table sans géométrie
               dans biblizou.gpkg|status_data.
