@@ -420,8 +420,8 @@ class BdStatutsProcessingThread(QThread):
             else:
                 self.log.emit(msg)
 
-            # 3. Tables pivot par groupe
-            self.progress.emit(3, 4, "Création des tables pivot par groupe")
+            # 4. Tables pivot par groupe
+            self.progress.emit(4, 5, "Création des tables pivot par groupe")
             ok, msg = status_pivot_by_group(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
