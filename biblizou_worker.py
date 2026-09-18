@@ -56,6 +56,7 @@ from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
 from .modules.bdc.StatusApiToTable import run as status_api_to_table
 from .modules.bdc.StatusJoinTaxref import run as status_join_taxref
 from .modules.bdc.StatusPivotByGroup import run as status_pivot_by_group
+from .modules.bdc.StatusJoinPatri import run as status_join_patri
 
 
 class FsdProcessingThread(QThread):
