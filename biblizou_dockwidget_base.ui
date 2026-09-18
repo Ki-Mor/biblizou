@@ -337,14 +337,14 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="TabFSD">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <attribute name="title">
-        <string>Moissonnage des FSD</string>
+        <string>Sites</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_fsd">
         <item>
@@ -537,7 +537,7 @@
       </widget>
       <widget class="QWidget" name="TabTaxref">
        <attribute name="title">
-        <string>Associer à TAXREF</string>
+        <string>Taxonomie</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_taxref">
         <item>
@@ -652,7 +652,7 @@
       </widget>
       <widget class="QWidget" name="TabStat">
        <attribute name="title">
-        <string>Associer à la BDC</string>
+        <string>Statuts</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_stat">
         <item>
