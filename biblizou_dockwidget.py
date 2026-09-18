@@ -182,7 +182,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_patri_dialog(self):
         """Ouvre la fenêtre des réglages généraux du plugin."""
         dialog = BiblizouDialogPatri(parent=self)
-        dialog.exec_()
+        if dialog.exec_():
+            self.patri_conditions = dialog.get_filter_conditions()
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
