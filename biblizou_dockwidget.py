@@ -426,8 +426,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "code_insee": self.comboBoxDpt.currentData(),
             "consolidation_config": self.get_stat_config(),
             "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
-
         }
+
         msg = (
             f"Lancer le workflow BD Statuts ?\n\n"
             f"Département : {self.comboBoxDpt.currentText()} (code {params['code_insee']})\n"
@@ -465,7 +465,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             button.setEnabled(True)
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
-
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
