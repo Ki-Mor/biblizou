@@ -92,6 +92,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.mapLayerZnieff.setEnabled(self.cBZnieff.isChecked())
         self.cBN2K.toggled.connect(self.mapLayerN2k.setEnabled)
         self.mapLayerN2k.setEnabled(self.cBN2K.isChecked())
+        self._setup_layer_lock()
 
 
         # ----------
@@ -185,6 +186,32 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         dialog = BiblizouDialogPatri(parent=self)
         if dialog.exec_():
             self.patri_conditions = dialog.get_filter_conditions()
+
+    def _setup_layer_lock(self):
+        """Miroir strict entre les combos ZNIEFF et Natura 2000."""
+        # Verrouillé par défaut : comportement attendu au démarrage (une seule aire d'étude)
+        self.btnLockZniefN2k.setLocked(True)
+
+        self.btnLockZniefN2k.lockChanged.connect(self._on_lock_changed)
+        self.mapLayerZnieff.layerChanged.connect(self._sync_from_znieff)
+        self.mapLayerN2k.layerChanged.connect(self._sync_from_n2k)
+
+        # Init : si une seule couche déjà sélectionnée, aligner l'autre
+        if self.btnLockZniefN2k.locked():
+            self._sync_from_znieff(self.mapLayerZnieff.currentLayer())
+
+    def _on_lock_changed(self, locked):
+        if locked:
+            # Réactivation du verrou : on aligne immédiatement N2K sur ZNIEFF
+            self._sync_from_znieff(self.mapLayerN2k.currentLayer())
+
+    def _sync_from_znieff(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerN2k.currentLayer() != layer:
+            self.mapLayerN2k.setLayer(layer)
+
+    def _sync_from_n2k(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerZnieff.currentLayer() != layer:
+            self.mapLayerZnieff.setLayer(layer)
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
