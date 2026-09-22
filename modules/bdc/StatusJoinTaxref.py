@@ -5,22 +5,21 @@ Nom : StatusJoinTaxref.py
 Groupe : bdc
 Description : Enrichit la table status_data avec nom vernaculaire et groupe taxonomique
               obtenus par requête API TaxRef (GET taxa/{cd_nom}), comme TaxrefApiToTable.
-              Enregistre le résultat dans biblizou.gpkg|status_data_joined.
-              Plus de jointure avec la table data_taxref.
+              Enregistre le résultat dans biblizou.gpkg|<layer_name>_joined (par défaut layer_name = "status_data").
 """
-import os
+
 import time
 import requests
 from qgis.core import (
-    QgsVectorLayer,
-    QgsFeature,
     QgsField,
     QgsMessageLog,
-    QgsVectorFileWriter,
-    QgsProject,
     Qgis
 )
+
 from qgis.PyQt.QtCore import QVariant
+
+from ..base.LayerUtils import LayerUtils
+
 
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
 MAX_RETRIES = 2
@@ -44,29 +43,33 @@ def _fetch_taxon_info(cdnom, session):
         return None
 
 
-def run(gpkg_path, progress_callback=None, log_callback=None):
+def run(gpkg_path: str, layer_name: str = "status_data", progress_callback=None, log_callback=None) -> tuple[bool, str]:
     """
-    Charge status_data depuis gpkg_path, pour chaque cdnom distinct appelle l'API TaxRef
-    pour récupérer nom vernaculaire et groupe, puis crée status_data_joined
-    (status_data + nom_vern + groupe). Pas de jointure avec la table data_taxref.
+    Charge la couche layer_name (par défaut status_data) depuis gpkg_path, pour chaque cdnom
+    distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe, puis ajoute les colonnes
+    nom_vern et groupe à layer_name, enregistrées dans une nouvelle couche <layer_name>_joined. Pas de jointure avec la table data_taxref.
+        Args:
+                gpkg_path: chemin vers biblizou.gpkg
+                layer_name: layer status_data obtenue de StatusApiToTable
+                progress_callback:
+                log_callback: optional (message)
 
-    Returns:
-        (success: bool, message: str)
-    """
+        Returns:
+            (success: bool, message: str)
+        """
+
     def log(msg):
-        QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
+        QgsMessageLog.logMessage(f"[StatusJoinTaxRef]: {msg}", "Biblizou", Qgis.Info) #mis à jour aujourd'hui précédemment QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
         if log_callback:
             log_callback(msg)
 
-    uri_status = f"{gpkg_path}|layername=status_data"
-    layer_status = QgsVectorLayer(uri_status, "status_data", "ogr")
-
-    if not layer_status.isValid():
-        return False, "Couche status_data introuvable ou invalide dans le GeoPackage."
+    layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
+    if layer_status is None:
+        return False, f"Avertissement : aucune couche {layer_name} trouvée dans le GeoPackage."
 
     idx_cdnom = layer_status.fields().indexOf("cdnom")
     if idx_cdnom == -1:
-        return False, "Champ cdnom absent de status_data."
+        return False, f"Champ cdnom absent de {layer_name}."
 
     # Cdnom distincts
     cdnoms = set()
@@ -78,7 +81,7 @@ def run(gpkg_path, progress_callback=None, log_callback=None):
                 cdnoms.add(key)
 
     if not cdnoms:
-        return False, "Aucun cdnom dans status_data."
+        return False, f"Aucun cdnom dans {layer_name}."
 
     log(f"Enrichissement via API TaxRef pour {len(cdnoms)} taxons (nom vern, groupe)...")
     session = requests.Session()
@@ -91,49 +94,24 @@ def run(gpkg_path, progress_callback=None, log_callback=None):
         taxon_info[cdnom] = info or {"nom_vern": "", "groupe": ""}
         time.sleep(0.15)
 
-    # Nouvelle couche : champs status_data + nom_vern + groupe
-    fs = layer_status.fields()
-    out_fields = [QgsField(f.name(), QVariant.String) for f in fs]
-    out_fields.append(QgsField("nom_vern", QVariant.String))
-    out_fields.append(QgsField("groupe", QVariant.String))
+    def compute_fn(feat):
+       cdnom = feat.attributes()[idx_cdnom]
+       key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
+       info = taxon_info.get(key, {"nom_vern": "", "groupe": ""})
+       return [info["nom_vern"], info["groupe"]]
 
-    temp = QgsVectorLayer("None", "status_data_joined_temp", "memory")
-    temp.dataProvider().addAttributes(out_fields)
-    temp.updateFields()
+    new_fields = [QgsField("nom_vern", QVariant.String), QgsField("groupe", QVariant.String)]
 
-    count = 0
-    for feat in layer_status.getFeatures():
-        cdnom = feat.attributes()[idx_cdnom]
-        if cdnom is None:
-            continue
-        key = str(cdnom).split(".")[0].strip()
-        if not key:
-            continue
-        info = taxon_info.get(key, {"nom_vern": "", "groupe": ""})
-        new_feat = QgsFeature(temp.fields())
-        new_feat.setAttributes(list(feat.attributes()) + [info["nom_vern"], info["groupe"]])
-        temp.dataProvider().addFeature(new_feat)
-        count += 1
-
-    if count == 0:
-        return False, "Aucune ligne à enregistrer dans status_data_joined."
-
-    save_options = QgsVectorFileWriter.SaveVectorOptions()
-    save_options.driverName = "GPKG"
-    save_options.layerName = "status_data_joined"
-    save_options.actionOnExistingFile = (
-        QgsVectorFileWriter.CreateOrOverwriteLayer
-        if os.path.exists(gpkg_path)
-        else QgsVectorFileWriter.CreateOrOverwriteFile
+    layer_joined = LayerUtils.add_computed_fields(
+        layer_status, new_fields, compute_fn, output_name=f"{layer_name}_joined"
     )
-    err, err_msg = QgsVectorFileWriter.writeAsVectorFormatV3(
-        temp,
-        gpkg_path,
-        QgsProject.instance().transformContext(),
-        save_options
-    )
-    if err != QgsVectorFileWriter.NoError:
-        return False, f"Erreur sauvegarde status_data_joined : {err_msg}"
-    log(f"Table status_data_joined enregistrée : {count} lignes (nom_vern et groupe via API).")
-    return True, f"Enrichissement terminé : {count} lignes dans status_data_joined (API TaxRef)."
+    if layer_joined is None:
+        return False, "Avertissement : aucune référence taxonomique ajoutée."
+
+    success, err_msg = LayerUtils.save_to_gpkg(layer_joined, gpkg_path)
+    if not success:
+        return False, f"Erreur sauvegarde GPKG : {err_msg}"
+
+    log(f"Colonnes Taxref ajoutées à {layer_name}.")
+    return True, f"Colonnes Taxref ajoutées à {layer_name}."
 

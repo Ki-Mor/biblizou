@@ -25,7 +25,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Options de patrimonialité - Biblizou</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
@@ -39,7 +39,7 @@
         <x>0</x>
         <y>0</y>
         <width>389</width>
-           <height>628</height>
+        <height>618</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
@@ -583,35 +583,40 @@
      </property>
     </widget>
    </item>
-      <item row="0" column="0" colspan="2">
-          <widget class="QLabel" name="label">
-              <property name="minimumSize">
-                  <size>
-                      <width>10</width>
-                      <height>10</height>
-                  </size>
-              </property>
-              <property name="maximumSize">
-                  <size>
-                      <width>16777215</width>
-                      <height>40</height>
-                  </size>
-              </property>
-              <property name="font">
-                  <font>
-                      <pointsize>8</pointsize>
-                  </font>
-              </property>
-              <property name="text">
-                  <string>Le filtre de patrimonialité ajoute une colonne de type boolean (Vrai/Faux) dont le résultat
-                      dépend des conditions ci dessous.
-                  </string>
-              </property>
-              <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-              </property>
-              <property name="wordWrap">
-                  <bool>true</bool>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="minimumSize">
+      <size>
+       <width>10</width>
+       <height>10</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="text">
+      <string>Le filtre de patrimonialité ajoute une colonne de type boolean (Vrai/Faux) dont le résultat dépend des conditions ci dessous.</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
      </property>
     </widget>
    </item>
