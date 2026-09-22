@@ -45,7 +45,7 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
 
     layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
     if layer_status is None:
-        return False, "Avertissement : aucune couche status_data trouvée dans le GeoPackage."
+        return False, f"Avertissement : aucune couche {layer_name} trouvée dans le GeoPackage."
 
     def compute_fn(feat):
         status_type_name = feat["statusTypeName"]
