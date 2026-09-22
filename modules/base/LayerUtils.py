@@ -97,6 +97,7 @@ class LayerUtils:
 
     @staticmethod
     def add_computed_fields(layer: QgsVectorLayer, new_fields, compute_fn, output_name=None) -> QgsVectorLayer | None:
+        """Ajoute une série de champs calculés à une couche """
         if not layer or not layer.isValid():
             return None
 
