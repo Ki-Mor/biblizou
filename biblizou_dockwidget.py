@@ -46,6 +46,9 @@ sys.modules['resources_rc'] = resources_rc
 from .biblizou_dialog_options import BiblizouDialogOptions
 from .biblizou_dialog_patri import BiblizouDialogPatri
 
+from .settings.biblizou_settings import get_gpkg_filename
+
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'biblizou_dockwidget_base.ui'))
 
