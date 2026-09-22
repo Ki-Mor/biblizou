@@ -12,7 +12,8 @@ from qgis.core import (
     QgsVectorLayer,
     QgsProviderRegistry,
     QgsVectorFileWriter,
-    QgsFeature
+    QgsFeature,
+    QgsField
 )
 import os
 
