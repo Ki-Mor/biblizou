@@ -47,13 +47,11 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
     if layer_status is None:
         return False, "Avertissement : aucune couche status_data trouvée dans le GeoPackage."
 
-    compute_fn = lambda feat: [_test_condition(feat["statusTypeName"], feat["statusCode"], conditions)]
-
-    # def compute_fn(feat): # Remplacé par la fonction lambda (identique, mais plus concise), et laissé ici afin de rendre le contenu plus lisible.
-    #    status_type_name = feat["statusTypeName"]
-    #    status_code = feat["statusCode"]
-    #    is_patri = _test_condition(status_type_name, status_code, conditions)
-    #    return [is_patri]
+    def compute_fn(feat):
+        status_type_name = feat["statusTypeName"]
+        status_code = feat["statusCode"]
+        is_patri = _test_condition(status_type_name, status_code, conditions)
+        return [is_patri]
 
     new_fields = [QgsField("patri", QVariant.Bool)]
     layer_status_patri = LayerUtils.add_computed_fields(layer_status, new_fields, compute_fn)
