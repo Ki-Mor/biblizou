@@ -24,16 +24,6 @@
     <string notr="true"/>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="0">
-     <widget class="QLabel" name="labelProgressStatus">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QFrame" name="frameBandeau">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -222,19 +212,13 @@
       </layout>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QProgressBar" name="progressBarGlobal">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="value">
-       <number>24</number>
+    <item row="4" column="0">
+     <widget class="QLabel" name="labelProgressStatus">
+      <property name="text">
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-      <property name="textVisible">
-       <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -274,6 +258,22 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="5" column="0">
+     <widget class="QProgressBar" name="progressBarGlobal">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <property name="textVisible">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
     <item row="6" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
@@ -668,14 +668,7 @@
        <layout class="QVBoxLayout" name="verticalLayout_stat">
         <item>
          <layout class="QGridLayout" name="gridLayoutStat">
-          <item row="0" column="1" colspan="2">
-           <widget class="QComboBox" name="comboBoxDpt">
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1" colspan="2">
+          <item row="8" column="1" colspan="2">
            <widget class="QPushButton" name="btnRunStat">
             <property name="palette">
              <palette>
@@ -957,37 +950,33 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0" colspan="2">
-           <widget class="QLabel" name="labelFsdOptions_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelDpt">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
-             <string>Option</string>
+             <string>Département de référence</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::AutoText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="0" colspan="3">
-           <widget class="Line" name="line_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="0" column="1" colspan="2">
+           <widget class="QComboBox" name="comboBoxDpt">
+            <property name="styleSheet">
+             <string notr="true"/>
             </property>
            </widget>
           </item>
@@ -1054,6 +1043,20 @@
             </property>
            </widget>
           </item>
+          <item row="7" column="2">
+           <widget class="QPushButton" name="btnPatri">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="resources.qrc">
+              <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png</iconset>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1" colspan="2">
            <widget class="QPushButton" name="btnAddLayerRowStat">
             <property name="font">
@@ -1075,47 +1078,44 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelDpt">
-            <property name="font">
-             <font>
-              <pointsize>8</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Département de référence</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::AutoText</enum>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QPushButton" name="btnPatri">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
+          <item row="7" column="0">
            <widget class="QCheckBox" name="cBPatri">
             <property name="text">
              <string>Filtrer selon la patrimonialité</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="labelFsdOptions_2">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Option</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="3">
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
