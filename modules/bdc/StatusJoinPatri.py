@@ -27,7 +27,8 @@ def _test_condition(status_type_name: str, status_code: str, conditions) -> bool
 
 def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callback=None) -> tuple[bool, str]:
     """
-    Ajoute une colonne booléenne patri à status_data, à True pour toute ligne dont le statut correspond à au moins une des conditions (test via _test_condition).
+    Ajoute une colonne booléenne patri à layer_name (par défaut status_data), à True pour toute ligne dont le statut
+    correspond à au moins une des conditions (test via _test_condition).
         Args:
             gpkg_path: chemin vers biblizou.gpkg
             conditions: état de biblizou_dialog_patri.py. liste de dicts [{'statusTypeName': '...', 'statusCode': '...' (optionnel)}]
