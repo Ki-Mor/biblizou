@@ -3,6 +3,11 @@
 </p>
 
 # **[Biblizou — Plugin QGIS](https://ki-mor.github.io/biblizou_frontend/)**
+![GitHub Created At](https://img.shields.io/github/created-at/Ki-Mor/biblizou?style=social)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Ki-Mor/biblizou/main?display_timestamp=committer&style=social)
+![GitHub Release Date](https://img.shields.io/github/release-date-pre/Ki-Mor/biblizou?style=social)
+
+
 
 Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
 
@@ -52,7 +57,6 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 
 [![Présentation](https://img.shields.io/badge/Présentation_du_plugin-6F42C1?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/biblizou_frontend/)
 [![Documentation technique](https://img.shields.io/badge/Documentation_technique-226C61?style=for-the-badge&logo=githubpages&logoColor=white)](https://Ki-Mor.github.io/biblizou/)
-[![Bug tracker](https://img.shields.io/badge/Bug_tracking-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ki-Mor/biblizou/issues)
 [![Page QGIS](https://img.shields.io/badge/Page_QGIS-589632?style=for-the-badge&logo=qgis&logoColor=white)](https://plugins.qgis.org/plugins/biblizou/)
 
 ## Crédits
@@ -78,7 +82,13 @@ Merci à MaxTanquerel pour ses conseils avisés
 ### Pour contribuer
 
 Le projet est collaboratif. Vous pouvez participer via deux canaux :
-* **Workflow Git** : Ouverture d'une *Issue* pour signaler un bug/proposer une évolution, ou soumission directe d'une *Pull Request* (PR).
+* **Workflow Git** : Ouverture d'un ticket pour signaler un bug/proposer une évolution, ou soumission directe d'une *Pull Request* (PR). 
+  
+  [![Bug tracking](https://img.shields.io/badge/GitHub-Bug_Tracker-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Ki-Mor/biblizou/issues)
+  ![GitHub Issues](https://img.shields.io/github/issues-closed-raw/Ki-Mor/Biblizou)
+  ![GitHub Issues](https://img.shields.io/github/issues-raw/Ki-Mor/Biblizou)
+
+
 * **Contact direct** : Envoi de suggestions par e-mail si vous n'utilisez pas Git.
 
 ## Licence
@@ -92,8 +102,7 @@ https://www.gnu.org/licenses/gpl-3.0.html#license-text
 <!-- TAXREF_START -->
 
 * **TAXREF** [Eds] 2025. TAXREF v18.0, référentiel taxonomique pour la France. PatriNat (OFB-CNRS-MNHN-IRD), Muséum
-  national d'Histoire naturelle, Paris. Archive de téléchargement contenant 8 fichiers générés le 9 janvier
-  2025. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu
+  national d'Histoire naturelle, Paris. Archive de téléchargement contenant 8 fichiers générés le 9 janvier 2025. https://inpn.mnhn.fr/telechargement/referentielEspece/taxref/18.0/menu
 <!-- TAXREF_END -->
 * **Julve, Ph**., 2024 ff. - **Baseflor**. Index botanique, écologique et chorologique de la flore de France. Version :
   01 juin 2024. https://www.tela-botanica.org/projets/phytosociologie
