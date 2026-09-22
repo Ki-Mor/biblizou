@@ -16,6 +16,14 @@ from qgis.core import (
 
 from ..base.LayerUtils import LayerUtils
 
+def _test_condition(status_type_name: str, status_code: str, conditions) -> bool:
+    """Vérifie si la couche existe, et valide et contient des entités."""
+
+    for condition in conditions:
+        if condition["statusTypeName"] == status_type_name and (
+                condition.get("statusCode") is None or condition.get("statusCode") == status_code):
+            return True
+    return False
 
 def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callback=None) -> tuple[bool, str]:
     """
