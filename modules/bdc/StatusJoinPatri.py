@@ -54,8 +54,11 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
         return [is_patri]
 
     new_fields = [QgsField("patri", QVariant.Bool)]
-    layer_status_patri = LayerUtils.add_computed_fields(layer_status, new_fields, compute_fn)
-    if layer_status_patri is None:
+
+    layer_joined = LayerUtils.add_computed_fields(
+        layer_status, new_fields, compute_fn, output_name=f"{layer_name}_joined"
+    )
+    if layer_joined is None:
         return False, "Avertissement : aucune correspondance patrimoniale calculée."
 
     success, err_msg = LayerUtils.save_to_gpkg(layer_status_patri, gpkg_path)
