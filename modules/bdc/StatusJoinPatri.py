@@ -65,15 +65,5 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
-    log("Colonne patri ajoutée à status_data.")
-    return True, "Colonne patri ajoutée à status_data."
-
-
-def _test_condition(status_type_name: str, status_code: str, conditions) -> bool:
-    """Vérifie si la couche existe, et valide et contient des entités."""
-
-    for condition in conditions:
-        if condition["statusTypeName"] == status_type_name and (
-                condition.get("statusCode") is None or condition.get("statusCode") == status_code):
-            return True
-    return False
+    log(f"Colonne patri ajoutée à {layer_name}.")
+    return True, f"Colonne patri ajoutée à {layer_name}."
