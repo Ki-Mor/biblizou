@@ -354,7 +354,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.finished.connect(self.on_taxref_finished)
             self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref))
 
-            self._show_progress(len(steps_list_length_if_known_or_1))
+            self._show_progress(1)
 
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
@@ -477,7 +477,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.finished.connect(self.on_stat_finished)
         self.stat_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunStat))
 
-        self._show_progress(len(steps_list_length_if_known_or_1))
+        self._show_progress(5)
 
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou", "Workflow BD Statuts démarré...", level=Qgis.Info)
