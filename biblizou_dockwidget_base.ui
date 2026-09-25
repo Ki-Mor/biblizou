@@ -335,7 +335,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="TabFSD">
        <property name="enabled">
@@ -599,7 +599,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QPushButton" name="btn_autoTaxref">
+             <widget class="QPushButton" name="btn_autofillTaxref">
               <property name="minimumSize">
                <size>
                 <width>50</width>
@@ -801,7 +801,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QPushButton" name="btn_autoStat">
+             <widget class="QPushButton" name="btn_autofillStat">
               <property name="minimumSize">
                <size>
                 <width>50</width>
