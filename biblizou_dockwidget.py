@@ -50,7 +50,8 @@ from .settings.biblizou_settings import get_gpkg_filename
 
 from .utils.UxUtils import (
 add_row,
-get_table_data
+get_table_data,
+run_auto_fill
 )
 
 
@@ -106,25 +107,35 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # ----------
 
         # Configuration onglet TaxRef
-        ## Connexion des boutons
+
+        ## Connexion du bouton run
         self.btnRunTaxref.clicked.connect(self.run_taxref_process)
-        ## Configuration du tableau TaxRef
-        header = self.tableTaxref.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         ## Connexion du bouton d'ajout de ligne pour TaxRef
         self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
+        ## Connexion du bouton 'Auto' TaxRef
+        self.btn_autofillTaxref.clicked.connect(self.run_autofill_taxref)
+
+        ## Configuration du tableau TaxRef
+        header_taxref = self.tableTaxref.horizontalHeader()
+        if header_taxref:
+            header_taxref.setSectionResizeMode(0, QHeaderView.Stretch)
+            header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
+            header_taxref.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
         #----------
 
         # Configuration onglet BDC
-        ## Connexion des boutons
+
+        ## Connexion du bouton run
         self.btnRunStat.clicked.connect(self.run_stat_process)
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
         # Tableau BD Statuts (même principe que TaxRef)
         self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
+        ## Connexion du bouton 'Auto' Statuts
+        self.btn_autofillStat.clicked.connect(self.run_autofill_stat)
+
+        ## Configuration du tableau Statuts
         header_stat = self.tableStat.horizontalHeader()
         if header_stat:
             header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -195,32 +206,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if dialog.exec_():
             self.patri_conditions = dialog.get_filter_conditions()
 
-    def _setup_layer_lock(self):
-        """Miroir strict entre les combos ZNIEFF et Natura 2000."""
-        # Verrouillé par défaut : comportement attendu au démarrage (une seule aire d'étude)
-        self.btnLockZniefN2k.setLocked(True)
-
-        self.btnLockZniefN2k.lockChanged.connect(self._on_lock_changed)
-        self.mapLayerZnieff.layerChanged.connect(self._sync_from_znieff)
-        self.mapLayerN2k.layerChanged.connect(self._sync_from_n2k)
-
-        # Init : si une seule couche déjà sélectionnée, aligner l'autre
-        if self.btnLockZniefN2k.locked():
-            self._sync_from_znieff(self.mapLayerZnieff.currentLayer())
-
-    def _on_lock_changed(self, locked):
-        if locked:
-            # Réactivation du verrou : on aligne immédiatement N2K sur ZNIEFF
-            self._sync_from_znieff(self.mapLayerN2k.currentLayer())
-
-    def _sync_from_znieff(self, layer):
-        if self.btnLockZniefN2k.locked() and self.mapLayerN2k.currentLayer() != layer:
-            self.mapLayerN2k.setLayer(layer)
-
-    def _sync_from_n2k(self, layer):
-        if self.btnLockZniefN2k.locked() and self.mapLayerZnieff.currentLayer() != layer:
-            self.mapLayerZnieff.setLayer(layer)
-
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
         errors = []
@@ -279,6 +264,14 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def add_stat_row(self):
         """Ajoute une ligne au tableau BD Statuts via UxUtils."""
         add_row(self.tableStat)
+
+    def run_autofill_taxref(self):
+        """Lance l'autofill TaxRef via UxUtils."""
+        run_auto_fill(self.tableTaxref, self.iface, self.log_to_qgis)
+
+    def run_autofill_stat(self):
+        """Lance l'autofill Statuts via UxUtils."""
+        run_auto_fill(self.tableStat, self.iface, self.log_to_qgis)
 
     def get_taxref_data(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
@@ -404,19 +397,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.progressBarGlobal.setValue(step)
         self.labelProgressStatus.setText(message)
 
-    def _show_progress(self, total):
-        """Affiche et initialise la barre de progression globale."""
-        self.progressBarGlobal.setVisible(True)
-        self.progressBarGlobal.setMinimum(0)
-        self.progressBarGlobal.setMaximum(total)
-        self.progressBarGlobal.setValue(0)
-        self.labelProgressStatus.setText("Démarrage...")
-
-    def _hide_progress(self):
-        """Masque la barre de progression globale et réinitialise le libellé."""
-        self.progressBarGlobal.setVisible(False)
-        self.labelProgressStatus.clear()
-
     def log_to_qgis(self, message):
         """Envoie les logs vers le panneau QGIS."""
         QgsMessageLog.logMessage(message, "Biblizou", level=Qgis.Info)
@@ -436,6 +416,45 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             button.setEnabled(True)
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
+
+    def _setup_layer_lock(self):
+        """Miroir strict entre les combos ZNIEFF et Natura 2000."""
+        # Verrouillé par défaut : comportement attendu au démarrage (une seule aire d'étude)
+        self.btnLockZniefN2k.setLocked(True)
+
+        self.btnLockZniefN2k.lockChanged.connect(self._on_lock_changed)
+        self.mapLayerZnieff.layerChanged.connect(self._sync_from_znieff)
+        self.mapLayerN2k.layerChanged.connect(self._sync_from_n2k)
+
+        # Init : si une seule couche déjà sélectionnée, aligner l'autre
+        if self.btnLockZniefN2k.locked():
+            self._sync_from_znieff(self.mapLayerZnieff.currentLayer())
+
+    def _on_lock_changed(self, locked):
+        if locked:
+            # Réactivation du verrou : on aligne immédiatement N2K sur ZNIEFF
+            self._sync_from_znieff(self.mapLayerN2k.currentLayer())
+
+    def _sync_from_znieff(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerN2k.currentLayer() != layer:
+            self.mapLayerN2k.setLayer(layer)
+
+    def _sync_from_n2k(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerZnieff.currentLayer() != layer:
+            self.mapLayerZnieff.setLayer(layer)
+
+    def _show_progress(self, total):
+        """Affiche et initialise la barre de progression globale."""
+        self.progressBarGlobal.setVisible(True)
+        self.progressBarGlobal.setMinimum(0)
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(0)
+        self.labelProgressStatus.setText("Démarrage...")
+
+    def _hide_progress(self):
+        """Masque la barre de progression globale et réinitialise le libellé."""
+        self.progressBarGlobal.setVisible(False)
+        self.labelProgressStatus.clear()
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
