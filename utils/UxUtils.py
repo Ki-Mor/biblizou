@@ -1,5 +1,5 @@
 @staticmethod
-def _add_row(table):
+def add_row(table):
     """Ajoute une ligne au tables de l'ui."""
     row = table.rowCount()
     table.insertRow(row)
@@ -22,7 +22,7 @@ def _add_row(table):
     table.setCellWidget(row, 2, btn_del)
 
 @staticmethod
-def _get_table_data(table):
+def get_table_data(table):
     """Extrait les IDs et colonnes du tableau (pour collecte cd_nom)."""
     data = []
     for row in range(table.rowCount()):
@@ -36,7 +36,7 @@ def _get_table_data(table):
     return data
 
 @staticmethod
-def _auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
+def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
     """
     Recherche automatiquement les couches et les en-têtes de colonnes
     correspondant aux conditions (cdnom/cdref).
@@ -61,7 +61,7 @@ def _auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
 
 
 @staticmethod
-def (table, matched_layers, matched_fields):
+def auto_fill_table(table, matched_layers, matched_fields):
     """
     charge automatiquement l'interface avec le résultat de auto_lookup_layer
     """
