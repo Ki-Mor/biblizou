@@ -1,11 +1,11 @@
 <RCC>
   <qresource prefix="/plugins/biblizou">
-      <file>misc/help.svg</file>
+    <file>misc/arrowRight.png</file>
+    <file>misc/help.svg</file>
     <file>misc/gear.png</file>
     <file>icon.png</file>
     <file>resources/style/biblizou.qss</file>
     <file>iconUi.png</file>
     <file>misc/arrowDown.png</file>
-    <file>misc/INPN_logo.png</file>
   </qresource>
 </RCC>
