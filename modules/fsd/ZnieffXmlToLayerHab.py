@@ -127,14 +127,9 @@ class ZnieffXmlToLayerHab(XmlToLayer):
         return layer
 
 
-# ---------------------------------------------------------------------------
-# Fonctions d'entrée
-# ---------------------------------------------------------------------------
-
 def run_module_with_path(folder_path: str):
-    """Mode BiblizouMain."""
     return ZnieffXmlToLayerHab().run_with_path(folder_path)
 
 
 if __name__ == "__console__":
-    run_module()
+    ZnieffXmlToLayerHab.run()
