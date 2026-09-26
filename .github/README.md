@@ -9,7 +9,7 @@
 
 
 
-Biblizou génère automatiquement une base de données bibliographique via quatre modules principaux :
+Biblizou génère automatiquement une base de données bibliographique via 3 modules principaux :
 
 * **[FSD](https://ki-mor.github.io/biblizou/Fsd.html)** : Moissonnage automatique des données issues des Formulaires
   Standards de Données (FSD) des sites ZNIEFF et Natura 2000 intersectant l'aire d'étude choisie.
