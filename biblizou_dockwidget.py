@@ -48,6 +48,12 @@ from .biblizou_dialog_patri import BiblizouDialogPatri
 
 from .settings.biblizou_settings import get_gpkg_filename
 
+from .utils.UxUtils import (
+add_row,
+get_table_data,
+run_auto_fill
+)
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'biblizou_dockwidget_base.ui'))
@@ -101,25 +107,35 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # ----------
 
         # Configuration onglet TaxRef
-        ## Connexion des boutons
+
+        ## Connexion du bouton run
         self.btnRunTaxref.clicked.connect(self.run_taxref_process)
-        ## Configuration du tableau TaxRef
-        header = self.tableTaxref.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         ## Connexion du bouton d'ajout de ligne pour TaxRef
         self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
+        ## Connexion du bouton 'Auto' TaxRef
+        self.btn_autofillTaxref.clicked.connect(self.run_autofill_taxref)
+
+        ## Configuration du tableau TaxRef
+        header_taxref = self.tableTaxref.horizontalHeader()
+        if header_taxref:
+            header_taxref.setSectionResizeMode(0, QHeaderView.Stretch)
+            header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
+            header_taxref.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
         #----------
 
         # Configuration onglet BDC
-        ## Connexion des boutons
+
+        ## Connexion du bouton run
         self.btnRunStat.clicked.connect(self.run_stat_process)
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
         # Tableau BD Statuts (même principe que TaxRef)
         self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
+        ## Connexion du bouton 'Auto' Statuts
+        self.btn_autofillStat.clicked.connect(self.run_autofill_stat)
+
+        ## Configuration du tableau Statuts
         header_stat = self.tableStat.horizontalHeader()
         if header_stat:
             header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -190,32 +206,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if dialog.exec_():
             self.patri_conditions = dialog.get_filter_conditions()
 
-    def _setup_layer_lock(self):
-        """Miroir strict entre les combos ZNIEFF et Natura 2000."""
-        # Verrouillé par défaut : comportement attendu au démarrage (une seule aire d'étude)
-        self.btnLockZniefN2k.setLocked(True)
-
-        self.btnLockZniefN2k.lockChanged.connect(self._on_lock_changed)
-        self.mapLayerZnieff.layerChanged.connect(self._sync_from_znieff)
-        self.mapLayerN2k.layerChanged.connect(self._sync_from_n2k)
-
-        # Init : si une seule couche déjà sélectionnée, aligner l'autre
-        if self.btnLockZniefN2k.locked():
-            self._sync_from_znieff(self.mapLayerZnieff.currentLayer())
-
-    def _on_lock_changed(self, locked):
-        if locked:
-            # Réactivation du verrou : on aligne immédiatement N2K sur ZNIEFF
-            self._sync_from_znieff(self.mapLayerN2k.currentLayer())
-
-    def _sync_from_znieff(self, layer):
-        if self.btnLockZniefN2k.locked() and self.mapLayerN2k.currentLayer() != layer:
-            self.mapLayerN2k.setLayer(layer)
-
-    def _sync_from_n2k(self, layer):
-        if self.btnLockZniefN2k.locked() and self.mapLayerZnieff.currentLayer() != layer:
-            self.mapLayerZnieff.setLayer(layer)
-
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
         errors = []
@@ -234,42 +224,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
-    def add_taxref_row(self):
-        """Ajoute une ligne au tableau de consolidation TaxRef."""
-        row = self.tableTaxref.rowCount()
-        self.tableTaxref.insertRow(row)
-
-        lyr_cb = QgsMapLayerComboBox()
-        lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        fld_cb = QgsFieldComboBox()
-        fld_cb.setLayer(lyr_cb.currentLayer())
-        lyr_cb.layerChanged.connect(fld_cb.setLayer)
-
-        btn_del = QPushButton()
-        icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
-        btn_del.setIcon(QtGui.QIcon(icon_path))
-        btn_del.setIconSize(QtCore.QSize(16, 16))
-        btn_del.setMaximumWidth(30)
-        btn_del.clicked.connect(lambda: self.tableTaxref.removeRow(self.tableTaxref.indexAt(btn_del.pos()).row()))
-
-        self.tableTaxref.setCellWidget(row, 0, lyr_cb)
-        self.tableTaxref.setCellWidget(row, 1, fld_cb)
-        self.tableTaxref.setCellWidget(row, 2, btn_del)
-
-    def get_taxref_consolidation_data(self):
-        """Extrait proprement les IDs et colonnes du tableau TaxRef."""
-        data = []
-        for row in range(self.tableTaxref.rowCount()):
-            lyr_widget = self.tableTaxref.cellWidget(row, 0)
-            fld_widget = self.tableTaxref.cellWidget(row, 1)
-
-            if lyr_widget and lyr_widget.currentLayer():
-                data.append({
-                    'layer_id': lyr_widget.currentLayer().id(),
-                    'column': fld_widget.currentField()
-                })
-        return data
-
     def validate_taxref(self):
         """Valide la saisie avant exécution de la consolidation TaxRef."""
         working_folder = self.mQgsFileWidget.filePath()
@@ -278,7 +232,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
 
-        consolidation_data = self.get_taxref_consolidation_data()
+        consolidation_data = self.get_taxref_data()
         if not consolidation_data:
             errors.append("Aucune couche à consolider avec TaxRef.")
 
@@ -286,6 +240,46 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             QtWidgets.QMessageBox.warning(self, "Validation", "\n".join(errors))
             return False
         return True
+
+    def validate_stat(self):
+        """Valide la saisie avant exécution du workflow BD Statuts."""
+        errors = []
+        working_folder = self.mQgsFileWidget.filePath()
+        if not working_folder or not os.path.isdir(working_folder):
+            errors.append("Dossier de travail invalide.")
+        code_insee = self.comboBoxDpt.currentData()
+        if not code_insee:
+            errors.append("Veuillez sélectionner un département (liste filtrable sur le nom).")
+        if not self.get_stat_data():
+            errors.append("Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
+        if errors:
+            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts", "\n".join(errors))
+            return False
+        return True
+
+    def add_taxref_row(self):
+        """Ajoute une ligne au tableau TaxRef via UxUtils."""
+        add_row(self.tableTaxref)
+
+    def add_stat_row(self):
+        """Ajoute une ligne au tableau BD Statuts via UxUtils."""
+        add_row(self.tableStat)
+
+    def run_autofill_taxref(self):
+        """Lance l'autofill TaxRef via UxUtils."""
+        run_auto_fill(self.tableTaxref, self.iface, self.log_to_qgis)
+
+    def run_autofill_stat(self):
+        """Lance l'autofill Statuts via UxUtils."""
+        run_auto_fill(self.tableStat, self.iface, self.log_to_qgis)
+
+    def get_taxref_data(self):
+        """Extrait les données du tableau TaxRef via UxUtils."""
+        return get_table_data(self.tableTaxref)
+
+    def get_stat_data(self):
+        """Extrait les données du tableau BD Statuts via UxUtils."""
+        return get_table_data(self.tableStat)
 
     def run_fsd_process(self):
         """Lance le traitement FSD via le thread."""
@@ -333,7 +327,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         params = {
             'working_folder': self.mQgsFileWidget.filePath(),
-            'consolidation_config': self.get_taxref_consolidation_data(),
+            'consolidation_config': self.get_taxref_data(),
             'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(), get_gpkg_filename())
         }
 
@@ -359,92 +353,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.start()
             self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
 
-    def update_status_bar(self, step, total, message):
-        """Affiche la progression dans la barre de message de QGIS et dans le dock."""
-        self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
-        self.progressBarGlobal.setMaximum(total)
-        self.progressBarGlobal.setValue(step)
-        self.labelProgressStatus.setText(message)
-
-    def _show_progress(self, total):
-        """Affiche et initialise la barre de progression globale."""
-        self.progressBarGlobal.setVisible(True)
-        self.progressBarGlobal.setMinimum(0)
-        self.progressBarGlobal.setMaximum(total)
-        self.progressBarGlobal.setValue(0)
-        self.labelProgressStatus.setText("Démarrage...")
-
-    def _hide_progress(self):
-        """Masque la barre de progression globale et réinitialise le libellé."""
-        self.progressBarGlobal.setVisible(False)
-        self.labelProgressStatus.clear()
-
-    def log_to_qgis(self, message):
-        """Envoie les logs vers le panneau QGIS."""
-        QgsMessageLog.logMessage(message, "Biblizou", level=Qgis.Info)
-
-    def on_fsd_finished(self, message):
-        """Action à la fin du traitement FSD."""
-        self.btnRunFsd.setEnabled(True)
-        self._hide_progress()
-        QtWidgets.QMessageBox.information(self, "Succès", message)
-        self.iface.mainWindow().statusBar().clearMessage()
-
-    def on_taxref_finished(self, message):
-        """Action à la fin de la consolidation TaxRef."""
-        self.btnRunTaxref.setEnabled(True)
-        self._hide_progress()
-        QtWidgets.QMessageBox.information(self, "Succès", message)
-        self.iface.mainWindow().statusBar().clearMessage()
-
-    def add_stat_row(self):
-        """Ajoute une ligne au tableau BD Statuts (couche + champ CD_Nom)."""
-        row = self.tableStat.rowCount()
-        self.tableStat.insertRow(row)
-        lyr_cb = QgsMapLayerComboBox()
-        lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        fld_cb = QgsFieldComboBox()
-        fld_cb.setLayer(lyr_cb.currentLayer())
-        lyr_cb.layerChanged.connect(fld_cb.setLayer)
-        btn_del = QPushButton()
-        icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
-        btn_del.setIcon(QtGui.QIcon(icon_path))
-        btn_del.setIconSize(QtCore.QSize(16, 16))
-        btn_del.setMaximumWidth(30)
-        btn_del.clicked.connect(lambda: self.tableStat.removeRow(self.tableStat.indexAt(btn_del.pos()).row()))
-        self.tableStat.setCellWidget(row, 0, lyr_cb)
-        self.tableStat.setCellWidget(row, 1, fld_cb)
-        self.tableStat.setCellWidget(row, 2, btn_del)
-
-    def get_stat_config(self):
-        """Extrait les IDs et colonnes du tableau BD Statuts (pour collecte cd_nom)."""
-        data = []
-        for row in range(self.tableStat.rowCount()):
-            lyr_widget = self.tableStat.cellWidget(row, 0)
-            fld_widget = self.tableStat.cellWidget(row, 1)
-            if lyr_widget and lyr_widget.currentLayer():
-                data.append({
-                    "layer_id": lyr_widget.currentLayer().id(),
-                    "column": fld_widget.currentField()
-                })
-        return data
-
-    def validate_stat(self):
-        """Valide la saisie avant exécution du workflow BD Statuts."""
-        errors = []
-        working_folder = self.mQgsFileWidget.filePath()
-        if not working_folder or not os.path.isdir(working_folder):
-            errors.append("Dossier de travail invalide.")
-        code_insee = self.comboBoxDpt.currentData()
-        if not code_insee:
-            errors.append("Veuillez sélectionner un département (liste filtrable sur le nom).")
-        if not self.get_stat_config():
-            errors.append("Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
-        if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts", "\n".join(errors))
-            return False
-        return True
-
     def run_stat_process(self):
         """Lance le workflow BD Statuts (API -> status_data -> jointure -> pivots)."""
         if not self.validate_stat():
@@ -454,7 +362,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "working_folder": working_folder,
             "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
             "code_insee": self.comboBoxDpt.currentData(),
-            "consolidation_config": self.get_stat_config(),
+            "consolidation_config": self.get_stat_data(),
             "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
         }
 
@@ -482,12 +390,25 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou", "Workflow BD Statuts démarré...", level=Qgis.Info)
 
+    def update_status_bar(self, step, total, message):
+        """Affiche la progression dans la barre de message de QGIS et dans le dock."""
+        self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(step)
+        self.labelProgressStatus.setText(message)
+
+    def log_to_qgis(self, message):
+        """Envoie les logs vers le panneau QGIS."""
+        QgsMessageLog.logMessage(message, "Biblizou", level=Qgis.Info)
+
+    def on_fsd_finished(self, message):
+        self._on_process_finished(message, self.btnRunFsd)
+
+    def on_taxref_finished(self, message):
+        self._on_process_finished(message, self.btnRunTaxref)
+
     def on_stat_finished(self, message):
-        """Action à la fin du workflow BD Statuts."""
-        self.btnRunStat.setEnabled(True)
-        self._hide_progress()
-        QtWidgets.QMessageBox.information(self, "Succès", message)
-        self.iface.mainWindow().statusBar().clearMessage()
+        self._on_process_finished(message, self.btnRunStat)
 
     def on_error(self, error_message, button=None):
         """Action générique en cas d'erreur d'un thread de traitement."""
@@ -495,6 +416,45 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             button.setEnabled(True)
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
+
+    def _setup_layer_lock(self):
+        """Miroir strict entre les combos ZNIEFF et Natura 2000."""
+        # Verrouillé par défaut : comportement attendu au démarrage (une seule aire d'étude)
+        self.btnLockZniefN2k.setLocked(True)
+
+        self.btnLockZniefN2k.lockChanged.connect(self._on_lock_changed)
+        self.mapLayerZnieff.layerChanged.connect(self._sync_from_znieff)
+        self.mapLayerN2k.layerChanged.connect(self._sync_from_n2k)
+
+        # Init : si une seule couche déjà sélectionnée, aligner l'autre
+        if self.btnLockZniefN2k.locked():
+            self._sync_from_znieff(self.mapLayerZnieff.currentLayer())
+
+    def _on_lock_changed(self, locked):
+        if locked:
+            # Réactivation du verrou : on aligne immédiatement N2K sur ZNIEFF
+            self._sync_from_znieff(self.mapLayerN2k.currentLayer())
+
+    def _sync_from_znieff(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerN2k.currentLayer() != layer:
+            self.mapLayerN2k.setLayer(layer)
+
+    def _sync_from_n2k(self, layer):
+        if self.btnLockZniefN2k.locked() and self.mapLayerZnieff.currentLayer() != layer:
+            self.mapLayerZnieff.setLayer(layer)
+
+    def _show_progress(self, total):
+        """Affiche et initialise la barre de progression globale."""
+        self.progressBarGlobal.setVisible(True)
+        self.progressBarGlobal.setMinimum(0)
+        self.progressBarGlobal.setMaximum(total)
+        self.progressBarGlobal.setValue(0)
+        self.labelProgressStatus.setText("Démarrage...")
+
+    def _hide_progress(self):
+        """Masque la barre de progression globale et réinitialise le libellé."""
+        self.progressBarGlobal.setVisible(False)
+        self.labelProgressStatus.clear()
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
