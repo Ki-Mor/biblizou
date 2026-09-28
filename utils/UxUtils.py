@@ -84,7 +84,7 @@ def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
             continue
         field_names = [field.name() for field in layer_name.fields()]
         for field_name in field_names:
-            normalized_field = field_name.strip().casefold().replace("_", "")
+            normalized_field = field_name.strip().casefold().replace("_", "").replace("-", "")
             if normalized_field == "cdnom" or normalized_field == "cdref":
                 matched_layers.append(layer_name)
                 matched_fields.append(field_name)
