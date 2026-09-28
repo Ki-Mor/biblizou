@@ -65,11 +65,13 @@ class LayerUtils:
             return True
 
         options = {}
-        err = QgsProviderRegistry.instance().createProvider("ogr", gpkg_path, options)
+        err = QgsProviderRegistry.instance().createProvider("ogr", gpkg_path,
+                                                            options)
         return err is None
 
     @staticmethod
-    def save_to_gpkg(layer: QgsVectorLayer, gpkg_path: str) -> tuple[bool, str]:
+    def save_to_gpkg(layer: QgsVectorLayer, gpkg_path: str) -> tuple[
+        bool, str]:
         """Exporte de manière persistante n'importe quelle couche (y compris virtuelle) dans un GeoPackage."""
         if not layer or not layer.isValid():
             return False, "Couche invalide ou absente."
@@ -96,7 +98,8 @@ class LayerUtils:
             return False, msg
 
     @staticmethod
-    def add_computed_fields(layer: QgsVectorLayer, new_fields, compute_fn, output_name=None) -> QgsVectorLayer | None:
+    def add_computed_fields(layer: QgsVectorLayer, new_fields, compute_fn,
+                            output_name=None) -> QgsVectorLayer | None:
         """Ajoute une série de champs calculés à une couche """
         if not layer or not layer.isValid():
             return None
@@ -104,7 +107,9 @@ class LayerUtils:
         fs = layer.fields()
         out_fields = [QgsField(f.name(), f.type()) for f in fs] + new_fields
 
-        temp = QgsVectorLayer("None", layer.name() if output_name is None else output_name, "memory")
+        temp = QgsVectorLayer("None",
+                              layer.name() if output_name is None else output_name,
+                              "memory")
         temp.dataProvider().addAttributes(out_fields)
         temp.updateFields()
 
