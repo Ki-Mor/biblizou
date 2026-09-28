@@ -51,7 +51,8 @@ from .settings.biblizou_settings import get_gpkg_filename
 from .utils.UxUtils import (
 add_row,
 get_table_data,
-run_auto_fill
+run_auto_fill,
+_on_process_finished
 )
 
 
