@@ -120,7 +120,6 @@ def get_new_pairs(table, matched_layers, matched_fields):
 
     return new_layers, new_fields
 
-
 @staticmethod
 def auto_fill_table(table, new_layers, new_fields):
     """
