@@ -13,7 +13,14 @@ from qgis.PyQt.QtWidgets import QPushButton
 from qgis.core import QgsMapLayerProxyModel, QgsVectorLayer, QgsProject
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 
+
 def add_row(table):
+    """
+    Cette fonction permet d'ajouter manuellement une nouvelle ligne dans les onglets qui présentent des tables.
+    - la première colonne (ind. 0) contient un MapsLayerComboBox (liste déroulante des couches, filtrée sur les couches vectorielles) ;
+    - la seconde colonne (ind. 1) contient QgsFieldComboBox (liste déroulante des champs) ;
+    - la troisième colonne (ind. 2) contient un bouton pour supprimer la ligne.
+    """
     row = table.rowCount()
     table.insertRow(row)
 
@@ -24,17 +31,23 @@ def add_row(table):
     lyr_cb.layerChanged.connect(fld_cb.setLayer)
 
     btn_del = QPushButton()
-    icon_path = os.path.join(os.path.dirname(__file__), '..', 'misc', 'cross.png')
+    icon_path = os.path.join(os.path.dirname(__file__), '..', 'misc',
+                             'cross.png')
     btn_del.setIcon(QtGui.QIcon(icon_path))
     btn_del.setIconSize(QtCore.QSize(16, 16))
     btn_del.setMaximumWidth(30)
-    btn_del.clicked.connect(lambda: table.removeRow(table.indexAt(btn_del.pos()).row()))
+    btn_del.clicked.connect(
+        lambda: table.removeRow(table.indexAt(btn_del.pos()).row()))
 
     table.setCellWidget(row, 0, lyr_cb)
     table.setCellWidget(row, 1, fld_cb)
     table.setCellWidget(row, 2, btn_del)
 
+
 def get_table_data(table):
+    """
+    Fonction permettant de récupérer la liste des couches et des champs saisis dans les interfaces de type "table".
+    """
     data = []
     for row in range(table.rowCount()):
         lyr_widget = table.cellWidget(row, 0)
@@ -45,6 +58,7 @@ def get_table_data(table):
                 "column": fld_widget.currentField()
             })
     return data
+
 
 def run_auto_fill(table, iface, log):
     """
@@ -59,7 +73,8 @@ def run_auto_fill(table, iface, log):
 
     matched_layers, matched_fields = result
 
-    new_layers, new_fields = get_new_pairs(table, matched_layers, matched_fields)
+    new_layers, new_fields = get_new_pairs(table, matched_layers,
+                                           matched_fields)
 
     if not new_layers:
         log("Autofill : aucune nouvelle couche à ajouter (déjà présentes dans la table).")
@@ -67,6 +82,7 @@ def run_auto_fill(table, iface, log):
 
     auto_fill_table(table, new_layers, new_fields)
     log(f"Autofill : {len(new_layers)} couche(s) ajoutée(s).")
+
 
 @staticmethod
 def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
@@ -84,7 +100,9 @@ def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
             continue
         field_names = [field.name() for field in layer_name.fields()]
         for field_name in field_names:
-            normalized_field = field_name.strip().casefold().replace("_", "").replace("-", "")
+            normalized_field = field_name.strip().casefold().replace("_",
+                                                                     "").replace(
+                "-", "")
             if normalized_field == "cdnom" or normalized_field == "cdref":
                 matched_layers.append(layer_name)
                 matched_fields.append(field_name)
@@ -94,6 +112,7 @@ def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
         return None
 
     return matched_layers, matched_fields
+
 
 @staticmethod
 def get_new_pairs(table, matched_layers, matched_fields):
@@ -120,6 +139,7 @@ def get_new_pairs(table, matched_layers, matched_fields):
 
     return new_layers, new_fields
 
+
 @staticmethod
 def auto_fill_table(table, new_layers, new_fields):
     """
@@ -127,7 +147,6 @@ def auto_fill_table(table, new_layers, new_fields):
     """
 
     for layer, field_name in zip(new_layers, new_fields):
-
         row = table.rowCount()
         table.insertRow(row)
 
@@ -140,11 +159,13 @@ def auto_fill_table(table, new_layers, new_fields):
         lyr_cb.layerChanged.connect(fld_cb.setLayer)
 
         btn_del = QPushButton()
-        icon_path = os.path.join(os.path.dirname(__file__), '..', 'misc', 'cross.png')
+        icon_path = os.path.join(os.path.dirname(__file__), '..', 'misc',
+                                 'cross.png')
         btn_del.setIcon(QtGui.QIcon(icon_path))
         btn_del.setIconSize(QtCore.QSize(16, 16))
         btn_del.setMaximumWidth(30)
-        btn_del.clicked.connect(lambda checked, b=btn_del: table.removeRow(table.indexAt(b.pos()).row()))
+        btn_del.clicked.connect(lambda checked, b=btn_del: table.removeRow(
+            table.indexAt(b.pos()).row()))
         table.setCellWidget(row, 0, lyr_cb)
         table.setCellWidget(row, 1, fld_cb)
         table.setCellWidget(row, 2, btn_del)
