@@ -402,7 +402,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         QgsMessageLog.logMessage(message, "Biblizou", level=Qgis.Info)
 
     def on_fsd_finished(self, message):
-        self._on_process_finished(message, self.btnRunFsd)
+        _on_process_finished(self, message, self.btnRunFsd)
 
     def on_taxref_finished(self, message):
         _on_process_finished(self, message, self.btnRunTaxref)
