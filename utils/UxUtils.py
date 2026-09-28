@@ -80,6 +80,8 @@ def auto_lookup_layer(iface) -> tuple[List[QgsVectorLayer], List[str]] | None:
     matched_fields = []
 
     for layer_name in layers_names:
+        if not isinstance(layer_name, QgsVectorLayer):
+            continue
         field_names = [field.name() for field in layer_name.fields()]
         for field_name in field_names:
             normalized_field = field_name.strip().casefold().replace("_", "")
