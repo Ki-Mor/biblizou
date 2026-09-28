@@ -405,7 +405,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self._on_process_finished(message, self.btnRunFsd)
 
     def on_taxref_finished(self, message):
-        self._on_process_finished(message, self.btnRunTaxref)
+        _on_process_finished(self, message, self.btnRunTaxref)
 
     def on_stat_finished(self, message):
         _on_process_finished(self, message, self.btnRunStat)
