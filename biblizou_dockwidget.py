@@ -408,7 +408,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self._on_process_finished(message, self.btnRunTaxref)
 
     def on_stat_finished(self, message):
-        self._on_process_finished(message, self.btnRunStat)
+        _on_process_finished(self, message, self.btnRunStat)
 
     def on_error(self, error_message, button=None):
         """Action générique en cas d'erreur d'un thread de traitement."""
