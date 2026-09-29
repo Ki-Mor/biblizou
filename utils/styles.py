@@ -17,7 +17,8 @@ import os
 
 def load_stylesheet(plugin_dir=None) -> str:
     if plugin_dir is None:
-        plugin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        plugin_dir = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))
 
     qss_path = os.path.join(plugin_dir, "resources", "style", "biblizou.qss")
 

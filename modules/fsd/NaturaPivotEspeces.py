@@ -8,8 +8,9 @@ Description : Module pour créer un tableau croisé dynamique (pivot) des habita
 
 """
 
-from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
+
+from ..base.PivotLayer import PivotLayer
 
 
 class NaturaPivotEspeces(PivotLayer):
@@ -40,7 +41,8 @@ class NaturaPivotEspeces(PivotLayer):
             for code, name in sorted(sites.items())
         ]
 
-        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes", Qgis.Info)
+        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes",
+                 Qgis.Info)
 
         return (
             f'SELECT TAXGROUP AS GROUPE, CD_NOM, NOM, '

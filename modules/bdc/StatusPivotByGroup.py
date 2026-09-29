@@ -24,13 +24,15 @@ def _sanitize_layer_name(name):
 
 def _get_vernacular_field(fields):
     """Retourne le nom du champ vernaculaire (nom_vern via API, ou colonnes TaxRef)."""
-    for cand in ("nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1", "taxref_nomVern"):
+    for cand in (
+    "nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1",
+    "taxref_nomVern"):
         if fields.indexOf(cand) != -1:
             return cand
     return "scientificName"
 
 
-def run(gpkg_path, progress_callback=None, log_callback=None):
+def run(gpkg_path, _progress_callback=None, log_callback=None):
     """
     Charge status_data_joined (ou status_data) depuis le GeoPackage, crée une
     couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
@@ -38,6 +40,7 @@ def run(gpkg_path, progress_callback=None, log_callback=None):
     Returns:
         (success: bool, message: str)
     """
+
     def log(msg):
         QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
         if log_callback:
@@ -94,7 +97,9 @@ def run(gpkg_path, progress_callback=None, log_callback=None):
             f'GROUP BY cdnom, scientificName, "{safe_vern}" '
             f'ORDER BY scientificName'
         )
-        vlayer = QgsVectorLayer(f"?query={query}", f"Statuts_Pivot_{_sanitize_layer_name(group_name)}", "virtual")
+        vlayer = QgsVectorLayer(f"?query={query}",
+                                f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
+                                "virtual")
         if vlayer.isValid():
             existing = QgsProject.instance().mapLayersByName(vlayer.name())
             for ex in existing:

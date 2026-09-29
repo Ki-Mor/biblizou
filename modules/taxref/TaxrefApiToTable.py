@@ -6,16 +6,14 @@ Groupe : TaxRef
 Description : Requêtage API TAXREF (taxa) et enregistrement dans biblizou.gpkg|data_taxref.
               Table sans géométrie. Anciennement TaxrefConsolidator.
 """
-import requests
+from qgis.PyQt.QtCore import QVariant, pyqtSignal, QObject
 from qgis.core import (
-    QgsProject,
     QgsVectorLayer,
     QgsFeature,
     QgsField,
     QgsMessageLog,
     Qgis
 )
-from qgis.PyQt.QtCore import QVariant, pyqtSignal, QObject
 
 from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
 from ..base.LayerUtils import LayerUtils
@@ -55,7 +53,8 @@ class TaxrefApiToTable(QObject):
                 )
                 if response.status_code == 200:
                     data = response.json()
-                    flat_data = {k: str(v) for k, v in data.items() if not k.startswith('_')}
+                    flat_data = {k: str(v) for k, v in data.items() if
+                                 not k.startswith('_')}
                     results.append(flat_data)
                     all_keys.update(flat_data.keys())
 
@@ -76,7 +75,8 @@ class TaxrefApiToTable(QObject):
 
         fields = [QgsField(key, QVariant.String) for key in sorted_keys]
 
-        temp_layer = QgsVectorLayer("None?crs=EPSG:4326", "data_taxref", "memory")
+        temp_layer = QgsVectorLayer("None?crs=EPSG:4326", "data_taxref",
+                                    "memory")
         temp_layer.dataProvider().addAttributes(fields)
         temp_layer.updateFields()
 
@@ -90,7 +90,8 @@ class TaxrefApiToTable(QObject):
 
         success, err_msg = LayerUtils.save_to_gpkg(temp_layer, self.gpkg_path)
         if success:
-            self.status_changed.emit("Table data_taxref enregistrée avec succès.")
+            self.status_changed.emit(
+                "Table data_taxref enregistrée avec succès.")
             return True, f"{len(results)} taxons consolidés dans le GeoPackage."
         else:
             return False, f"Erreur de sauvegarde : {err_msg}"

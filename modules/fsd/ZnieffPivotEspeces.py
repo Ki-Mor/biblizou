@@ -12,8 +12,9 @@ Description : Module pour créer un tableau croisé dynamique (pivot) unique des
               - Tri par GROUPE puis par nom_complet (ascendant).
 """
 
-from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
+
+from ..base.PivotLayer import PivotLayer
 
 
 class ZnieffPivotEspeces(PivotLayer):
@@ -49,7 +50,8 @@ class ZnieffPivotEspeces(PivotLayer):
             self.log(f"Champ manquant : {e}", Qgis.Critical)
 
         if not sites:
-            self.log("Aucun site trouvé pour les espèces déterminantes", Qgis.Warning)
+            self.log("Aucun site trouvé pour les espèces déterminantes",
+                     Qgis.Warning)
 
         return sites
 
@@ -66,7 +68,8 @@ class ZnieffPivotEspeces(PivotLayer):
             for code, name in sorted(sites.items())
         ]
 
-        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes", Qgis.Info)
+        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes",
+                 Qgis.Info)
 
         return (
             f'SELECT groupe AS GROUPE, cd_nom, nom_complet, nom_vern, '
@@ -80,6 +83,7 @@ class ZnieffPivotEspeces(PivotLayer):
 
 def run_module(gpkg_path: str = None):
     return ZnieffPivotEspeces().run(gpkg_path)
+
 
 if __name__ == "__console__":
     run_module()

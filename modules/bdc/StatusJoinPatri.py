@@ -16,16 +16,21 @@ from qgis.core import (
 
 from ..base.LayerUtils import LayerUtils
 
-def _test_condition(status_type_name: str, status_code: str, conditions) -> bool:
+
+def _test_condition(status_type_name: str, status_code: str,
+                    conditions) -> bool:
     """Vérifie si la couche existe, et valide et contient des entités."""
 
     for condition in conditions:
         if condition["statusTypeName"] == status_type_name and (
-                condition.get("statusCode") is None or condition.get("statusCode") == status_code):
+                condition.get("statusCode") is None or condition.get(
+            "statusCode") == status_code):
             return True
     return False
 
-def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callback=None) -> tuple[bool, str]:
+
+def run(gpkg_path: str, conditions, layer_name: str = "status_data",
+        log_callback=None) -> tuple[bool, str]:
     """
     Ajoute une colonne booléenne patri à layer_name (par défaut status_data), à True pour toute ligne dont le statut
     correspond à au moins une des conditions (test via _test_condition).
@@ -39,7 +44,8 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
         """
 
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusJoinPatri]: {msg}", "Biblizou", Qgis.Info)
+        QgsMessageLog.logMessage(f"[StatusJoinPatri]: {msg}", "Biblizou",
+                                 Qgis.Info)
         if log_callback:
             log_callback(msg)
 
@@ -56,7 +62,8 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data", log_callbac
     new_fields = [QgsField("patri", QVariant.Bool)]
 
     layer_joined = LayerUtils.add_computed_fields(
-        layer_status, new_fields, compute_fn, output_name=f"{layer_name}_joined"
+        layer_status, new_fields, compute_fn,
+        output_name=f"{layer_name}_joined"
     )
     if layer_joined is None:
         return False, "Avertissement : aucune correspondance patrimoniale calculée."

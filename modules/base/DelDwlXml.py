@@ -53,11 +53,13 @@ class DelDwlXml:
         try:
             xml_files = [
                 f for f in os.listdir(folder_path)
-                if f.endswith('.xml') and os.path.isfile(os.path.join(folder_path, f))
+                if f.endswith('.xml') and os.path.isfile(
+                    os.path.join(folder_path, f))
             ]
 
             if not xml_files:
-                self.log(f"Aucun fichier XML trouvé dans {folder_path}", Qgis.Warning)
+                self.log(f"Aucun fichier XML trouvé dans {folder_path}",
+                         Qgis.Warning)
                 return False, 0
 
             for file_name in xml_files:
@@ -66,7 +68,8 @@ class DelDwlXml:
                     os.remove(file_path)
                     self.deleted_files += 1
                 except OSError as e:
-                    self.log(f"Impossible de supprimer {file_name} : {str(e)}", Qgis.Warning)
+                    self.log(f"Impossible de supprimer {file_name} : {str(e)}",
+                             Qgis.Warning)
 
             if self.deleted_files > 0:
                 self.log(
@@ -75,7 +78,8 @@ class DelDwlXml:
                 )
                 return True, self.deleted_files
             else:
-                self.log("Échec du nettoyage : aucun fichier supprimé", Qgis.Critical)
+                self.log("Échec du nettoyage : aucun fichier supprimé",
+                         Qgis.Critical)
                 return False, 0
 
         except Exception as e:

@@ -13,6 +13,7 @@ from .LayerUtils import LayerUtils
 
 from ...settings.biblizou_settings import get_gpkg_filename
 
+
 class XmlToLayer(ABC):
     """
     Classe abstraite pour l'extraction XML vers couche QGIS / GeoPackage.
@@ -69,7 +70,8 @@ class XmlToLayer(ABC):
             return False
 
         if not os.path.isdir(folder_path):
-            self.log_message(f"Dossier introuvable : {folder_path}", Qgis.Warning)
+            self.log_message(f"Dossier introuvable : {folder_path}",
+                             Qgis.Warning)
             return False
 
         try:
@@ -88,7 +90,9 @@ class XmlToLayer(ABC):
                 self.load_from_geopackage()
             else:
                 QgsProject.instance().addMapLayer(temp_layer)
-                self.log_message("Couche temporaire ajoutée (échec sauvegarde GeoPackage)", Qgis.Warning)
+                self.log_message(
+                    "Couche temporaire ajoutée (échec sauvegarde GeoPackage)",
+                    Qgis.Warning)
 
             self.log_message(
                 f"Traitement terminé — {self.processed_files} fichiers, {len(data)} enregistrements",
@@ -97,7 +101,8 @@ class XmlToLayer(ABC):
             return True
 
         except Exception as e:
-            self.log_message(f"Erreur lors du traitement : {str(e)}", Qgis.Critical)
+            self.log_message(f"Erreur lors du traitement : {str(e)}",
+                             Qgis.Critical)
             return False
 
     def process_folder(self, folder_path: str) -> list:
@@ -107,7 +112,8 @@ class XmlToLayer(ABC):
         xml_files = [f for f in os.listdir(folder_path) if xml_filter(f)]
 
         if not xml_files:
-            self.log_message(f"Aucun fichier XML trouvé dans {folder_path}", Qgis.Warning)
+            self.log_message(f"Aucun fichier XML trouvé dans {folder_path}",
+                             Qgis.Warning)
             return []
 
         self.log_message(f"{len(xml_files)} fichiers XML à traiter", Qgis.Info)
@@ -121,7 +127,9 @@ class XmlToLayer(ABC):
                 self.processed_files += 1
 
             if i % 10 == 0 or i == len(xml_files):
-                self.log_message(f"Progression : {i}/{len(xml_files)} fichiers traités", Qgis.Info)
+                self.log_message(
+                    f"Progression : {i}/{len(xml_files)} fichiers traités",
+                    Qgis.Info)
 
         self.total_records = len(all_data)
         return all_data
@@ -137,17 +145,21 @@ class XmlToLayer(ABC):
         if success:
             self.log_message("Couche sauvegardée avec succès", Qgis.Success)
         else:
-            self.log_message(f"Erreur de sauvegarde : {err_msg}", Qgis.Critical)
+            self.log_message(f"Erreur de sauvegarde : {err_msg}",
+                             Qgis.Critical)
 
     def load_from_geopackage(self):
         """Délègue le chargement à LayerUtils et la substitution de couche."""
-        layer = LayerUtils.load_from_gpkg(self.gpkg_path, self.get_layer_name())
+        layer = LayerUtils.load_from_gpkg(self.gpkg_path,
+                                          self.get_layer_name())
 
         if layer:
             LayerUtils.replace_layer(layer)
-            self.log_message("Couche chargée depuis le GeoPackage", Qgis.Success)
+            self.log_message("Couche chargée depuis le GeoPackage",
+                             Qgis.Success)
         else:
-            self.log_message("Erreur : la couche chargée n'est pas valide", Qgis.Critical)
+            self.log_message("Erreur : la couche chargée n'est pas valide",
+                             Qgis.Critical)
 
     def select_folder_dialog(self):
         """Ouvre une boîte de dialogue pour saisir le chemin du dossier."""
@@ -162,7 +174,8 @@ class XmlToLayer(ABC):
             return None
 
         if not os.path.isdir(folder_path):
-            QMessageBox.warning(None, "Erreur", f"Le dossier '{folder_path}' n'existe pas.")
+            QMessageBox.warning(None, "Erreur",
+                                f"Le dossier '{folder_path}' n'existe pas.")
             return None
 
         return folder_path

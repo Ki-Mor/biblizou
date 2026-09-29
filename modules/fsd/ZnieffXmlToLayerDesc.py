@@ -7,12 +7,12 @@ Description : Module pour extraire les descriptions des sites ZNIEFF des fichier
               et les exporter dans une couche QGIS enrichie sans géométrie.
 """
 
-import os
 import html
+import os
 import xml.etree.ElementTree as ET
 
-from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 from qgis.PyQt.QtCore import QVariant
+from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 
 from ..base.XmlToLayer import XmlToLayer
 
@@ -57,9 +57,11 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
 
                 descriptions_data.append({
                     'NM_SFFZN': nm_sffzn,
-                    'VOLET_ZNIEFF': self._text(znieff_elem.find('VOLET_ZNIEFF')),
+                    'VOLET_ZNIEFF': self._text(
+                        znieff_elem.find('VOLET_ZNIEFF')),
                     'TERRITOIRE': self._text(znieff_elem.find('TERRITOIRE')),
-                    'NM_SFFZN_PARENT': self._text(znieff_elem.find('NM_SFFZN_PARENT')),
+                    'NM_SFFZN_PARENT': self._text(
+                        znieff_elem.find('NM_SFFZN_PARENT')),
                     'NM_REGZN': self._text(znieff_elem.find('NM_REGZN')),
                     'LB_ZN': lb_zn,
                     'TY_ZONE': self._text(znieff_elem.find('TY_ZONE')),
@@ -75,10 +77,13 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
                     'FG_CONTOUR': self._text(znieff_elem.find('FG_CONTOUR')),
                     'TX_GEO': self._rich_text(znieff_elem.find('TX_GEO')),
                     'TX_ACTH': self._rich_text(znieff_elem.find('TX_ACTH')),
-                    'TX_MESPRO': self._rich_text(znieff_elem.find('TX_MESPRO')),
+                    'TX_MESPRO': self._rich_text(
+                        znieff_elem.find('TX_MESPRO')),
                     'TX_HYDRO': self._rich_text(znieff_elem.find('TX_HYDRO')),
-                    'TX_GRANULO': self._rich_text(znieff_elem.find('TX_GRANULO')),
-                    'TX_INTERET': self._rich_text(znieff_elem.find('TX_INTERET')),
+                    'TX_GRANULO': self._rich_text(
+                        znieff_elem.find('TX_GRANULO')),
+                    'TX_INTERET': self._rich_text(
+                        znieff_elem.find('TX_INTERET')),
                     'TX_FACT': self._rich_text(znieff_elem.find('TX_FACT')),
                     'DESCRIPTION': tx_gene,
                     'TX_DELIM': self._rich_text(znieff_elem.find('TX_DELIM')),
@@ -87,7 +92,8 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
                     'DATE_CREA': self._text(znieff_elem.find('DATE_CREA')),
                     'DATE_MODIF': self._text(znieff_elem.find('DATE_MODIF')),
                     'TYPE1_INCLU': self._text(znieff_elem.find('TYPE1_INCLU')),
-                    'INCLU_DANS_TYPE2': self._text(znieff_elem.find('INCLU_DANS_TYPE2')),
+                    'INCLU_DANS_TYPE2': self._text(
+                        znieff_elem.find('INCLU_DANS_TYPE2')),
                     'ZNI_ID_ZNIEFF': zni_data.get('ID_ZNIEFF', ''),
                     'ZNI_NM_SFFZN': zni_data.get('NM_SFFZN', ''),
                     'ZNI_LB_ZN': zni_data.get('LB_ZN', ''),
@@ -97,12 +103,17 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
                     'HTML_POPUP': self._html_popup(nm_sffzn, lb_zn, tx_gene),
                 })
 
-                self.log_message(f"Description extraite : {lb_zn} ({nm_sffzn})", Qgis.Info)
+                self.log_message(
+                    f"Description extraite : {lb_zn} ({nm_sffzn})", Qgis.Info)
 
         except ET.ParseError as e:
-            self.log_message(f"Erreur parsing {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur parsing {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
         except Exception as e:
-            self.log_message(f"Erreur traitement {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur traitement {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
 
         return descriptions_data
 
@@ -149,13 +160,16 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
             QgsField('HTML_POPUP', QVariant.String),
         ]
 
-        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp", "memory")
+        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp",
+                               "memory")
         provider = layer.dataProvider()
         provider.addAttributes(fields)
         layer.updateFields()
-        layer.setDisplayExpression("coalesce(LB_ZN, '') || ' (' || coalesce(NM_SFFZN, '') || ')'")
+        layer.setDisplayExpression(
+            "coalesce(LB_ZN, '') || ' (' || coalesce(NM_SFFZN, '') || ')'")
 
-        numeric_fields = {'SU_ZN', 'PROF_MINI', 'PROF_MAXI', 'ALT_MINI', 'ALT_MAXI', 'X_L2E', 'Y_L2E'}
+        numeric_fields = {'SU_ZN', 'PROF_MINI', 'PROF_MAXI', 'ALT_MINI',
+                          'ALT_MAXI', 'X_L2E', 'Y_L2E'}
         success_count = 0
         error_count = 0
 
@@ -166,7 +180,8 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
                 attrs = []
                 for f in layer.fields():
                     val = data.get(f.name(), '')
-                    attrs.append(self._to_double(val) if f.name() in numeric_fields else val)
+                    attrs.append(self._to_double(
+                        val) if f.name() in numeric_fields else val)
                 feat.setAttributes(attrs)
 
                 if provider.addFeature(feat):
@@ -182,7 +197,8 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
         layer.updateExtents()
         level = Qgis.Success if error_count == 0 else Qgis.Warning
         self.log_message(
-            f"Couche créée : {success_count} entrées, {error_count} erreurs", level
+            f"Couche créée : {success_count} entrées, {error_count} erreurs",
+            level
         )
         return layer
 
@@ -200,7 +216,8 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
                 for old in QgsProject.instance().mapLayersByName(layer_name):
                     QgsProject.instance().removeMapLayer(old.id())
                 QgsProject.instance().addMapLayer(layer)
-                self.log_message("Couche chargée depuis le GeoPackage", Qgis.Success)
+                self.log_message("Couche chargée depuis le GeoPackage",
+                                 Qgis.Success)
             else:
                 self.log_message("Couche chargée invalide", Qgis.Critical)
         except Exception as e:
@@ -223,8 +240,10 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
         if element.text and element.text.strip():
             text = element.text.strip()
         else:
-            paragraphs = [p.text.strip() for p in element.findall('.//p') if p.text]
-            text = '\n'.join(paragraphs) if paragraphs else ''.join(element.itertext()).strip()
+            paragraphs = [p.text.strip() for p in element.findall('.//p') if
+                          p.text]
+            text = '\n'.join(paragraphs) if paragraphs else ''.join(
+                element.itertext()).strip()
         return ' '.join(text.split()) if text else ""
 
     def _extract_zni(self, znieff_elem) -> dict:
@@ -234,7 +253,9 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
         if zni_elem is not None:
             row = zni_elem.find('ZNI_ROW')
             if row is not None:
-                for key in ('ID_ZNIEFF', 'NM_SFFZN', 'LB_ZN', 'TY_ZONE', 'NM_REGZN', 'VOLET_ZNIEFF'):
+                for key in (
+                'ID_ZNIEFF', 'NM_SFFZN', 'LB_ZN', 'TY_ZONE', 'NM_REGZN',
+                'VOLET_ZNIEFF'):
                     zni_data[key] = self._text(row.find(key))
         return zni_data
 
@@ -243,7 +264,9 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
         if not value:
             return None
         try:
-            cleaned = ''.join(c for c in str(value).replace(',', '.').strip() if c.isdigit() or c in '.-')
+            cleaned = ''.join(
+                c for c in str(value).replace(',', '.').strip() if
+                c.isdigit() or c in '.-')
             return float(cleaned) if cleaned else None
         except (ValueError, TypeError):
             return None
@@ -253,7 +276,8 @@ class ZnieffXmlToLayerDesc(XmlToLayer):
         safe_num = html.escape(nm_sffzn) if nm_sffzn else "Non renseigné"
         safe_name = html.escape(lb_zn) if lb_zn else "Non renseigné"
         if description:
-            safe_desc = html.escape(description).replace('  ', ' ').replace('\n', '<br>')
+            safe_desc = html.escape(description).replace('  ', ' ').replace(
+                '\n', '<br>')
         else:
             safe_desc = '<i>Aucune description disponible</i>'
 

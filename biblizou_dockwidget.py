@@ -22,26 +22,29 @@
  ***************************************************************************/
 """
 import os
-from qgis.PyQt import QtGui, QtWidgets, QtCore, uic
-from qgis.PyQt.QtCore import pyqtSignal, QSize, Qt
-from qgis.PyQt.QtGui import QDesktopServices
+
+from PyQt5.QtWidgets import QHeaderView, QCompleter
+from qgis.PyQt import QtWidgets, uic
 from qgis.PyQt.QtCore import QUrl
-from PyQt5.QtWidgets import QPushButton, QHeaderView, QCompleter
-from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
-from qgis.gui import QgsFileWidget, QgsMapLayerComboBox, QgsFieldComboBox
-from .utils.styles import apply_stylesheet
+from qgis.PyQt.QtCore import pyqtSignal, Qt
+from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtWidgets import QStyleFactory
+from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
+from qgis.gui import QgsFileWidget
 
-
+from .utils.styles import apply_stylesheet
 
 # Importation du thread de traitement depuis le script biblizou.py
 try:
-    from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
+    from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, \
+        BdStatutsProcessingThread
 except ImportError:
-    from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, BdStatutsProcessingThread
+    from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, \
+        BdStatutsProcessingThread
 
 import sys
 from . import resources as resources_rc
+
 sys.modules['resources_rc'] = resources_rc
 from .biblizou_dialog_options import BiblizouDialogOptions
 from .biblizou_dialog_patri import BiblizouDialogPatri
@@ -49,19 +52,17 @@ from .biblizou_dialog_patri import BiblizouDialogPatri
 from .settings.biblizou_settings import get_gpkg_filename
 
 from .utils.UxUtils import (
-add_row,
-get_table_data,
-run_auto_fill,
-_on_process_finished
+    add_row,
+    get_table_data,
+    run_auto_fill,
+    _on_process_finished
 )
-
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'biblizou_dockwidget_base.ui'))
 
 
 class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
-
     closingPlugin = pyqtSignal()
 
     def __init__(self, iface, parent=None):
@@ -104,7 +105,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.mapLayerN2k.setEnabled(self.cBN2K.isChecked())
         self._setup_layer_lock()
 
-
         # ----------
 
         # Configuration onglet TaxRef
@@ -123,7 +123,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
             header_taxref.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
-        #----------
+        # ----------
 
         # Configuration onglet BDC
 
@@ -162,15 +162,18 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # Configurer le sélecteur de dossier
         self.mQgsFileWidget.setStorageMode(QgsFileWidget.GetDirectory)
-        self.mQgsFileWidget.setDialogTitle("Sélectionner le dossier de travail")
+        self.mQgsFileWidget.setDialogTitle(
+            "Sélectionner le dossier de travail")
 
     def setup_department_combo(self):
         """Remplit le combo Département depuis dept_fr.csv (nom_officiel affiché, code_insee stocké). Liste filtrable."""
         import csv
-        csv_path = os.path.join(os.path.dirname(__file__), "data", "dept_fr.csv")
+        csv_path = os.path.join(os.path.dirname(__file__), "data",
+                                "dept_fr.csv")
         self.comboBoxDpt.clear()
         if not os.path.isfile(csv_path):
-            QgsMessageLog.logMessage("Biblizou: dept_fr.csv introuvable", "Biblizou", level=Qgis.Warning)
+            QgsMessageLog.logMessage("Biblizou: dept_fr.csv introuvable",
+                                     "Biblizou", level=Qgis.Warning)
             return
         try:
             with open(csv_path, "r", encoding="utf-8") as f:
@@ -190,11 +193,14 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
             self.comboBoxDpt.setCompleter(c)
         except Exception as e:
-            QgsMessageLog.logMessage(f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou", level=Qgis.Warning)
+            QgsMessageLog.logMessage(
+                f"Biblizou: Erreur chargement dept_fr.csv : {e}", "Biblizou",
+                level=Qgis.Warning)
 
     def open_help_link(self):
         """Ouvre la documentation du plugin dans le navigateur par défaut."""
-        QDesktopServices.openUrl(QUrl("https://ki-mor.github.io/biblizou_frontend/"))
+        QDesktopServices.openUrl(
+            QUrl("https://ki-mor.github.io/biblizou_frontend/"))
 
     def open_options_dialog(self):
         """Ouvre la fenêtre des réglages généraux du plugin."""
@@ -221,7 +227,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             errors.append("Dossier de travail invalide.")
 
         if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation", "\n".join(errors))
+            QtWidgets.QMessageBox.warning(self, "Validation",
+                                          "\n".join(errors))
             return False
         return True
 
@@ -238,7 +245,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             errors.append("Aucune couche à consolider avec TaxRef.")
 
         if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation", "\n".join(errors))
+            QtWidgets.QMessageBox.warning(self, "Validation",
+                                          "\n".join(errors))
             return False
         return True
 
@@ -250,11 +258,14 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             errors.append("Dossier de travail invalide.")
         code_insee = self.comboBoxDpt.currentData()
         if not code_insee:
-            errors.append("Veuillez sélectionner un département (liste filtrable sur le nom).")
+            errors.append(
+                "Veuillez sélectionner un département (liste filtrable sur le nom).")
         if not self.get_stat_data():
-            errors.append("Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
+            errors.append(
+                "Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
         if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts", "\n".join(errors))
+            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts",
+                                          "\n".join(errors))
             return False
         return True
 
@@ -296,8 +307,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             'run_natura': self.cBN2K.isChecked(),
         }
 
-        QgsMessageLog.logMessage(f"Params avant création thread: {params}", "Biblizou", level=Qgis.Info)
-        QgsMessageLog.logMessage(f"Working folder: {params.get('working_folder')}", "Biblizou", level=Qgis.Info)
+        QgsMessageLog.logMessage(f"Params avant création thread: {params}",
+                                 "Biblizou", level=Qgis.Info)
+        QgsMessageLog.logMessage(
+            f"Working folder: {params.get('working_folder')}", "Biblizou",
+            level=Qgis.Info)
 
         # Confirmation
         msg = f"Lancer le moissonnage des données FSD ?\n\nDossier : {params['working_folder']}"
@@ -314,12 +328,15 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.fsd_thread.progress.connect(self.update_status_bar)
             self.fsd_thread.log.connect(self.log_to_qgis)
             self.fsd_thread.finished.connect(self.on_fsd_finished)
-            self.fsd_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunFsd))
+            self.fsd_thread.error.connect(
+                lambda msg: self.on_error(msg, self.btnRunFsd))
 
             self._show_progress(1)
 
             self.fsd_thread.start()
-            self.iface.messageBar().pushMessage("Biblizou", "Traitement FSD démarré...", level=Qgis.Info)
+            self.iface.messageBar().pushMessage("Biblizou",
+                                                "Traitement FSD démarré...",
+                                                level=Qgis.Info)
 
     def run_taxref_process(self):
         """Lance la consolidation TaxRef via le thread."""
@@ -329,7 +346,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         params = {
             'working_folder': self.mQgsFileWidget.filePath(),
             'consolidation_config': self.get_taxref_data(),
-            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(), get_gpkg_filename())
+            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(),
+                                      get_gpkg_filename())
         }
 
         # Confirmation
@@ -347,12 +365,15 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.progress.connect(self.update_status_bar)
             self.taxref_thread.log.connect(self.log_to_qgis)
             self.taxref_thread.finished.connect(self.on_taxref_finished)
-            self.taxref_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunTaxref))
+            self.taxref_thread.error.connect(
+                lambda msg: self.on_error(msg, self.btnRunTaxref))
 
             self._show_progress(1)
 
             self.taxref_thread.start()
-            self.iface.messageBar().pushMessage("Biblizou", "Consolidation TaxRef démarrée...", level=Qgis.Info)
+            self.iface.messageBar().pushMessage("Biblizou",
+                                                "Consolidation TaxRef démarrée...",
+                                                level=Qgis.Info)
 
     def run_stat_process(self):
         """Lance le workflow BD Statuts (API -> status_data -> jointure -> pivots)."""
@@ -384,16 +405,20 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.progress.connect(self.update_status_bar)
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
-        self.stat_thread.error.connect(lambda msg: self.on_error(msg, self.btnRunStat))
+        self.stat_thread.error.connect(
+            lambda msg: self.on_error(msg, self.btnRunStat))
 
         self._show_progress(5)
 
         self.stat_thread.start()
-        self.iface.messageBar().pushMessage("Biblizou", "Workflow BD Statuts démarré...", level=Qgis.Info)
+        self.iface.messageBar().pushMessage("Biblizou",
+                                            "Workflow BD Statuts démarré...",
+                                            level=Qgis.Info)
 
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
-        self.iface.mainWindow().statusBar().showMessage(f"Biblizou : {message} ({step}/{total})")
+        self.iface.mainWindow().statusBar().showMessage(
+            f"Biblizou : {message} ({step}/{total})")
         self.progressBarGlobal.setMaximum(total)
         self.progressBarGlobal.setValue(step)
         self.labelProgressStatus.setText(message)

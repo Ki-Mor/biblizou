@@ -22,41 +22,42 @@
  ***************************************************************************/
 """
 import os
+
 from qgis.PyQt.QtCore import QThread, pyqtSignal
-
-# WFS Manager
-from .modules.fsd.WfsManager import setup_wfs_connections, load_wfs_layers
-
-# Settings
-from .settings.biblizou_settings import get_gpkg_filename
-
-# Import des modules Natura 2000
-from .modules.fsd.NaturaDwlXml import run_module_with_path as natura_download
-from .modules.fsd.NaturaXmlToLayerDesc import run_module_with_path as natura_process_desc
-from .modules.fsd.NaturaXmlToLayerHab import run_module_with_path as natura_process_hab
-from .modules.fsd.NaturaPivotHabitats import run_module as natura_pivot_hab
-from .modules.fsd.NaturaXmlToLayerEsp import run_module_with_path as natura_process_esp
-from .modules.fsd.NaturaPivotEspeces import run_module as natura_pivot_esp
-
-# Import des modules ZNIEFF
-from .modules.fsd.ZnieffDwlXml import run_module_with_path as znieff_download
-from .modules.fsd.ZnieffXmlToLayerDesc import run_module_with_path as znieff_process_desc
-from .modules.fsd.ZnieffXmlToLayerHab import run_module_with_path as znieff_process_hab
-from .modules.fsd.ZnieffPivotHabitats import run_module as znieff_pivot_hab
-from .modules.fsd.ZnieffXmlToLayerEsp import run_module_with_path as znieff_process_esp
-from .modules.fsd.ZnieffPivotEspeces import run_module as znieff_pivot_esp
 
 # Nettoyage des XML téléchargés
 from .modules.base.DelDwlXml import run_module_with_path as clean_xml_files
-
-# API TaxRef -> table data_taxref
-from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
-
 # BD Statuts (API TaxRef Statuts)
 from .modules.bdc.StatusApiToTable import run as status_api_to_table
+from .modules.bdc.StatusJoinPatri import run as status_join_patri
 from .modules.bdc.StatusJoinTaxref import run as status_join_taxref
 from .modules.bdc.StatusPivotByGroup import run as status_pivot_by_group
-from .modules.bdc.StatusJoinPatri import run as status_join_patri
+# Import des modules Natura 2000
+from .modules.fsd.NaturaDwlXml import run_module_with_path as natura_download
+from .modules.fsd.NaturaPivotEspeces import run_module as natura_pivot_esp
+from .modules.fsd.NaturaPivotHabitats import run_module as natura_pivot_hab
+from .modules.fsd.NaturaXmlToLayerDesc import \
+    run_module_with_path as natura_process_desc
+from .modules.fsd.NaturaXmlToLayerEsp import \
+    run_module_with_path as natura_process_esp
+from .modules.fsd.NaturaXmlToLayerHab import \
+    run_module_with_path as natura_process_hab
+# WFS Manager
+from .modules.fsd.WfsManager import setup_wfs_connections, load_wfs_layers
+# Import des modules ZNIEFF
+from .modules.fsd.ZnieffDwlXml import run_module_with_path as znieff_download
+from .modules.fsd.ZnieffPivotEspeces import run_module as znieff_pivot_esp
+from .modules.fsd.ZnieffPivotHabitats import run_module as znieff_pivot_hab
+from .modules.fsd.ZnieffXmlToLayerDesc import \
+    run_module_with_path as znieff_process_desc
+from .modules.fsd.ZnieffXmlToLayerEsp import \
+    run_module_with_path as znieff_process_esp
+from .modules.fsd.ZnieffXmlToLayerHab import \
+    run_module_with_path as znieff_process_hab
+# API TaxRef -> table data_taxref
+from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
+# Settings
+from .settings.biblizou_settings import get_gpkg_filename
 
 
 class FsdProcessingThread(QThread):
@@ -83,7 +84,8 @@ class FsdProcessingThread(QThread):
             # Vérification et extraction des paramètres CRITIQUES
             working_folder = self.params.get('working_folder')
             if not working_folder:
-                self.error.emit("Paramètre 'working_folder' manquant ou vide dans les paramètres")
+                self.error.emit(
+                    "Paramètre 'working_folder' manquant ou vide dans les paramètres")
                 return
 
             # Stockage dans la variable d'instance pour utilisation dans toutes les méthodes
@@ -98,40 +100,54 @@ class FsdProcessingThread(QThread):
             self.run_znieff = self.params.get('run_znieff', True)
             self.run_natura = self.params.get('run_natura', True)
             if self.run_znieff and not self.znieff_layer:
-                self.error.emit("Paramètre 'znieff_layer' manquant ou vide dans les paramètres")
+                self.error.emit(
+                    "Paramètre 'znieff_layer' manquant ou vide dans les paramètres")
                 return
             if self.run_natura and not self.natura_layer:
-                self.error.emit("Paramètre 'natura_layer' manquant ou vide dans les paramètres")
+                self.error.emit(
+                    "Paramètre 'natura_layer' manquant ou vide dans les paramètres")
                 return
 
             steps = [
-                ("Configuration des connexions WFS", self.setup_wfs_connections),
+                ("Configuration des connexions WFS",
+                 self.setup_wfs_connections),
                 ("Chargement des couches WFS", self.load_wfs_layers),
             ]
 
             if self.run_znieff:
                 steps.append(("Téléchargement ZNIEFF", self.download_znieff))
-                steps.append(("Traitement descriptions ZNIEFF", self.process_znieff_desc))
-                steps.append(("Traitement espèces ZNIEFF", self.process_znieff_esp))
-                steps.append(("Traitement habitats ZNIEFF", self.process_znieff_hab))
+                steps.append(("Traitement descriptions ZNIEFF",
+                              self.process_znieff_desc))
+                steps.append(
+                    ("Traitement espèces ZNIEFF", self.process_znieff_esp))
+                steps.append(
+                    ("Traitement habitats ZNIEFF", self.process_znieff_hab))
             else:
                 self.log.emit("Bloc ZNIEFF ignoré (case cBZnieff décochée)")
 
             if self.run_natura:
-                steps.append(("Téléchargement Natura 2000", self.download_natura))
-                steps.append(("Traitement descriptions Natura 2000", self.process_natura_desc))
-                steps.append(("Traitement espèces Natura 2000", self.process_natura_esp))
-                steps.append(("Traitement habitats Natura 2000", self.process_natura_hab))
+                steps.append(
+                    ("Téléchargement Natura 2000", self.download_natura))
+                steps.append(("Traitement descriptions Natura 2000",
+                              self.process_natura_desc))
+                steps.append(("Traitement espèces Natura 2000",
+                              self.process_natura_esp))
+                steps.append(("Traitement habitats Natura 2000",
+                              self.process_natura_hab))
             else:
                 self.log.emit("Bloc Natura 2000 ignoré (case cBN2K décochée)")
 
             if self.run_znieff:
-                steps.append(("Pivot des espèces déterminantes des ZNIEFF", self.pivot_znieff_esp))
-                steps.append(("Pivot des habitats des ZNIEFF", self.pivot_znieff_hab))
+                steps.append(("Pivot des espèces déterminantes des ZNIEFF",
+                              self.pivot_znieff_esp))
+                steps.append(
+                    ("Pivot des habitats des ZNIEFF", self.pivot_znieff_hab))
 
             if self.run_natura:
-                steps.append(("Pivot des espèces Natura 2000", self.pivot_natura_esp))
-                steps.append(("Pivot des habitats Natura 2000", self.pivot_natura_hab))
+                steps.append(
+                    ("Pivot des espèces Natura 2000", self.pivot_natura_esp))
+                steps.append(
+                    ("Pivot des habitats Natura 2000", self.pivot_natura_hab))
 
             # Flags pour bloquer les pivots si aucune donnée en amont
             self._has_znieff_esp = False
@@ -149,20 +165,25 @@ class FsdProcessingThread(QThread):
                     self.all_steps_ok = False
                 self.log.emit(f"--- Terminé : {step_name} ---")
 
-            if self.all_steps_ok and self.params.get('clean_xml_after_run',False):
+            if self.all_steps_ok and self.params.get('clean_xml_after_run',
+                                                     False):
                 self.log.emit("--- Nettoyage des fichiers XML téléchargés ---")
                 success, nb_deleted, = clean_xml_files(self.working_folder)
                 if success:
-                    self.log.emit(f"{nb_deleted} fichier(s) XML supprimé(s) du dossier de travail")
+                    self.log.emit(
+                        f"{nb_deleted} fichier(s) XML supprimé(s) du dossier de travail")
                 else:
-                    self.log.emit("Avertissement : nettoyage des fichiers XML sans effet (aucun fichier supprimé)")
+                    self.log.emit(
+                        "Avertissement : nettoyage des fichiers XML sans effet (aucun fichier supprimé)")
             elif not self.all_steps_ok:
-                self.log.emit("Nettoyage des fichiers XML ignoré : au moins une étape du traitement a échoué")
+                self.log.emit(
+                    "Nettoyage des fichiers XML ignoré : au moins une étape du traitement a échoué")
 
             if self.all_steps_ok:
                 self.finished.emit("Moissonnage FSD terminé avec succès !")
             else:
-                self.finished.emit("Moissonnage FSD terminé avec des avertissements — voir le journal pour le détail.")
+                self.finished.emit(
+                    "Moissonnage FSD terminé avec des avertissements — voir le journal pour le détail.")
 
         except Exception as e:
             self.error.emit(f"Erreur critique dans le workflow FSD : {str(e)}")
@@ -178,14 +199,16 @@ class FsdProcessingThread(QThread):
                     self.log.emit(line)
 
             if not success:
-                self.log.emit("Avertissement : Certaines connexions WFS n'ont pas pu être ajoutées")
+                self.log.emit(
+                    "Avertissement : Certaines connexions WFS n'ont pas pu être ajoutées")
             else:
                 self.log.emit("Connexions WFS configurées avec succès")
             return success
 
         except Exception as e:
             self.log.emit(f"Erreur lors de la configuration WFS : {str(e)}")
-            self.log.emit("Le traitement va continuer mais certaines connexions peuvent être manquantes")
+            self.log.emit(
+                "Le traitement va continuer mais certaines connexions peuvent être manquantes")
             return False
 
     def load_wfs_layers(self):
@@ -199,14 +222,17 @@ class FsdProcessingThread(QThread):
                     self.log.emit(line)
 
             if not success:
-                self.log.emit("Avertissement : Certaines couches WFS n'ont pas pu être chargées")
+                self.log.emit(
+                    "Avertissement : Certaines couches WFS n'ont pas pu être chargées")
             else:
                 self.log.emit("Couches WFS chargées avec succès")
             return success
 
         except Exception as e:
-            self.log.emit(f"Erreur lors du chargement des couches WFS : {str(e)}")
-            self.log.emit("Le traitement va continuer mais certaines couches peuvent être manquantes")
+            self.log.emit(
+                f"Erreur lors du chargement des couches WFS : {str(e)}")
+            self.log.emit(
+                "Le traitement va continuer mais certaines couches peuvent être manquantes")
             return False
 
     def download_znieff(self):
@@ -216,71 +242,83 @@ class FsdProcessingThread(QThread):
             return False
         success = znieff_download(self.znieff_layer, self.working_folder)
         if not success:
-            self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des ZNIEFF")
+            self.log.emit(
+                "Avertissement : Échec partiel sur le téléchargement des xml des ZNIEFF")
         return success
 
     def process_znieff_desc(self):
         self.log.emit("Analyse des descriptions ZNIEFF...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_znieff_desc")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_znieff_desc")
             return False
         success = znieff_process_desc(self.working_folder)
         if not success:
-            self.log.emit("Avertissement : Échec partiel sur les descriptions ZNIEFF")
+            self.log.emit(
+                "Avertissement : Échec partiel sur les descriptions ZNIEFF")
         return success
 
     def process_znieff_esp(self):
         self.log.emit("Analyse des espèces ZNIEFF...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_znieff_esp")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_znieff_esp")
             return
         result = znieff_process_esp(self.working_folder)
         if result is True:
             self._has_znieff_esp = True
         elif result is False:
-            self.log.emit("Avertissement : Échec partiel sur les espèces ZNIEFF")
+            self.log.emit(
+                "Avertissement : Échec partiel sur les espèces ZNIEFF")
         return result
 
     def process_znieff_hab(self):
         self.log.emit("Analyse des habitats ZNIEFF...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_znieff_hab")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_znieff_hab")
             return
         result = znieff_process_hab(self.working_folder)
         if result is True:
             self._has_znieff_hab = True
         elif result is False:
-            self.log.emit("Avertissement : Échec partiel sur les habitats ZNIEFF")
+            self.log.emit(
+                "Avertissement : Échec partiel sur les habitats ZNIEFF")
         return result
 
     def pivot_znieff_esp(self):
         if not self._has_znieff_esp:
-            self.log.emit("Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
+            self.log.emit(
+                "Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot espèces ZNIEFF...")
         return znieff_pivot_esp(self.gpkg_path)
 
     def pivot_znieff_hab(self):
         if not self._has_znieff_hab:
-            self.log.emit("Pivot habitats ZNIEFF ignoré : aucune donnée disponible")
+            self.log.emit(
+                "Pivot habitats ZNIEFF ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot habitats ZNIEFF...")
         return znieff_pivot_hab(self.gpkg_path)
 
     def download_natura(self):
-        self.log.emit("Téléchargement des FSD des sites Natura 2000 au format xml...")
+        self.log.emit(
+            "Téléchargement des FSD des sites Natura 2000 au format xml...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini")
             return False
         success = natura_download(self.natura_layer, self.working_folder)
         if not success:
-            self.log.emit("Avertissement : Échec partiel sur le téléchargement des xml des sites Natura 2000")
+            self.log.emit(
+                "Avertissement : Échec partiel sur le téléchargement des xml des sites Natura 2000")
         return success
 
     def process_natura_desc(self):
         self.log.emit("Analyse des descriptions Natura 2000...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_natura_desc")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_natura_desc")
             return False
         success = natura_process_desc(self.working_folder)
         if not success:
@@ -290,37 +328,43 @@ class FsdProcessingThread(QThread):
     def process_natura_esp(self):
         self.log.emit("Analyse des espèces Natura 2000...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_natura_esp")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_natura_esp")
             return
         result = natura_process_esp(self.working_folder)
         if result is True:
             self._has_natura_esp = True
         elif result is False:
-            self.log.emit("Avertissement : Échec partiel sur les espèces Natura 2000")
+            self.log.emit(
+                "Avertissement : Échec partiel sur les espèces Natura 2000")
         return result
 
     def process_natura_hab(self):
         self.log.emit("Analyse des habitats Natura 2000...")
         if not self.working_folder:
-            self.log.emit("ERREUR: Dossier de travail non défini pour process_natura_hab")
+            self.log.emit(
+                "ERREUR: Dossier de travail non défini pour process_natura_hab")
             return
         result = natura_process_hab(self.working_folder)
         if result is True:
             self._has_natura_hab = True
         elif result is False:
-            self.log.emit("Avertissement : Échec partiel sur les habitats Natura 2000")
+            self.log.emit(
+                "Avertissement : Échec partiel sur les habitats Natura 2000")
         return result
 
     def pivot_natura_esp(self):
         if not self._has_natura_esp:
-            self.log.emit("Pivot espèces Natura 2000 ignoré : aucune donnée disponible")
+            self.log.emit(
+                "Pivot espèces Natura 2000 ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot espèces Natura...")
         return natura_pivot_esp(self.gpkg_path)
 
     def pivot_natura_hab(self):
         if not self._has_natura_hab:
-            self.log.emit("Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
+            self.log.emit(
+                "Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
             return None
         self.log.emit("Génération pivot habitats Natura...")
         return natura_pivot_hab(self.gpkg_path)
@@ -350,20 +394,24 @@ class TaxrefProcessingThread(QThread):
                 self.finished.emit("Aucune couche à consolider.")
                 return
 
-            self.log.emit(f"Nombre de couches à consolider : {len(self.params['consolidation_config'])}")
+            self.log.emit(
+                f"Nombre de couches à consolider : {len(self.params['consolidation_config'])}")
 
             consolidator = TaxrefApiToTable(self.params['gpkg_path'])
-            success, msg = consolidator.run(self.params['consolidation_config'])
+            success, msg = consolidator.run(
+                self.params['consolidation_config'])
 
             self.log.emit(msg)
 
             if success:
-                self.finished.emit("Consolidation TaxRef terminée avec succès !")
+                self.finished.emit(
+                    "Consolidation TaxRef terminée avec succès !")
             else:
                 self.error.emit(f"Erreur lors de la consolidation : {msg}")
 
         except Exception as e:
-            self.error.emit(f"Erreur critique dans la consolidation TaxRef : {str(e)}")
+            self.error.emit(
+                f"Erreur critique dans la consolidation TaxRef : {str(e)}")
 
 
 class BdStatutsProcessingThread(QThread):
@@ -392,7 +440,8 @@ class BdStatutsProcessingThread(QThread):
                 self.error.emit("Département de référence non sélectionné.")
                 return
             if not layer_config:
-                self.error.emit("Aucune couche source (CD_Nom) configurée pour les statuts.")
+                self.error.emit(
+                    "Aucune couche source (CD_Nom) configurée pour les statuts.")
                 return
 
             def log_cb(msg):
@@ -413,10 +462,12 @@ class BdStatutsProcessingThread(QThread):
             self.log.emit(msg)
 
             # 2. (Optionnel) Jointure status_data + patri -> status_data
-            self.progress.emit(2, 5, "Correspondance des espèces patrimoniales")
+            self.progress.emit(2, 5,
+                               "Correspondance des espèces patrimoniales")
             conditions = self.params.get("conditions") or []
             if conditions:
-                ok, msg = status_join_patri(gpkg_path, conditions, "status_data", log_callback=log_cb)
+                ok, msg = status_join_patri(gpkg_path, conditions,
+                                            "status_data", log_callback=log_cb)
                 if not ok:
                     self.log.emit(f"Avertissement : {msg}")
                 else:
@@ -426,7 +477,9 @@ class BdStatutsProcessingThread(QThread):
 
             # 3. Jointure status_data + data_taxref -> status_data_joined
             self.progress.emit(3, 5, "Jointure avec data_taxref")
-            ok, msg = status_join_taxref(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
+            ok, msg = status_join_taxref(gpkg_path,
+                                         progress_callback=progress_cb,
+                                         log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
                 # On continue quand même pour les pivots (sur status_data seul)
@@ -435,7 +488,9 @@ class BdStatutsProcessingThread(QThread):
 
             # 4. Tables pivot par groupe
             self.progress.emit(4, 5, "Création des tables pivot par groupe")
-            ok, msg = status_pivot_by_group(gpkg_path, progress_callback=progress_cb, log_callback=log_cb)
+            ok, msg = status_pivot_by_group(gpkg_path,
+                                            progress_callback=progress_cb,
+                                            log_callback=log_cb)
             if not ok:
                 self.log.emit(f"Avertissement : {msg}")
             else:

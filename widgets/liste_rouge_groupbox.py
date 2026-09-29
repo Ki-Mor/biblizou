@@ -48,4 +48,5 @@ class ListeRougeGroupBox(QGroupBox):
 
     def statuts_coches(self):
         """Retourne la liste des statuts actuellement cochés."""
-        return [statut for statut, cb in self.checkboxes.items() if cb.isChecked()]
+        return [statut for statut, cb in self.checkboxes.items() if
+                cb.isChecked()]

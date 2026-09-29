@@ -7,11 +7,14 @@ Description : Dialog de gestion des espèces patrimoniales
 """
 
 import os
+
 from qgis.PyQt import uic, QtWidgets
+
 from .settings.biblizou_settings import (
     # imports des statuts boolean
     DEFAULT_BERNE, DEFAULT_CITES, DEFAULT_BONN,  # Conventions internationales
-    DEFAULT_DH2, DEFAULT_DH4, DEFAULT_DO1, DEFAULT_DO4,  # Directives Européennes
+    DEFAULT_DH2, DEFAULT_DH4, DEFAULT_DO1,
+    DEFAULT_DO4,  # Directives Européennes
     DEFAULT_PN, DEFAULT_PR,  # Espèces protégées
     DEFAULT_ZDET,  # Déterminantes de ZNIEFF
     get_status_bool, set_status_bool,
@@ -55,10 +58,14 @@ class BiblizouDialogPatri(QtWidgets.QDialog, FORM_CLASS):
         self.chbPR.setChecked(get_status_bool("pr", DEFAULT_PR))
         self.chbZDet.setChecked(get_status_bool("zdet", DEFAULT_ZDET))
 
-        self.gBListeRougeMond.set_statuts_coches(get_lr_statuts("lr_mondial", DEFAULT_LR_MOND))
-        self.gBListeRougeEuro.set_statuts_coches(get_lr_statuts("lr_europe", DEFAULT_LR_EURO))
-        self.gBListeRougeNat.set_statuts_coches(get_lr_statuts("lr_national", DEFAULT_LR_NAT))
-        self.gBListeRougeReg.set_statuts_coches(get_lr_statuts("lr_regional", DEFAULT_LR_REG))
+        self.gBListeRougeMond.set_statuts_coches(
+            get_lr_statuts("lr_mondial", DEFAULT_LR_MOND))
+        self.gBListeRougeEuro.set_statuts_coches(
+            get_lr_statuts("lr_europe", DEFAULT_LR_EURO))
+        self.gBListeRougeNat.set_statuts_coches(
+            get_lr_statuts("lr_national", DEFAULT_LR_NAT))
+        self.gBListeRougeReg.set_statuts_coches(
+            get_lr_statuts("lr_regional", DEFAULT_LR_REG))
 
     def save_and_accept(self):
         """Enregistre la saisie utilisateur puis ferme le dialogue (OK)."""
@@ -162,10 +169,14 @@ class BiblizouDialogPatri(QtWidgets.QDialog, FORM_CLASS):
         # 5. Listes rouges
         if self.gBListesRouges.isChecked():
             lr_groups = [
-                (self.cBListeRougeMond, self.gBListeRougeMond, "Liste rouge mondiale"),
-                (self.cBListeRougeEuro, self.gBListeRougeEuro, "Liste rouge européenne"),
-                (self.cBListeRougeNat, self.gBListeRougeNat, "Liste rouge nationale"),
-                (self.cBListeRougeReg, self.gBListeRougeReg, "Liste rouge régionale"),
+                (self.cBListeRougeMond, self.gBListeRougeMond,
+                 "Liste rouge mondiale"),
+                (self.cBListeRougeEuro, self.gBListeRougeEuro,
+                 "Liste rouge européenne"),
+                (self.cBListeRougeNat, self.gBListeRougeNat,
+                 "Liste rouge nationale"),
+                (self.cBListeRougeReg, self.gBListeRougeReg,
+                 "Liste rouge régionale"),
             ]
 
             for master_cb, groupbox, type_name in lr_groups:
