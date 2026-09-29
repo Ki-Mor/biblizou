@@ -7,8 +7,9 @@ Description : Module pour créer un tableau croisé dynamique (pivot) des habita
               Transforme la table longue en format large avec une ZNIEFF par colonne.
 """
 
-from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
+
+from ..base.PivotLayer import PivotLayer
 
 
 class ZnieffPivotHabitats(PivotLayer):
@@ -36,7 +37,8 @@ class ZnieffPivotHabitats(PivotLayer):
             for code, name in sorted(sites.items())
         ]
 
-        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes", Qgis.Info)
+        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes",
+                 Qgis.Info)
 
         return f"""
 SELECT LB_CODE, LB_HAB, {', '.join(case_statements)}
@@ -48,6 +50,7 @@ ORDER BY LB_CODE
 
 def run_module(gpkg_path: str = None):
     return ZnieffPivotHabitats().run(gpkg_path)
+
 
 if __name__ == "__console__":
     run_module()

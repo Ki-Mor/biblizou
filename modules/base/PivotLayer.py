@@ -26,6 +26,7 @@ from .LayerUtils import LayerUtils
 
 from ...settings.biblizou_settings import get_gpkg_filename
 
+
 class PivotLayer(ABC):
 
     # -----------------------------------------------------------------------
@@ -35,18 +36,34 @@ class PivotLayer(ABC):
 
     @abstractmethod
     def get_source_layer_name(self) -> str:
+        """
+        Méthodes abstraites (à implémenter dans chaque classe enfant) :
+            get_source_layer_name() → nom de la couche source dans le projet QGIS
+        """
         pass
 
     @abstractmethod
     def get_output_layer_name(self) -> str:
+        """
+        Méthodes abstraites (à implémenter dans chaque classe enfant) :
+            get_output_layer_name() → nom de la couche pivot à créer
+        """
         pass
 
     @abstractmethod
     def get_site_keys(self) -> tuple:
+        """
+        Méthodes abstraites (à implémenter dans chaque classe enfant) :
+            get_site_keys()         → tuple (code_field, name_field) pour extraire les sites
+        """
         pass
 
     @abstractmethod
     def build_pivot_query(self) -> str:
+        """
+        Méthodes abstraites (à implémenter dans chaque classe enfant) :
+            build_pivot_query()     → requête SQL complète du pivot
+        """
         pass
 
     # -----------------------------------------------------------------------
@@ -57,11 +74,14 @@ class PivotLayer(ABC):
         self.source_layer = LayerUtils.get_layer(source_name)
 
         if not self.source_layer:
-            self.log(f"Couche source '{source_name}' introuvable dans le projet", Qgis.Warning)
+            self.log(
+                f"Couche source '{source_name}' introuvable dans le projet",
+                Qgis.Warning)
             return False
 
         if not self.source_layer.isValid():
-            self.log(f"Couche source '{source_name}' présente mais non valide", Qgis.Critical)
+            self.log(f"Couche source '{source_name}' présente mais non valide",
+                     Qgis.Critical)
             return False
 
         return True
@@ -81,20 +101,24 @@ class PivotLayer(ABC):
             code = feature[code_field]
             name = feature[name_field]
             if code and str(code).strip():
-                sites[str(code).strip()] = str(name).strip() if name else f"Site {code}"
+                sites[str(code).strip()] = str(
+                    name).strip() if name else f"Site {code}"
 
         return sites
 
     def run(self, gpkg_path: str = None) -> bool:
         """Exécute la chaîne complète de génération du pivot."""
-        self.log(f"Démarrage du pivot pour {self.__class__.__name__}", Qgis.Info)
+        self.log(f"Démarrage du pivot pour {self.__class__.__name__}",
+                 Qgis.Info)
 
         if not self.load_source_layer():
             return False
 
         sql_query = self.build_pivot_query()
         if not sql_query:
-            self.log("Aucune donnée ou site trouvé pour construire le pivot SQL", Qgis.Warning)
+            self.log(
+                "Aucune donnée ou site trouvé pour construire le pivot SQL",
+                Qgis.Warning)
             return False
 
         layer = self.create_virtual_layer(sql_query)
@@ -107,10 +131,13 @@ class PivotLayer(ABC):
     def create_virtual_layer(self, sql_query: str) -> QgsVectorLayer | None:
         """Génère la couche virtuelle SQL et l'injecte/substitue via le LayerUtils."""
         output_name = self.get_output_layer_name()
-        virtual_layer = QgsVectorLayer(f"?query={sql_query}", output_name, "virtual")
+        virtual_layer = QgsVectorLayer(f"?query={sql_query}", output_name,
+                                       "virtual")
 
         if not virtual_layer.isValid():
-            self.log(f"Couche virtuelle '{output_name}' invalide — vérifiez la requête SQL", Qgis.Critical)
+            self.log(
+                f"Couche virtuelle '{output_name}' invalide — vérifiez la requête SQL",
+                Qgis.Critical)
             return None
 
         if LayerUtils.replace_layer(virtual_layer):
@@ -122,21 +149,26 @@ class PivotLayer(ABC):
 
         return None
 
-    def export_to_geopackage(self, layer: QgsVectorLayer, gpkg_path: str = None):
+    def export_to_geopackage(self, layer: QgsVectorLayer,
+                             gpkg_path: str = None):
         """Exporte de façon persistante la couche générée via le LayerUtils."""
         if not gpkg_path:
             project_dir = os.path.dirname(QgsProject.instance().fileName())
             if not project_dir:
-                self.log("Projet non sauvegardé et aucun chemin gpkg fourni", Qgis.Warning)
+                self.log("Projet non sauvegardé et aucun chemin gpkg fourni",
+                         Qgis.Warning)
                 return
             gpkg_path = os.path.join(project_dir, get_gpkg_filename())
 
         success, err_msg = LayerUtils.save_to_gpkg(layer, gpkg_path)
 
         if success:
-            self.log(f"Couche pivot enregistrée dans '{layer.name()}' ({gpkg_path})", Qgis.Success)
+            self.log(
+                f"Couche pivot enregistrée dans '{layer.name()}' ({gpkg_path})",
+                Qgis.Success)
         else:
-            self.log(f"Échec de l'export GeoPackage : {err_msg}", Qgis.Critical)
+            self.log(f"Échec de l'export GeoPackage : {err_msg}",
+                     Qgis.Critical)
 
     def remove_accents(self, text: str) -> str:
         """Supprime les diacritiques d'une chaîne (à â é è ë ê î ô ù...)."""

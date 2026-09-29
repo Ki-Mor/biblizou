@@ -20,7 +20,6 @@ from qgis.PyQt.QtCore import QVariant
 
 from ..base.LayerUtils import LayerUtils
 
-
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
 MAX_RETRIES = 2
 
@@ -35,7 +34,8 @@ def _fetch_taxon_info(cdnom, session):
         nom_vern = (data.get("vernacularName1") or data.get("nomVern") or "")
         if isinstance(nom_vern, dict):
             nom_vern = nom_vern.get("value", "") or ""
-        groupe = (data.get("classe") or data.get("ordre") or data.get("groupe") or "")
+        groupe = (data.get("classe") or data.get("ordre") or data.get(
+            "groupe") or "")
         if isinstance(groupe, dict):
             groupe = groupe.get("value", "") or ""
         return {"nom_vern": str(nom_vern), "groupe": str(groupe)}
@@ -43,7 +43,8 @@ def _fetch_taxon_info(cdnom, session):
         return None
 
 
-def run(gpkg_path: str, layer_name: str = "status_data", progress_callback=None, log_callback=None) -> tuple[bool, str]:
+def run(gpkg_path: str, layer_name: str = "status_data",
+        progress_callback=None, log_callback=None) -> tuple[bool, str]:
     """
     Charge la couche layer_name (par défaut status_data) depuis gpkg_path, pour chaque cdnom
     distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe, puis ajoute les colonnes
@@ -59,7 +60,8 @@ def run(gpkg_path: str, layer_name: str = "status_data", progress_callback=None,
         """
 
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusJoinTaxRef]: {msg}", "Biblizou", Qgis.Info) #mis à jour aujourd'hui précédemment QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
+        QgsMessageLog.logMessage(f"[StatusJoinTaxRef]: {msg}", "Biblizou",
+                                 Qgis.Info)  # mis à jour aujourd'hui précédemment QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
         if log_callback:
             log_callback(msg)
 
@@ -95,15 +97,17 @@ def run(gpkg_path: str, layer_name: str = "status_data", progress_callback=None,
         time.sleep(0.15)
 
     def compute_fn(feat):
-       cdnom = feat.attributes()[idx_cdnom]
-       key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
-       info = taxon_info.get(key, {"nom_vern": "", "groupe": ""})
-       return [info["nom_vern"], info["groupe"]]
+        cdnom = feat.attributes()[idx_cdnom]
+        key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
+        info = taxon_info.get(key, {"nom_vern": "", "groupe": ""})
+        return [info["nom_vern"], info["groupe"]]
 
-    new_fields = [QgsField("nom_vern", QVariant.String), QgsField("groupe", QVariant.String)]
+    new_fields = [QgsField("nom_vern", QVariant.String),
+                  QgsField("groupe", QVariant.String)]
 
     layer_joined = LayerUtils.add_computed_fields(
-        layer_status, new_fields, compute_fn, output_name=f"{layer_name}_joined"
+        layer_status, new_fields, compute_fn,
+        output_name=f"{layer_name}_joined"
     )
     if layer_joined is None:
         return False, "Avertissement : aucune référence taxonomique ajoutée."
@@ -114,4 +118,3 @@ def run(gpkg_path: str, layer_name: str = "status_data", progress_callback=None,
 
     log(f"Colonnes Taxref ajoutées à {layer_name}.")
     return True, f"Colonnes Taxref ajoutées à {layer_name}."
-

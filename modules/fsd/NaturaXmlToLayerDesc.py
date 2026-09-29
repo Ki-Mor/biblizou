@@ -7,12 +7,12 @@ Description : Module pour extraire les descriptions des sites Natura 2000 des fi
               et les exporter dans une couche QGIS enrichie sans géométrie.
 """
 
-import os
 import html
+import os
 import xml.etree.ElementTree as ET
 
-from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 from qgis.PyQt.QtCore import QVariant
+from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 
 from ..base.XmlToLayer import XmlToLayer
 
@@ -35,7 +35,8 @@ class NaturaXmlToLayerDesc(XmlToLayer):
         return "Natura_2000_Descriptions"
 
     def get_xml_filter(self) -> callable:
-        return lambda f: f.startswith('FR') and f.endswith('.xml') and len(f) == 13
+        return lambda f: f.startswith('FR') and f.endswith('.xml') and len(
+            f) == 13
 
     def process_xml_file(self, xml_path: str) -> list:
         descriptions_data = []
@@ -58,13 +59,18 @@ class NaturaXmlToLayerDesc(XmlToLayer):
                         'SITE_NAME': site_name,
                         'QUALITY': quality,
                         'VULNAR': vulnar,
-                        'HTML_POPUP': self._html_popup(sitecode, site_name, quality, vulnar),
+                        'HTML_POPUP': self._html_popup(sitecode, site_name,
+                                                       quality, vulnar),
                     })
 
         except ET.ParseError as e:
-            self.log_message(f"Erreur parsing {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur parsing {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
         except Exception as e:
-            self.log_message(f"Erreur traitement {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur traitement {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
 
         return descriptions_data
 
@@ -77,7 +83,8 @@ class NaturaXmlToLayerDesc(XmlToLayer):
             QgsField('HTML_POPUP', QVariant.String),
         ]
 
-        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp", "memory")
+        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp",
+                               "memory")
         provider = layer.dataProvider()
         provider.addAttributes(fields)
         layer.updateFields()
@@ -87,14 +94,16 @@ class NaturaXmlToLayerDesc(XmlToLayer):
         for data in descriptions_data:
             feat = QgsFeature()
             feat.setFields(layer.fields())
-            feat.setAttributes([data.get(f.name(), '') for f in layer.fields()])
+            feat.setAttributes(
+                [data.get(f.name(), '') for f in layer.fields()])
             features.append(feat)
 
         provider.addFeatures(features)
         layer.updateExtents()
 
         self.log_message(
-            f"Couche temporaire créée avec {len(descriptions_data)} entrées", Qgis.Success
+            f"Couche temporaire créée avec {len(descriptions_data)} entrées",
+            Qgis.Success
         )
         return layer
 
@@ -110,7 +119,8 @@ class NaturaXmlToLayerDesc(XmlToLayer):
                 for old in QgsProject.instance().mapLayersByName(layer_name):
                     QgsProject.instance().removeMapLayer(old.id())
                 QgsProject.instance().addMapLayer(layer)
-                self.log_message("Couche chargée depuis le GeoPackage", Qgis.Success)
+                self.log_message("Couche chargée depuis le GeoPackage",
+                                 Qgis.Success)
             else:
                 self.log_message("Couche chargée invalide", Qgis.Critical)
         except Exception as e:
@@ -125,11 +135,14 @@ class NaturaXmlToLayerDesc(XmlToLayer):
             return element.text.strip()
         return ""
 
-    def _html_popup(self, sitecode: str, site_name: str, quality: str, vulnar: str) -> str:
+    def _html_popup(self, sitecode: str, site_name: str, quality: str,
+                    vulnar: str) -> str:
         s_code = html.escape(sitecode)
         s_name = html.escape(site_name)
-        s_quality = html.escape(quality).replace('\n', '<br>') if quality else '<i>Aucune information</i>'
-        s_vulnar = html.escape(vulnar).replace('\n', '<br>') if vulnar else '<i>Aucune information</i>'
+        s_quality = html.escape(quality).replace('\n',
+                                                 '<br>') if quality else '<i>Aucune information</i>'
+        s_vulnar = html.escape(vulnar).replace('\n',
+                                               '<br>') if vulnar else '<i>Aucune information</i>'
 
         return f"""<!DOCTYPE html>
 <html>

@@ -35,8 +35,10 @@ EXCLUDE_PATTERNS = [
     "pylintrc", ".pylintrc",  # outils pylint
     "Makefile",
     "requirements-dev.txt",
-    ".git", ".git/*", ".gitignore", ".gitattributes", ".github", ".github/*",  # répertoire et fichiers git
-    ".vscode", ".vscode/*", ".idea", ".idea/*", "*.pyc", "__pycache__", "__pycache__/*", ".Rproj.user",
+    ".git", ".git/*", ".gitignore", ".gitattributes", ".github", ".github/*",
+    # répertoire et fichiers git
+    ".vscode", ".vscode/*", ".idea", ".idea/*", "*.pyc", "__pycache__",
+    "__pycache__/*", ".Rproj.user",
     ".Rproj.user/*"  # répertoire et fichiers IDE
     "*.zip",
     "dist", "dist/*",
@@ -47,7 +49,8 @@ EXCLUDE_PATTERNS = [
 def is_excluded(rel_parts) -> bool:
     rel_str = "/".join(rel_parts)
     return any(
-        fnmatch.fnmatch(rel_str, pattern) or fnmatch.fnmatch(rel_parts[0], pattern)
+        fnmatch.fnmatch(rel_str, pattern) or fnmatch.fnmatch(rel_parts[0],
+                                                             pattern)
         for pattern in EXCLUDE_PATTERNS
     )
 
@@ -77,9 +80,12 @@ def build_zip(plugin_dir: Path, output_dir: Path, plugin_name: str | None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("plugin_dir", type=Path, help="Chemin vers le dossier du plugin")
-    parser.add_argument("--output", type=Path, default=Path("dist"), help="Dossier de sortie (défaut : dist)")
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("plugin_dir", type=Path,
+                        help="Chemin vers le dossier du plugin")
+    parser.add_argument("--output", type=Path, default=Path("dist"),
+                        help="Dossier de sortie (défaut : dist)")
     parser.add_argument("--name", default=None,
                         help="Nom technique du plugin (dossier racine dans le zip). Défaut : nom du dossier sur disque.")
     args = parser.parse_args()

@@ -9,6 +9,7 @@ Description : Centralise la lecture/écriture des réglages généraux du plugin
 """
 
 import re
+
 from qgis.core import QgsSettings
 
 SETTINGS_KEY_GPKG_NAME = "biblizou/gpkg_name"

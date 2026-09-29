@@ -8,8 +8,9 @@ Description : Module pour créer un tableau croisé dynamique (pivot) des habita
 
 """
 
-from ..base.PivotLayer import PivotLayer
 from qgis.core import Qgis
+
+from ..base.PivotLayer import PivotLayer
 
 
 class NaturaPivotHabitats(PivotLayer):
@@ -37,7 +38,8 @@ class NaturaPivotHabitats(PivotLayer):
             for code, name in sorted(sites.items())
         ]
 
-        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes", Qgis.Info)
+        self.log(f"Requête SQL générée avec {len(case_statements)} colonnes",
+                 Qgis.Info)
 
         return f"""
 SELECT CD_UE, LB_HABDH_FR, {', '.join(case_statements)}
@@ -49,6 +51,7 @@ ORDER BY CD_UE
 
 def run_module(gpkg_path: str = None):
     return NaturaPivotHabitats().run(gpkg_path)
+
 
 if __name__ == "__console__":
     run_module()

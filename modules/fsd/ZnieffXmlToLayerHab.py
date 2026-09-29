@@ -10,8 +10,8 @@ Description : Module pour extraire des données d'habitats déterminants à part
 import os
 import xml.etree.ElementTree as ET
 
-from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 from qgis.PyQt.QtCore import QVariant
+from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 
 from ..base.XmlToLayer import XmlToLayer
 
@@ -32,7 +32,8 @@ class ZnieffXmlToLayerHab(XmlToLayer):
 
     def get_xml_filter(self) -> callable:
         """Fichiers XML ZNIEFF : 13 caractères, sans préfixe FR."""
-        return lambda f: f.endswith('.xml') and not f.startswith('FR') and len(f) == 13
+        return lambda f: f.endswith('.xml') and not f.startswith('FR') and len(
+            f) == 13
 
     def process_xml_file(self, xml_path: str) -> list:
         """
@@ -65,27 +66,34 @@ class ZnieffXmlToLayerHab(XmlToLayer):
                     # Habitats déterminants uniquement
                     if fg_typo_elem is not None and fg_typo_elem.text == 'D':
                         codes_in_row = [
-                            e.text for e in typo_info_row_elem.iter('LB_CODE') if e.text
+                            e.text for e in typo_info_row_elem.iter('LB_CODE')
+                            if e.text
                         ]
                         habs_in_row = [
-                            e.text for e in typo_info_row_elem.iter('LB_HAB') if e.text
+                            e.text for e in typo_info_row_elem.iter('LB_HAB')
+                            if e.text
                         ]
 
-                        for i in range(max(len(codes_in_row), len(habs_in_row))):
+                        for i in range(
+                                max(len(codes_in_row), len(habs_in_row))):
                             habitats_data.append({
                                 'NM_SFFZN': nm_sffzn,
-                                'LB_ZN':    lb_zn,
-                                'LB_CODE':  codes_in_row[i] if i < len(codes_in_row) else "",
-                                'LB_HAB':   habs_in_row[i]  if i < len(habs_in_row)  else ""
+                                'LB_ZN': lb_zn,
+                                'LB_CODE': codes_in_row[i] if i < len(
+                                    codes_in_row) else "",
+                                'LB_HAB': habs_in_row[i] if i < len(
+                                    habs_in_row) else ""
                             })
 
         except ET.ParseError as e:
             self.log_message(
-                f"Erreur de parsing XML {os.path.basename(xml_path)}: {e}", Qgis.Warning
+                f"Erreur de parsing XML {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning
             )
         except Exception as e:
             self.log_message(
-                f"Erreur traitement {os.path.basename(xml_path)}: {e}", Qgis.Warning
+                f"Erreur traitement {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning
             )
 
         return habitats_data
@@ -96,12 +104,13 @@ class ZnieffXmlToLayerHab(XmlToLayer):
         """
         fields = [
             QgsField('NM_SFFZN', QVariant.String),  # Numéro ZNIEFF
-            QgsField('LB_ZN',    QVariant.String),  # Nom ZNIEFF
-            QgsField('LB_CODE',  QVariant.String),  # Code habitat
-            QgsField('LB_HAB',   QVariant.String),  # Libellé habitat
+            QgsField('LB_ZN', QVariant.String),  # Nom ZNIEFF
+            QgsField('LB_CODE', QVariant.String),  # Code habitat
+            QgsField('LB_HAB', QVariant.String),  # Libellé habitat
         ]
 
-        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp", "memory")
+        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp",
+                               "memory")
         provider = layer.dataProvider()
         provider.addAttributes(fields)
         layer.updateFields()
@@ -112,9 +121,9 @@ class ZnieffXmlToLayerHab(XmlToLayer):
             feat.setFields(layer.fields())
             feat.setAttributes([
                 data.get('NM_SFFZN', ''),
-                data.get('LB_ZN',    ''),
-                data.get('LB_CODE',  ''),
-                data.get('LB_HAB',   ''),
+                data.get('LB_ZN', ''),
+                data.get('LB_CODE', ''),
+                data.get('LB_HAB', ''),
             ])
             features.append(feat)
 
@@ -122,7 +131,8 @@ class ZnieffXmlToLayerHab(XmlToLayer):
         layer.updateExtents()
 
         self.log_message(
-            f"Couche temporaire créée avec {len(habitats_data)} enregistrements", Qgis.Info
+            f"Couche temporaire créée avec {len(habitats_data)} enregistrements",
+            Qgis.Info
         )
         return layer
 

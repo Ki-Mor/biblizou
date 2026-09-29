@@ -10,8 +10,8 @@ Description : Module pour extraire des données d'habitats directive à partir d
 import os
 import xml.etree.ElementTree as ET
 
-from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 from qgis.PyQt.QtCore import QVariant
+from qgis.core import QgsVectorLayer, QgsFeature, QgsField, Qgis
 
 from ..base.XmlToLayer import XmlToLayer
 
@@ -31,7 +31,8 @@ class NaturaXmlToLayerHab(XmlToLayer):
         return "Natura_2000_Habitats"
 
     def get_xml_filter(self) -> callable:
-        return lambda f: f.startswith('FR') and f.endswith('.xml') and len(f) == 13
+        return lambda f: f.startswith('FR') and f.endswith('.xml') and len(
+            f) == 13
 
     def process_xml_file(self, xml_path: str) -> list:
         habitats_data = []
@@ -56,9 +57,13 @@ class NaturaXmlToLayerHab(XmlToLayer):
                     })
 
         except ET.ParseError as e:
-            self.log_message(f"Erreur parsing {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur parsing {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
         except Exception as e:
-            self.log_message(f"Erreur traitement {os.path.basename(xml_path)}: {e}", Qgis.Warning)
+            self.log_message(
+                f"Erreur traitement {os.path.basename(xml_path)}: {e}",
+                Qgis.Warning)
 
         return habitats_data
 
@@ -70,7 +75,8 @@ class NaturaXmlToLayerHab(XmlToLayer):
             QgsField('LB_HABDH_FR', QVariant.String),
         ]
 
-        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp", "memory")
+        layer = QgsVectorLayer("None", f"{self.get_layer_name()}_temp",
+                               "memory")
         provider = layer.dataProvider()
         provider.addAttributes(fields)
         layer.updateFields()
@@ -79,14 +85,16 @@ class NaturaXmlToLayerHab(XmlToLayer):
         for data in habitats_data:
             feat = QgsFeature()
             feat.setFields(layer.fields())
-            feat.setAttributes([data.get(f.name(), '') for f in layer.fields()])
+            feat.setAttributes(
+                [data.get(f.name(), '') for f in layer.fields()])
             features.append(feat)
 
         provider.addFeatures(features)
         layer.updateExtents()
 
         self.log_message(
-            f"Couche temporaire créée avec {len(habitats_data)} habitats", Qgis.Info
+            f"Couche temporaire créée avec {len(habitats_data)} habitats",
+            Qgis.Info
         )
         return layer
 

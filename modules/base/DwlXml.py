@@ -93,7 +93,8 @@ class DwlXml(ABC):
             return self.execute_download()
 
         except Exception as e:
-            self.log(f"Erreur lors du téléchargement : {str(e)}", Qgis.Critical)
+            self.log(f"Erreur lors du téléchargement : {str(e)}",
+                     Qgis.Critical)
             return False
 
     def find_patrinat_layers(self) -> bool:
@@ -119,7 +120,8 @@ class DwlXml(ABC):
             return self.patrinat_layer_1 is not None and self.patrinat_layer_2 is not None
 
         except Exception as e:
-            self.log(f"Erreur recherche couches Patrinat : {str(e)}", Qgis.Critical)
+            self.log(f"Erreur recherche couches Patrinat : {str(e)}",
+                     Qgis.Critical)
             return False
 
     def selectionner_et_stocker(self, couche_source, liste_stockage: list):
@@ -138,7 +140,8 @@ class DwlXml(ABC):
             geometries = [f.geometry() for f in self.ae_eloignee.getFeatures()]
 
             if not geometries:
-                self.log("Aucune géométrie trouvée dans l'aire d'étude", Qgis.Warning)
+                self.log("Aucune géométrie trouvée dans l'aire d'étude",
+                         Qgis.Warning)
                 return
 
             geom_ref = QgsGeometry.unaryUnion(geometries)
@@ -169,20 +172,24 @@ class DwlXml(ABC):
                 )
 
         except Exception as e:
-            self.log(f"Erreur lors de la sélection spatiale : {str(e)}", Qgis.Critical)
+            self.log(f"Erreur lors de la sélection spatiale : {str(e)}",
+                     Qgis.Critical)
 
-    def download_file(self, url: str, save_path: str, retries: int = 3) -> bool:
+    def download_file(self, url: str, save_path: str,
+                      retries: int = 3) -> bool:
         """Télécharge un fichier XML avec retry exponentiel."""
         attempt = 0
         while attempt < retries:
             try:
-                self.log(f"Tentative {attempt + 1}/{retries} : {url}", Qgis.Info)
+                self.log(f"Tentative {attempt + 1}/{retries} : {url}",
+                         Qgis.Info)
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()
 
                 content_type = response.headers.get('Content-Type', '')
                 content_start = response.content[:200].lstrip()
-                if 'xml' not in content_type.lower() and not content_start.startswith(b'<?xml'):
+                if 'xml' not in content_type.lower() and not content_start.startswith(
+                        b'<?xml'):
                     raise requests.exceptions.RequestException(
                         f"Réponse HTTP 200 mais contenu non-XML (Content-Type: '{content_type}') "
                         f"— le service source est peut-être indisponible : {url}"
@@ -192,7 +199,8 @@ class DwlXml(ABC):
                     f.write(response.content)
 
                 self.files_downloaded += 1
-                self.log(f"Téléchargé : {os.path.basename(save_path)}", Qgis.Success)
+                self.log(f"Téléchargé : {os.path.basename(save_path)}",
+                         Qgis.Success)
                 return True
 
             except requests.exceptions.RequestException as e:

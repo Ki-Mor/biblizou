@@ -53,7 +53,8 @@ def _fetch_status_batch(location_id: str, taxref_ids: list, session) -> list:
     return []
 
 
-def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_callback=None):
+def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
+        log_callback=None):
     """
     Args:
         gpkg_path: chemin vers biblizou.gpkg
@@ -64,8 +65,10 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_ca
     Returns:
         (success: bool, message: str)
     """
+
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusApiToTable]: {msg}", "Biblizou", Qgis.Info)
+        QgsMessageLog.logMessage(f"[StatusApiToTable]: {msg}", "Biblizou",
+                                 Qgis.Info)
         if log_callback:
             log_callback(msg)
 
@@ -85,7 +88,8 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None, log_ca
         batch = cd_nom_list[i: i + BATCH_SIZE]
         batch_num = i // BATCH_SIZE + 1
         if progress_callback:
-            progress_callback(batch_num, total_batches, f"Lot {batch_num}/{total_batches}")
+            progress_callback(batch_num, total_batches,
+                              f"Lot {batch_num}/{total_batches}")
 
         for s in _fetch_status_batch(location_id, batch, session):
             taxon = s.get("taxon") or {}

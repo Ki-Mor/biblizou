@@ -26,6 +26,9 @@ class ZnieffDwlXml(DwlXml):
 
 
 def run_module_with_path(reference_layer, folder_path: str) -> bool:
+    """
+    fonction d'entrée du module, appelée par le worker
+    """
     return ZnieffDwlXml().run_with_path(reference_layer, folder_path)
 
 
