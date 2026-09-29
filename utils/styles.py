@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-/***************************************************************************
- Styles
-                                 A QGIS plugin
- Moissonnage bibliographique automatisé
-                             -------------------
-        begin                : 2026-09-10
-        copyright            : (C) 2026 by François Botcazou
-        email                : francois.botcazou@proton.me
- ***************************************************************************/
+Auteur : François Botcazou
+Nom : styles.py
+Groupe : utils
 Description : Charge et applique la feuille de style resources/biblizou.qss
 """
 
 import os
-
+from qgis.core import (QgsMessageLog, Qgis)
 
 def load_stylesheet(plugin_dir=None) -> str:
     if plugin_dir is None:
