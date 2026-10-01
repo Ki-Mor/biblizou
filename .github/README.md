@@ -61,7 +61,7 @@ Activer **Biblizou** dans `Extensions` → `Gérer et installer les extensions` 
 
 ## Crédits
 
-* **Auteur** : François Botcazou
+* **Premier auteur** : François Botcazou 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/botcazoufrancois/)
 [![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=ResearchGate&logoColor=white)](https://www.researchgate.net/profile/Francois-Botcazou)
