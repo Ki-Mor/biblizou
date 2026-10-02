@@ -461,7 +461,12 @@ class BdStatutsProcessingThread(QThread):
                 return
             self.log.emit(msg)
 
-            # 2. (Optionnel) Jointure status_data + patri -> status_data
+            ##############################################################
+            # 2. (Optionnel) Jointure status_data + patri -> status_data #
+            ##############################################################
+
+            current_layer = "status_data"
+
             self.progress.emit(2, 5,
                                "Correspondance des espèces patrimoniales")
             conditions = self.params.get("conditions") or []
