@@ -118,6 +118,19 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         if not success:
             return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
+        # Remplacement dans le projet par la couche enregistrée dans le GPKG
+        layer_pivot = LayerUtils.load_from_gpkg(gpkg_path, vlayer.name())
+        if layer_pivot is None:
+            log(f"StatutsPivot : table {vlayer.name()} introuvable dans le GPKG après sauvegarde")
+            continue
+
+        for ex in QgsProject.instance().mapLayersByName(
+                layer_pivot.name()):
+            QgsProject.instance().removeMapLayer(ex.id())
+        QgsProject.instance().addMapLayer(layer_pivot)
+        created += 1
+        log(f"Pivot créé : {layer_pivot.name()}")
+
         # if vlayer.isValid():
         #     existing = QgsProject.instance().mapLayersByName(vlayer.name())
         #     for ex in existing:
