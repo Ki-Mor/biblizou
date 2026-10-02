@@ -39,7 +39,7 @@ def run(gpkg_path: str, conditions, layer_name: str,
         Args:
             gpkg_path: chemin vers biblizou.gpkg
             conditions: état de biblizou_dialog_patri.py. liste de dicts [{'statusTypeName': '...', 'statusCode': '...' (optionnel)}]
-            layer_name: layer status_data obtenue de StatusApiToTable
+            layer_name: layer obtenue via le worker
             log_callback: optional (message)
         Returns:
             (success: bool, message: str)
