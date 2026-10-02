@@ -48,7 +48,24 @@ def _collect_groups (layer: QgsVectorLayer) ->dict:
 
 def _build_sql_query ():
     """Construire la requête SQL d'un groupe"""
-
+    case_parts = []
+    for st in sorted(type_names):
+        safe_alias = st.replace('"', '""')
+        st_esc = st.replace("'", "''")
+        case_parts.append(
+            f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
+        )
+    cols = ", ".join(case_parts)
+    safe_vern = vern_fld.replace('"', '""')
+    group_esc = group_name.replace("'", "''")
+    query = (
+        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
+        f'FROM "{layer_id}" '
+        f"WHERE statusTypeGroup = '{group_esc}' "
+        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
+        f'ORDER BY scientificName'
+    )
+    return query
 
 def run(gpkg_path: str, layer_name: str = "layer_joined",
         log_callback=None):
