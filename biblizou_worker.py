@@ -497,6 +497,8 @@ class BdStatutsProcessingThread(QThread):
 
             self.progress.emit(3, 5, "Jointure avec data_taxref")
             ok, msg = status_join_taxref(gpkg_path,
+                                         current_layer,
+                                         output_name="status_joined_taxref",
                                          progress_callback=progress_cb,
                                          log_callback=log_cb)
             if not ok:
