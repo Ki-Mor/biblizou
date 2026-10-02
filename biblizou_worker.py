@@ -475,7 +475,10 @@ class BdStatutsProcessingThread(QThread):
             else:
                 self.log.emit("Étape ignorée")
 
-            # 3. Jointure status_data + data_taxref -> status_data_joined
+            ###############################################################
+            # 3. Jointure status_data + data_taxref -> status_data_joined #
+            ###############################################################
+
             self.progress.emit(3, 5, "Jointure avec data_taxref")
             ok, msg = status_join_taxref(gpkg_path,
                                          progress_callback=progress_cb,
