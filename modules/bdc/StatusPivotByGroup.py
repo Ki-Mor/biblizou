@@ -34,7 +34,8 @@ def _get_vernacular_field(fields):
     return "scientificName"
 
 
-def run(gpkg_path, _progress_callback=None, log_callback=None):
+def run(gpkg_path: str, layer_name: str = "layer_joined",
+        log_callback=None):
     """
     Charge status_data_joined (ou status_data) depuis le GeoPackage, crée une
     couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
