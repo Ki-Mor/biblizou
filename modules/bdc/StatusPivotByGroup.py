@@ -89,15 +89,18 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
 
     vern_fld = _get_vernacular_field(layer_status.fields())
     # Charger la couche en mémoire pour lire les groupes/types
-    groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
-    for feat in layer_status.getFeatures():
-        g = feat["statusTypeGroup"] or ""
-        t = feat["statusTypeName"] or ""
-        if not g:
-            continue
-        if g not in groups_types:
-            groups_types[g] = set()
-        groups_types[g].add(t)
+    # groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
+    # for feat in layer_status.getFeatures():
+    #     g = feat["statusTypeGroup"] or ""
+    #     t = feat["statusTypeName"] or ""
+    #     if not g:
+    #         continue
+    #     if g not in groups_types:
+    #         groups_types[g] = set()
+    #     groups_types[g].add(t)
+    #
+    # if not groups_types:
+    #     return False, "Aucun statusTypeGroup trouvé dans la table."
 
     if not groups_types:
         return False, "Aucun statusTypeGroup trouvé dans la table."
