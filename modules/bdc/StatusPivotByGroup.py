@@ -49,8 +49,9 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         if log_callback:
             log_callback(msg)
 
-    uri_joined = f"{gpkg_path}|layername=status_data_joined"
-    uri_status = f"{gpkg_path}|layername=status_data"
+    layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
+    if layer_status is None:
+        return False, f"Avertissement : aucune couche {layer_name} trouvée dans le GeoPackage."
 
     # uri_joined = f"{gpkg_path}|layername=status_data_joined"
     #     # uri_status = f"{gpkg_path}|layername=status_data"
