@@ -502,10 +502,10 @@ class BdStatutsProcessingThread(QThread):
                                          progress_callback=progress_cb,
                                          log_callback=log_cb)
             if not ok:
-                self.log.emit(f"Avertissement : {msg}")
-                # On continue quand même pour les pivots (sur status_data seul)
-            else:
-                self.log.emit(msg)
+                self.error.emit(f"Erreur jointure TaxRef : {msg}")
+                return
+            current_layer = "status_joined_taxref"
+            self.log.emit(msg)
 
             ##############################
             # 4. Tables pivot par groupe #
