@@ -131,9 +131,9 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
     status_data.updateFields()
 
     for row in all_rows:
-        feat = QgsFeature(temp_layer.fields())
-        feat.setAttributes([row[f.name()] for f in temp_layer.fields()])
-        temp_layer.dataProvider().addFeature(feat)
+        feat = QgsFeature(status_data.fields())
+        feat.setAttributes([row[f.name()] for f in status_data.fields()])
+        status_data.dataProvider().addFeature(feat)
 
     success, err_msg = LayerUtils.save_to_gpkg(temp_layer, gpkg_path)
     if not success:
