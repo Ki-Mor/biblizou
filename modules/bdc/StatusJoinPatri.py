@@ -5,6 +5,7 @@ Nom : StatusJoinPatri.py
 Groupe : bdc
 Description : Enrichit la table layer_name avec une colonne patri selon l'état de l'ui biblizou_dialog_patri.
               À condition que la checkbox cBPatri de biblizou_dialog_patri soit checked.
+              Enregistre le résultat dans biblizou.gpkg|output_name.
 """
 
 from qgis.PyQt.QtCore import QVariant
