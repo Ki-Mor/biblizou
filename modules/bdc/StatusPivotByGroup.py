@@ -101,7 +101,6 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
 
     # Ajouter au projet pour que la couche virtuelle puisse référencer la table par id
     LayerUtils.replace_layer_in_project(layer_status)
-    layer_id = layer_status.id()
 
     vern_fld = _get_vernacular_field(layer_status.fields())
 
