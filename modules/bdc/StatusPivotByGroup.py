@@ -72,7 +72,7 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     vern_fld = _get_vernacular_field(layer_status.fields())
     # Charger la couche en mémoire pour lire les groupes/types
     groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
-    for feat in layer.getFeatures():
+    for feat in layer_status.getFeatures():
         g = feat["statusTypeGroup"] or ""
         t = feat["statusTypeName"] or ""
         if not g:
