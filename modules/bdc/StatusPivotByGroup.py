@@ -110,6 +110,10 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
                                 f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
                                 "virtual")
 
+        if not vlayer.isValid():
+            log(f"StatutsPivot : requête pivot invalide pour le groupe '{group_name}'")
+            continue
+
         success, err_msg = LayerUtils.save_to_gpkg(vlayer, gpkg_path)
         if not success:
             return False, f"Erreur sauvegarde GPKG : {err_msg}"
