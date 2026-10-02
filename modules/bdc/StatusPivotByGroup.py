@@ -9,6 +9,8 @@ Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom l
 """
 
 import re
+from urllib.parse import quote
+
 from qgis.core import (
     QgsProject,
     QgsVectorLayer,
