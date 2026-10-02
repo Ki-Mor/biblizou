@@ -450,45 +450,70 @@ class BdStatutsProcessingThread(QThread):
             def progress_cb(current, total, msg):
                 self.progress.emit(current, total, msg)
 
-            # 1. API -> status_data dans GPKG
-            self.progress.emit(1, 5, "Requête API Statuts (département)")
+            ###################################
+            # 1. API -> status_data dans GPKG #
+            ###################################
+
+            self.progress.emit(1, 5,
+                               "Requête API Statuts (département)")
             ok, msg = status_api_to_table(
-                gpkg_path, code_insee, layer_config,
-                progress_callback=progress_cb, log_callback=log_cb
+                gpkg_path,
+                code_insee,
+                layer_config,
+                progress_callback=progress_cb,
+                log_callback=log_cb
             )
             if not ok:
                 self.error.emit(msg)
                 return
             self.log.emit(msg)
 
-            # 2. (Optionnel) Jointure status_data + patri -> status_data
+            ##############################################################
+            # 2. (Optionnel) Jointure status_data + patri -> status_data #
+            ##############################################################
+
+            current_layer = "status_data"
+
             self.progress.emit(2, 5,
                                "Correspondance des espèces patrimoniales")
             conditions = self.params.get("conditions") or []
             if conditions:
-                ok, msg = status_join_patri(gpkg_path, conditions,
-                                            "status_data", log_callback=log_cb)
+                ok, msg = status_join_patri(gpkg_path,
+                                            conditions,
+                                            current_layer,
+                                            output_name="status_joined_patri",
+                                            log_callback=log_cb)
                 if not ok:
                     self.log.emit(f"Avertissement : {msg}")
                 else:
+                    current_layer = "status_joined_patri"
                     self.log.emit(msg)
             else:
                 self.log.emit("Étape ignorée")
 
-            # 3. Jointure status_data + data_taxref -> status_data_joined
+            ###############################################################
+            # 3. Jointure status_data + data_taxref -> status_data_joined #
+            ###############################################################
+
             self.progress.emit(3, 5, "Jointure avec data_taxref")
             ok, msg = status_join_taxref(gpkg_path,
+                                         current_layer,
+                                         output_name="status_joined_taxref",
                                          progress_callback=progress_cb,
                                          log_callback=log_cb)
             if not ok:
-                self.log.emit(f"Avertissement : {msg}")
-                # On continue quand même pour les pivots (sur status_data seul)
-            else:
-                self.log.emit(msg)
+                self.error.emit(f"Erreur jointure TaxRef : {msg}")
+                return
+            current_layer = "status_joined_taxref"
+            self.log.emit(msg)
 
-            # 4. Tables pivot par groupe
+            ##############################
+            # 4. Tables pivot par groupe #
+            ##############################
+
             self.progress.emit(4, 5, "Création des tables pivot par groupe")
             ok, msg = status_pivot_by_group(gpkg_path,
+                                            layer_name=current_layer,
                                             progress_callback=progress_cb,
                                             log_callback=log_cb)
             if not ok:
@@ -496,7 +521,10 @@ class BdStatutsProcessingThread(QThread):
             else:
                 self.log.emit(msg)
 
-            # 5. Fin
+            ##########
+            # 5. Fin #
+            ##########
+
             self.progress.emit(5, 5, "Terminé")
             self.finished.emit("Workflow BD Statuts terminé avec succès.")
         except Exception as e:

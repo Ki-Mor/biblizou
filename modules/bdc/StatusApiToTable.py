@@ -4,8 +4,8 @@ Auteur : François Botcazou
 Nom : StatusApiToTable.py
 Groupe : bdc
 Description : Interroge l'API TaxRef Statuts (locationId=INSEED + code département),
-              une ligne par statut par espèce. Enregistre la table sans géométrie
-              dans biblizou.gpkg|status_data.
+              une ligne par statut par espèce.
+              Enregistre la table sans géométrie dans biblizou.gpkg|status_data.
 """
 
 import time
@@ -56,6 +56,9 @@ def _fetch_status_batch(location_id: str, taxref_ids: list, session) -> list:
 def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
         log_callback=None):
     """
+    Interroge l'API TaxRef Statuts (locationId=INSEED + code département),
+    une ligne par statut par espèce.
+    Enregistre la table sans géométrie dans biblizou.gpkg|status_data.
     Args:
         gpkg_path: chemin vers biblizou.gpkg
         code_insee_dept: code INSEE du département (ex. "07", "2A")
@@ -123,16 +126,16 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
         QgsField("source", QVariant.String),
     ]
 
-    temp_layer = QgsVectorLayer("None", "status_data", "memory")
-    temp_layer.dataProvider().addAttributes(fields)
-    temp_layer.updateFields()
+    status_data = QgsVectorLayer("None", "status_data", "memory")
+    status_data.dataProvider().addAttributes(fields)
+    status_data.updateFields()
 
     for row in all_rows:
-        feat = QgsFeature(temp_layer.fields())
-        feat.setAttributes([row[f.name()] for f in temp_layer.fields()])
-        temp_layer.dataProvider().addFeature(feat)
+        feat = QgsFeature(status_data.fields())
+        feat.setAttributes([row[f.name()] for f in status_data.fields()])
+        status_data.dataProvider().addFeature(feat)
 
-    success, err_msg = LayerUtils.save_to_gpkg(temp_layer, gpkg_path)
+    success, err_msg = LayerUtils.save_to_gpkg(status_data, gpkg_path)
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 

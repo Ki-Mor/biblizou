@@ -3,8 +3,9 @@
 Auteur : François Botcazou
 Nom : StatusJoinPatri.py
 Groupe : bdc
-Description : Enrichit la table status_data avec une colonne patri selon l'état de l'ui biblizou_dialog_patri.
+Description : Enrichit la table layer_name avec une colonne patri selon l'état de l'ui biblizou_dialog_patri.
               À condition que la checkbox cBPatri de biblizou_dialog_patri soit checked.
+              Enregistre le résultat dans biblizou.gpkg|output_name.
 """
 
 from qgis.PyQt.QtCore import QVariant
@@ -29,16 +30,19 @@ def _test_condition(status_type_name: str, status_code: str,
     return False
 
 
-def run(gpkg_path: str, conditions, layer_name: str = "status_data",
-        log_callback=None) -> tuple[bool, str]:
+def run(gpkg_path: str, conditions, layer_name: str,
+        log_callback=None, output_name: str | None = None) -> tuple[bool, str]:
     """
-    Ajoute une colonne booléenne patri à layer_name (par défaut status_data), à True pour toute ligne dont le statut
+    Charge la couche layer_name depuis gpkg_path.
+    Ajoute une colonne booléenne patri à layer_name, à True pour toute ligne dont le statut
     correspond à au moins une des conditions (test via _test_condition).
+    Résultat enregistré dans une nouvelle couche "status_joined_patri".
         Args:
             gpkg_path: chemin vers biblizou.gpkg
             conditions: état de biblizou_dialog_patri.py. liste de dicts [{'statusTypeName': '...', 'statusCode': '...' (optionnel)}]
-            layer_name: layer status_data obtenue de StatusApiToTable
+            layer_name: layer obtenue via le worker
             log_callback: optional (message)
+            output_name: nom de la couche de sortie (défaut "status_joined_patri")
         Returns:
             (success: bool, message: str)
         """
@@ -63,7 +67,7 @@ def run(gpkg_path: str, conditions, layer_name: str = "status_data",
 
     layer_joined = LayerUtils.add_computed_fields(
         layer_status, new_fields, compute_fn,
-        output_name=f"{layer_name}_joined"
+        output_name=output_name or "status_joined_patri"
     )
     if layer_joined is None:
         return False, "Avertissement : aucune correspondance patrimoniale calculée."

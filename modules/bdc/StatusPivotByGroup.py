@@ -5,7 +5,7 @@ Nom : StatusPivotByGroup.py
 Groupe : bdc
 Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom latin,
               nom vernaculaire ; en colonnes statusTypeName ; en valeur statusCode.
-              Utilise la table status_data_joined (ou status_data) du GeoPackage.
+              Utilise la table status_joined_taxref du GeoPackage.
 """
 
 import re
@@ -81,12 +81,15 @@ def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                           "virtual")
 
 
-def run(gpkg_path: str, layer_name: str = "status_data_joined",
+def run(gpkg_path: str, layer_name: str,
         log_callback=None) -> tuple:
     """
-    Charge layer_joined depuis le GeoPackage, crée une
-    couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
-    
+    Charge la couche layer_name depuis gpkg_path.
+    Crée une couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
+        Args:
+                gpkg_path: chemin vers biblizou.gpkg
+                layer_name: layer obtenue via le worker
+                log_callback: optional (message)
     Returns:
         (success: bool, message: str)
     """

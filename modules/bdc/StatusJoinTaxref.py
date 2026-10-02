@@ -3,20 +3,21 @@
 Auteur : François Botcazou
 Nom : StatusJoinTaxref.py
 Groupe : bdc
-Description : Enrichit la table status_data avec nom vernaculaire et groupe taxonomique
+Description : Enrichit la table layer_name avec nom vernaculaire et groupe taxonomique
               obtenus par requête API TaxRef (GET taxa/{cd_nom}), comme TaxrefApiToTable.
-              Enregistre le résultat dans biblizou.gpkg|<layer_name>_joined (par défaut layer_name = "status_data").
+              Enregistre le résultat dans biblizou.gpkg|output_name.
 """
 
 import time
+
 import requests
+from qgis.PyQt.QtCore import QVariant
 from qgis.core import (
     QgsField,
     QgsMessageLog,
     Qgis
 )
 
-from qgis.PyQt.QtCore import QVariant
 
 from ..base.LayerUtils import LayerUtils
 
@@ -43,17 +44,20 @@ def _fetch_taxon_info(cdnom, session):
         return None
 
 
-def run(gpkg_path: str, layer_name: str = "status_data",
-        progress_callback=None, log_callback=None) -> tuple[bool, str]:
+def run(gpkg_path: str, layer_name: str,
+        progress_callback=None, log_callback=None,
+        output_name: str | None = None) -> tuple[bool, str]:
     """
-    Charge la couche layer_name (par défaut status_data) depuis gpkg_path, pour chaque cdnom
-    distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe, puis ajoute les colonnes
-    nom_vern et groupe à layer_name, enregistrées dans une nouvelle couche <layer_name>_joined. Pas de jointure avec la table data_taxref.
+    Charge la couche layer_name depuis gpkg_path.
+    Pour chaque cdnom distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe,
+    puis ajoute les colonnes nom_vern et groupe à layer_name
+    Résultat enregistré dans une nouvelle couche "status_joined_taxref".
         Args:
                 gpkg_path: chemin vers biblizou.gpkg
-                layer_name: layer status_data obtenue de StatusApiToTable
+                layer_name: layer obtenue via le worker
                 progress_callback:
                 log_callback: optional (message)
+                output_name: nom de la couche de sortie (défaut "status_joined_taxref")
 
         Returns:
             (success: bool, message: str)
@@ -107,7 +111,7 @@ def run(gpkg_path: str, layer_name: str = "status_data",
 
     layer_joined = LayerUtils.add_computed_fields(
         layer_status, new_fields, compute_fn,
-        output_name=f"{layer_name}_joined"
+        output_name=output_name or "status_joined_taxref"
     )
     if layer_joined is None:
         return False, "Avertissement : aucune référence taxonomique ajoutée."
