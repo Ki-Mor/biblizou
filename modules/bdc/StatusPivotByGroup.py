@@ -81,7 +81,7 @@ def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                           "virtual")
 
 
-def run(gpkg_path: str, layer_name: str = "status_data_joined",
+def run(gpkg_path: str, layer_name: str,
         log_callback=None) -> tuple:
     """
     Charge layer_joined depuis le GeoPackage, crée une
