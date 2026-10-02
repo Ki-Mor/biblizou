@@ -53,7 +53,7 @@ def run(gpkg_path: str, layer_name: str,
     Résultat enregistré dans une nouvelle couche "status_joined_taxref".
         Args:
                 gpkg_path: chemin vers biblizou.gpkg
-                layer_name: layer status_data obtenue de StatusApiToTable
+                layer_name: layer obtenue via le worker
                 progress_callback:
                 log_callback: optional (message)
 
