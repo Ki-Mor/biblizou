@@ -11,6 +11,7 @@ Description : Enrichit la table layer_name avec nom vernaculaire et groupe taxon
 import time
 
 import requests
+from qgis.PyQt.QtCore import QVariant
 from qgis.core import (
     QgsField,
     QgsMessageLog,
