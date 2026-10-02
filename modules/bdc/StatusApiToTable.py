@@ -56,6 +56,9 @@ def _fetch_status_batch(location_id: str, taxref_ids: list, session) -> list:
 def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
         log_callback=None):
     """
+    Interroge l'API TaxRef Statuts (locationId=INSEED + code département),
+    une ligne par statut par espèce.
+    Enregistre la table sans géométrie dans biblizou.gpkg|status_data.
     Args:
         gpkg_path: chemin vers biblizou.gpkg
         code_insee_dept: code INSEE du département (ex. "07", "2A")
