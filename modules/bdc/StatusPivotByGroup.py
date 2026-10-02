@@ -28,8 +28,8 @@ def _sanitize_layer_name(name):
 def _get_vernacular_field(fields):
     """Retourne le nom du champ vernaculaire (nom_vern via API, ou colonnes TaxRef)."""
     for cand in (
-    "nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1",
-    "taxref_nomVern"):
+            "nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1",
+            "taxref_nomVern"):
         if fields.indexOf(cand) != -1:
             return cand
     return "scientificName"
