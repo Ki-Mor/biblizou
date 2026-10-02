@@ -84,9 +84,12 @@ def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
 def run(gpkg_path: str, layer_name: str,
         log_callback=None) -> tuple:
     """
-    Charge layer_joined depuis le GeoPackage, crée une
-    couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
-    
+    Charge la couche layer_name depuis gpkg_path.
+    Crée une couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
+        Args:
+                gpkg_path: chemin vers biblizou.gpkg
+                layer_name: layer obtenue via le worker
+                log_callback: optional (message)
     Returns:
         (success: bool, message: str)
     """
