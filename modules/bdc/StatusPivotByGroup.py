@@ -12,7 +12,6 @@ import re
 from urllib.parse import quote
 
 from qgis.core import (
-    QgsProject,
     QgsVectorLayer,
     QgsMessageLog,
     Qgis
