@@ -92,21 +92,6 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     if layer_status is None:
         return False, f"Avertissement : aucune couche {layer_name} trouvée dans le GeoPackage."
 
-    # uri_joined = f"{gpkg_path}|layername=status_data_joined"
-    #     # uri_status = f"{gpkg_path}|layername=status_data"
-    #     #
-    #     # layer = QgsVectorLayer(uri_joined, "status_data_joined", "ogr")
-    #     # if not layer.isValid():
-    #     #     layer = QgsVectorLayer(uri_status, "status_data", "ogr")
-    #     # if not layer.isValid():
-    #     #     return False, "Aucune table status_data ou status_data_joined dans le GeoPackage."
-
-    # Ajouter au projet pour que la couche virtuelle puisse référencer la table par id
-    # existing = QgsProject.instance().mapLayersByName(layer_status.name())
-    # for ex in existing:
-    #     QgsProject.instance().removeMapLayer(ex.id())
-    # QgsProject.instance().addMapLayer(layer_status)
-
     # Ajouter au projet pour que la couche virtuelle puisse référencer la table par id
     LayerUtils.replace_layer_in_project(layer_status)
     layer_id = layer_status.id()
