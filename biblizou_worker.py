@@ -486,6 +486,7 @@ class BdStatutsProcessingThread(QThread):
                 if not ok:
                     self.log.emit(f"Avertissement : {msg}")
                 else:
+                    current_layer = "status_joined_patri"
                     self.log.emit(msg)
             else:
                 self.log.emit("Étape ignorée")
