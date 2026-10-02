@@ -450,8 +450,12 @@ class BdStatutsProcessingThread(QThread):
             def progress_cb(current, total, msg):
                 self.progress.emit(current, total, msg)
 
-            # 1. API -> status_data dans GPKG
-            self.progress.emit(1, 5, "Requête API Statuts (département)")
+            ###################################
+            # 1. API -> status_data dans GPKG #
+            ###################################
+
+            self.progress.emit(1, 5,
+                               "Requête API Statuts (département)")
             ok, msg = status_api_to_table(
                 gpkg_path, code_insee, layer_config,
                 progress_callback=progress_cb, log_callback=log_cb
