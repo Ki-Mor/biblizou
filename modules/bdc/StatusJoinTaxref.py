@@ -47,9 +47,10 @@ def run(gpkg_path: str, layer_name: str,
         progress_callback=None, log_callback=None,
         output_name: str | None = None) -> tuple[bool, str]:
     """
-    Charge la couche layer_name (par défaut status_data) depuis gpkg_path, pour chaque cdnom
-    distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe, puis ajoute les colonnes
-    nom_vern et groupe à layer_name, enregistrées dans une nouvelle couche <layer_name>_joined. Pas de jointure avec la table data_taxref.
+    Charge la couche layer_name depuis gpkg_path.
+    Pour chaque cdnom distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe,
+    puis ajoute les colonnes nom_vern et groupe à layer_name
+    Résultat enregistré dans une nouvelle couche "status_joined_taxref".
         Args:
                 gpkg_path: chemin vers biblizou.gpkg
                 layer_name: layer status_data obtenue de StatusApiToTable
