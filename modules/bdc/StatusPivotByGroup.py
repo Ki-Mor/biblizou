@@ -177,7 +177,7 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
 
         if not LayerUtils.replace_layer_in_project(layer_pivot):
             log(f"StatusPivot : impossible d'ajouter la couche {layer_pivot.name()} au projet")
-        QgsProject.instance().addMapLayer(layer_pivot)
+            continue
         created += 1
         log(f"Pivot créé : {layer_pivot.name()}")
 
