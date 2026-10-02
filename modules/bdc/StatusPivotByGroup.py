@@ -71,6 +71,7 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
     )
     return query
 
+
 def run(gpkg_path: str, layer_name: str = "layer_joined",
         log_callback=None):
     """
