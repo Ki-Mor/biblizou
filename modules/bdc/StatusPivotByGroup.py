@@ -5,7 +5,7 @@ Nom : StatusPivotByGroup.py
 Groupe : bdc
 Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom latin,
               nom vernaculaire ; en colonnes statusTypeName ; en valeur statusCode.
-              Utilise la table status_data_joined (ou status_data) du GeoPackage.
+              Utilise la table status_joined_taxref du GeoPackage.
 """
 
 import re
