@@ -35,6 +35,7 @@ def run(gpkg_path: str, conditions, layer_name: str,
     Charge la couche layer_name depuis gpkg_path.
     Ajoute une colonne booléenne patri à layer_name, à True pour toute ligne dont le statut
     correspond à au moins une des conditions (test via _test_condition).
+    Résultat enregistré dans une nouvelle couche "status_joined_patri".
         Args:
             gpkg_path: chemin vers biblizou.gpkg
             conditions: état de biblizou_dialog_patri.py. liste de dicts [{'statusTypeName': '...', 'statusCode': '...' (optionnel)}]
