@@ -103,28 +103,6 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         return False, "Aucun statusTypeGroup trouvé dans la table."
 
     created = 0
-    # for group_name, type_names in groups_types.items():
-    #     sorted_types = sorted(type_names)
-    #     case_parts = []
-    #     for st in sorted_types:
-    #         safe_alias = st.replace('"', '""')
-    #         st_esc = st.replace("'", "''")
-    #         case_parts.append(
-    #             f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
-    #         )
-    #     cols = ", ".join(case_parts)
-    #     safe_vern = vern_fld.replace('"', '""')
-    #     group_esc = group_name.replace("'", "''")
-    #     query = (
-    #         f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
-    #         f'FROM "{layer_id}" '
-    #         f"WHERE statusTypeGroup = '{group_esc}' "
-    #         f'GROUP BY cdnom, scientificName, "{safe_vern}" '
-    #         f'ORDER BY scientificName'
-    #     )
-    #     vlayer = QgsVectorLayer(f"?query={query}",
-    #                             f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
-    #                             "virtual")
 
     for group_name, type_names in groups_types.items():
         query = _build_sql_query(group_name, type_names, vern_fld, layer_id)
