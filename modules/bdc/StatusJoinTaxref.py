@@ -18,7 +18,6 @@ from qgis.core import (
     Qgis
 )
 
-from qgis.PyQt.QtCore import QVariant
 
 from ..base.LayerUtils import LayerUtils
 
