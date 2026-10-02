@@ -48,7 +48,9 @@ def _collect_groups(layer: QgsVectorLayer) -> dict:
         groups_types[g].add(t)
     return groups_types
 
-def _build_sql_query ():
+
+def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
+                     layer_id: str) -> str:
     """Construire la requête SQL d'un groupe"""
     case_parts = []
     for st in sorted(type_names):
