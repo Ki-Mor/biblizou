@@ -33,6 +33,12 @@ def _get_vernacular_field(fields):
             return cand
     return "scientificName"
 
+def _collect_groups ():
+    """Collecter les groupes et types"""
+
+def _build_sql_query ():
+    """Construire la requête SQL d'un groupe"""
+
 
 def run(gpkg_path: str, layer_name: str = "layer_joined",
         log_callback=None):
