@@ -7,6 +7,8 @@ Description : Classe utilitaire centralisant la gestion, la validation, le charg
               la création de GeoPackage et la substitution des couches vectorielles au sein de QGIS.
 """
 
+import os
+
 from qgis.core import (
     QgsProject,
     QgsVectorLayer,
