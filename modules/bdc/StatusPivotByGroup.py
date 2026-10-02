@@ -16,6 +16,7 @@ from qgis.core import (
     Qgis
 )
 
+from urllib.parse import quote
 from ..base.LayerUtils import LayerUtils
 
 
