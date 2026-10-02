@@ -41,6 +41,7 @@ def run(gpkg_path: str, conditions, layer_name: str,
             conditions: état de biblizou_dialog_patri.py. liste de dicts [{'statusTypeName': '...', 'statusCode': '...' (optionnel)}]
             layer_name: layer obtenue via le worker
             log_callback: optional (message)
+            output_name: nom de la couche de sortie (défaut "status_joined_patri")
         Returns:
             (success: bool, message: str)
         """
