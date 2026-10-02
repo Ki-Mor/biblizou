@@ -102,6 +102,7 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     # if not groups_types:
     #     return False, "Aucun statusTypeGroup trouvé dans la table."
 
+    groups_types = _collect_groups(layer_status)
     if not groups_types:
         return False, "Aucun statusTypeGroup trouvé dans la table."
 
