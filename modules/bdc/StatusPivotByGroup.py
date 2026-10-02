@@ -112,10 +112,8 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     created = 0
 
     for group_name, type_names in groups_types.items():
-        query = _build_sql_query(group_name, type_names, vern_fld, layer_id)
-        vlayer = QgsVectorLayer(f"?query={quote(query)}",
-                                f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
-                                "virtual")
+        vlayer = _build_pivot_layer(group_name, type_names, vern_fld,
+                                    layer_status.id())
 
         if not vlayer.isValid():
             log(f"StatutsPivot : requête pivot invalide pour le groupe '{group_name}'")
