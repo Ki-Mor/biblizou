@@ -43,8 +43,9 @@ def _fetch_taxon_info(cdnom, session):
         return None
 
 
-def run(gpkg_path: str, layer_name: str = "status_data",
-        progress_callback=None, log_callback=None) -> tuple[bool, str]:
+def run(gpkg_path: str, layer_name: str,
+        progress_callback=None, log_callback=None,
+        output_name: str | None = None) -> tuple[bool, str]:
     """
     Charge la couche layer_name (par défaut status_data) depuis gpkg_path, pour chaque cdnom
     distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe, puis ajoute les colonnes
