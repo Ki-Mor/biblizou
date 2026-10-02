@@ -32,7 +32,8 @@ def _test_condition(status_type_name: str, status_code: str,
 def run(gpkg_path: str, conditions, layer_name: str,
         log_callback=None, output_name: str | None = None) -> tuple[bool, str]:
     """
-    Ajoute une colonne booléenne patri à layer_name (par défaut status_data), à True pour toute ligne dont le statut
+    Charge la couche layer_name depuis gpkg_path.
+    Ajoute une colonne booléenne patri à layer_name, à True pour toute ligne dont le statut
     correspond à au moins une des conditions (test via _test_condition).
         Args:
             gpkg_path: chemin vers biblizou.gpkg
