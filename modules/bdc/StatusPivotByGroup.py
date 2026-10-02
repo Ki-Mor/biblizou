@@ -16,6 +16,8 @@ from qgis.core import (
     Qgis
 )
 
+from ..base.LayerUtils import LayerUtils
+
 
 def _sanitize_layer_name(name):
     """Retourne un nom de couche sans caractères problématiques."""
