@@ -56,6 +56,7 @@ def run(gpkg_path: str, layer_name: str,
                 layer_name: layer obtenue via le worker
                 progress_callback:
                 log_callback: optional (message)
+                output_name: nom de la couche de sortie (défaut "status_joined_taxref")
 
         Returns:
             (success: bool, message: str)
