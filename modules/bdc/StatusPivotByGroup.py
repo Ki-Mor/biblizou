@@ -9,12 +9,15 @@ Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom l
 """
 
 import re
+from urllib.parse import quote
+
 from qgis.core import (
-    QgsProject,
     QgsVectorLayer,
     QgsMessageLog,
     Qgis
 )
+
+from ..base.LayerUtils import LayerUtils
 
 
 def _sanitize_layer_name(name):
@@ -25,16 +28,63 @@ def _sanitize_layer_name(name):
 def _get_vernacular_field(fields):
     """Retourne le nom du champ vernaculaire (nom_vern via API, ou colonnes TaxRef)."""
     for cand in (
-    "nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1",
-    "taxref_nomVern"):
+            "nom_vern", "vernacularName1", "nomVern", "taxref_vernacularName1",
+            "taxref_nomVern"):
         if fields.indexOf(cand) != -1:
             return cand
     return "scientificName"
 
 
-def run(gpkg_path, _progress_callback=None, log_callback=None):
+def _collect_groups(layer: QgsVectorLayer) -> dict:
+    """Collecter les groupes et types d'une couche"""
+    groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
+    for feat in layer.getFeatures():
+        g = feat["statusTypeGroup"] or ""
+        t = feat["statusTypeName"] or ""
+        if not g:
+            continue
+        if g not in groups_types:
+            groups_types[g] = set()
+        groups_types[g].add(t)
+    return groups_types
+
+
+def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
+                     layer_id: str) -> str:
+    """Construire la requête SQL d'un groupe"""
+    case_parts = []
+    for st in sorted(type_names):
+        safe_alias = st.replace('"', '""')
+        st_esc = st.replace("'", "''")
+        case_parts.append(
+            f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
+        )
+    cols = ", ".join(case_parts)
+    safe_vern = vern_fld.replace('"', '""')
+    group_esc = group_name.replace("'", "''")
+    query = (
+        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
+        f'FROM "{layer_id}" '
+        f"WHERE statusTypeGroup = '{group_esc}' "
+        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
+        f'ORDER BY scientificName'
+    )
+    return query
+
+
+def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
+                       layer_id: str) -> QgsVectorLayer:
+    """Construit la couche virtuelle pivot d'un groupe de statuts."""
+    query = _build_sql_query(group_name, type_names, vern_fld, layer_id)
+    return QgsVectorLayer(f"?query={quote(query)}",
+                          f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
+                          "virtual")
+
+
+def run(gpkg_path: str, layer_name: str = "status_data_joined",
+        log_callback=None) -> tuple:
     """
-    Charge status_data_joined (ou status_data) depuis le GeoPackage, crée une
+    Charge layer_joined depuis le GeoPackage, crée une
     couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
     
     Returns:
@@ -46,73 +96,45 @@ def run(gpkg_path, _progress_callback=None, log_callback=None):
         if log_callback:
             log_callback(msg)
 
-    uri_joined = f"{gpkg_path}|layername=status_data_joined"
-    uri_status = f"{gpkg_path}|layername=status_data"
-
-    layer = QgsVectorLayer(uri_joined, "status_data_joined", "ogr")
-    if not layer.isValid():
-        layer = QgsVectorLayer(uri_status, "status_data", "ogr")
-    if not layer.isValid():
-        return False, "Aucune table status_data ou status_data_joined dans le GeoPackage."
+    # Charger layer_name depuis le gpkg
+    layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
+    if layer_status is None:
+        return False, f"Avertissement : aucune couche {layer_name} trouvée dans le GeoPackage."
 
     # Ajouter au projet pour que la couche virtuelle puisse référencer la table par id
-    existing = QgsProject.instance().mapLayersByName(layer.name())
-    for ex in existing:
-        QgsProject.instance().removeMapLayer(ex.id())
-    QgsProject.instance().addMapLayer(layer)
-    layer_id = layer.id()
+    LayerUtils.replace_layer_in_project(layer_status)
 
-    vern_fld = _get_vernacular_field(layer.fields())
-    # Charger la couche en mémoire pour lire les groupes/types
-    groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
-    for feat in layer.getFeatures():
-        g = feat["statusTypeGroup"] or ""
-        t = feat["statusTypeName"] or ""
-        if not g:
-            continue
-        if g not in groups_types:
-            groups_types[g] = set()
-        groups_types[g].add(t)
+    vern_fld = _get_vernacular_field(layer_status.fields())
 
+    groups_types = _collect_groups(layer_status)
     if not groups_types:
         return False, "Aucun statusTypeGroup trouvé dans la table."
 
     created = 0
+
     for group_name, type_names in groups_types.items():
-        sorted_types = sorted(type_names)
-        case_parts = []
-        for st in sorted_types:
-            safe_alias = st.replace('"', '""')
-            st_esc = st.replace("'", "''")
-            case_parts.append(
-                f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
-            )
-        cols = ", ".join(case_parts)
-        safe_vern = vern_fld.replace('"', '""')
-        group_esc = group_name.replace("'", "''")
-        query = (
-            f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
-            f'FROM "{layer_id}" '
-            f"WHERE statusTypeGroup = '{group_esc}' "
-            f'GROUP BY cdnom, scientificName, "{safe_vern}" '
-            f'ORDER BY scientificName'
-        )
-        vlayer = QgsVectorLayer(f"?query={query}",
-                                f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
-                                "virtual")
-        if vlayer.isValid():
-            existing = QgsProject.instance().mapLayersByName(vlayer.name())
-            for ex in existing:
-                QgsProject.instance().removeMapLayer(ex.id())
-            QgsProject.instance().addMapLayer(vlayer)
-            created += 1
-            log(f"Pivot créé : {vlayer.name()}")
-        else:
-            QgsMessageLog.logMessage(
-                f"StatutsPivot: Erreur création pivot pour groupe '{group_name}'",
-                "Biblizou",
-                level=Qgis.Warning
-            )
+        vlayer = _build_pivot_layer(group_name, type_names, vern_fld,
+                                    layer_status.id())
+
+        if not vlayer.isValid():
+            log(f"StatutsPivot : requête pivot invalide pour le groupe '{group_name}'")
+            continue
+
+        success, err_msg = LayerUtils.save_to_gpkg(vlayer, gpkg_path)
+        if not success:
+            return False, f"Erreur sauvegarde GPKG : {err_msg}"
+
+        # Remplacement dans le projet par la couche enregistrée dans le GPKG
+        layer_pivot = LayerUtils.load_from_gpkg(gpkg_path, vlayer.name())
+        if layer_pivot is None:
+            log(f"StatutsPivot : table {vlayer.name()} introuvable dans le GPKG après sauvegarde")
+            continue
+
+        if not LayerUtils.replace_layer_in_project(layer_pivot):
+            log(f"StatusPivot : impossible d'ajouter la couche {layer_pivot.name()} au projet")
+            continue
+        created += 1
+        log(f"Pivot créé : {layer_pivot.name()}")
 
     if created == 0:
         return False, "Aucune couche pivot n'a pu être créée."

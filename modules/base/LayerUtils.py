@@ -7,6 +7,8 @@ Description : Classe utilitaire centralisant la gestion, la validation, le charg
               la création de GeoPackage et la substitution des couches vectorielles au sein de QGIS.
 """
 
+import os
+
 from qgis.core import (
     QgsProject,
     QgsVectorLayer,
@@ -15,7 +17,6 @@ from qgis.core import (
     QgsFeature,
     QgsField
 )
-import os
 
 
 class LayerUtils:
@@ -57,6 +58,18 @@ class LayerUtils:
         source = f"{gpkg_path}|layername={name}"
         layer = QgsVectorLayer(source, name, "ogr")
         return layer if layer.isValid() else None
+
+    @staticmethod
+    def replace_layer_in_project(layer) -> bool:
+        """Remplace et écrase une couche dans un projet."""
+        if layer is None or not layer.isValid():
+            return False
+        for ex in QgsProject.instance().mapLayersByName(layer.name()):
+            if ex.id() != layer.id():
+                QgsProject.instance().removeMapLayer(ex.id())
+        if QgsProject.instance().mapLayer(layer.id()) is None:
+            QgsProject.instance().addMapLayer(layer)
+        return True
 
     @staticmethod
     def create_empty_gpkg(gpkg_path: str) -> bool:
