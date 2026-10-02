@@ -124,9 +124,8 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
             log(f"StatutsPivot : table {vlayer.name()} introuvable dans le GPKG après sauvegarde")
             continue
 
-        for ex in QgsProject.instance().mapLayersByName(
-                layer_pivot.name()):
-            QgsProject.instance().removeMapLayer(ex.id())
+        if not LayerUtils.replace_layer_in_project(layer_pivot):
+            log(f"StatusPivot : impossible d'ajouter la couche {layer_pivot.name()} au projet")
         QgsProject.instance().addMapLayer(layer_pivot)
         created += 1
         log(f"Pivot créé : {layer_pivot.name()}")
