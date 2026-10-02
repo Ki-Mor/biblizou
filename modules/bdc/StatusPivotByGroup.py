@@ -130,20 +130,6 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         created += 1
         log(f"Pivot créé : {layer_pivot.name()}")
 
-        # if vlayer.isValid():
-        #     existing = QgsProject.instance().mapLayersByName(vlayer.name())
-        #     for ex in existing:
-        #         QgsProject.instance().removeMapLayer(ex.id())
-        #     QgsProject.instance().addMapLayer(vlayer)
-        #     created += 1
-        #     log(f"Pivot créé : {vlayer.name()}")
-        # else:
-        #     QgsMessageLog.logMessage(
-        #         f"StatutsPivot: Erreur création pivot pour groupe '{group_name}'",
-        #         "Biblizou",
-        #         level=Qgis.Warning
-        #     )
-
     if created == 0:
         return False, "Aucune couche pivot n'a pu être créée."
     return True, f"{created} table(s) pivot créée(s) par groupe de statuts."
