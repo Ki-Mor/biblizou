@@ -457,8 +457,11 @@ class BdStatutsProcessingThread(QThread):
             self.progress.emit(1, 5,
                                "Requête API Statuts (département)")
             ok, msg = status_api_to_table(
-                gpkg_path, code_insee, layer_config,
-                progress_callback=progress_cb, log_callback=log_cb
+                gpkg_path,
+                code_insee,
+                layer_config,
+                progress_callback=progress_cb,
+                log_callback=log_cb
             )
             if not ok:
                 self.error.emit(msg)
