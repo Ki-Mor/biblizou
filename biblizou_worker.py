@@ -478,8 +478,11 @@ class BdStatutsProcessingThread(QThread):
                                "Correspondance des espèces patrimoniales")
             conditions = self.params.get("conditions") or []
             if conditions:
-                ok, msg = status_join_patri(gpkg_path, conditions,
-                                            "status_data", log_callback=log_cb)
+                ok, msg = status_join_patri(gpkg_path,
+                                            conditions,
+                                            current_layer,
+                                            output_name="status_joined_patri",
+                                            log_callback=log_cb)
                 if not ok:
                     self.log.emit(f"Avertissement : {msg}")
                 else:
