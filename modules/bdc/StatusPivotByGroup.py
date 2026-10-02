@@ -34,7 +34,8 @@ def _get_vernacular_field(fields):
             return cand
     return "scientificName"
 
-def _collect_groups (layer: QgsVectorLayer) ->dict:
+
+def _collect_groups(layer: QgsVectorLayer) -> dict:
     """Collecter les groupes et types d'une couche"""
     groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
     for feat in layer.getFeatures():
