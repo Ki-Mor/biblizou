@@ -126,9 +126,9 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
         QgsField("source", QVariant.String),
     ]
 
-    temp_layer = QgsVectorLayer("None", "status_data", "memory")
-    temp_layer.dataProvider().addAttributes(fields)
-    temp_layer.updateFields()
+    status_data = QgsVectorLayer("None", "status_data", "memory")
+    status_data.dataProvider().addAttributes(fields)
+    status_data.updateFields()
 
     for row in all_rows:
         feat = QgsFeature(temp_layer.fields())
