@@ -59,6 +59,18 @@ class LayerUtils:
         return layer if layer.isValid() else None
 
     @staticmethod
+    def replace_layer_in_project(layer) -> bool:
+        """Remplace et écrase une couche dans un projet."""
+        if layer is None or not layer.isValid():
+            return False
+        for ex in QgsProject.instance().mapLayersByName(layer.name()):
+            if ex.id() != layer.id():
+                QgsProject.instance().removeMapLayer(ex.id())
+        if QgsProject.instance().mapLayer(layer.id()) is None:
+            QgsProject.instance().addMapLayer(layer)
+        return True
+
+    @staticmethod
     def create_empty_gpkg(gpkg_path: str) -> bool:
         """Crée physiquement un fichier GeoPackage vide s'il n'existe pas déjà."""
         if os.path.exists(gpkg_path):
