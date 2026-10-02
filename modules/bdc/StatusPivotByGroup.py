@@ -107,6 +107,11 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         vlayer = QgsVectorLayer(f"?query={query}",
                                 f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
                                 "virtual")
+
+        success, err_msg = LayerUtils.save_to_gpkg(vlayer, gpkg_path)
+        if not success:
+            return False, f"Erreur sauvegarde GPKG : {err_msg}"
+
         # if vlayer.isValid():
         #     existing = QgsProject.instance().mapLayersByName(vlayer.name())
         #     for ex in existing:
