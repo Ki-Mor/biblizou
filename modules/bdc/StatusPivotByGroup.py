@@ -75,7 +75,7 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
 def run(gpkg_path: str, layer_name: str = "layer_joined",
         log_callback=None) -> tuple:
     """
-    Charge status_data_joined (ou status_data) depuis le GeoPackage, crée une
+    Charge layer_joined depuis le GeoPackage, crée une
     couche virtuelle pivot par statusTypeGroup et l'ajoute au projet.
     
     Returns:
