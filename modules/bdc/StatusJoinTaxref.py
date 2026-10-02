@@ -9,6 +9,7 @@ Description : Enrichit la table layer_name avec nom vernaculaire et groupe taxon
 """
 
 import time
+
 import requests
 from qgis.core import (
     QgsField,
