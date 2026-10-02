@@ -110,7 +110,7 @@ def run(gpkg_path: str, layer_name: str,
 
     layer_joined = LayerUtils.add_computed_fields(
         layer_status, new_fields, compute_fn,
-        output_name=f"{layer_name}_joined"
+        output_name=output_name or "status_joined_taxref"
     )
     if layer_joined is None:
         return False, "Avertissement : aucune référence taxonomique ajoutée."
