@@ -107,6 +107,7 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     #     QgsProject.instance().removeMapLayer(ex.id())
     # QgsProject.instance().addMapLayer(layer_status)
 
+    # Ajouter au projet pour que la couche virtuelle puisse référencer la table par id
     LayerUtils.replace_layer_in_project(layer_status)
     layer_id = layer_status.id()
 
