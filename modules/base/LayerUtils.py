@@ -17,7 +17,6 @@ from qgis.core import (
     QgsFeature,
     QgsField
 )
-import os
 
 
 class LayerUtils:
