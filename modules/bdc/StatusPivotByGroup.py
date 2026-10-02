@@ -66,8 +66,8 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
     existing = QgsProject.instance().mapLayersByName(layer_status.name())
     for ex in existing:
         QgsProject.instance().removeMapLayer(ex.id())
-    QgsProject.instance().addMapLayer(layer)
-    layer_id = layer.id()
+    QgsProject.instance().addMapLayer(layer_status)
+    layer_id = layer_status.id()
 
     vern_fld = _get_vernacular_field(layer.fields())
     # Charger la couche en mémoire pour lire les groupes/types
