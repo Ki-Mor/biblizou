@@ -107,19 +107,19 @@ def run(gpkg_path: str, layer_name: str = "layer_joined",
         vlayer = QgsVectorLayer(f"?query={query}",
                                 f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
                                 "virtual")
-        if vlayer.isValid():
-            existing = QgsProject.instance().mapLayersByName(vlayer.name())
-            for ex in existing:
-                QgsProject.instance().removeMapLayer(ex.id())
-            QgsProject.instance().addMapLayer(vlayer)
-            created += 1
-            log(f"Pivot créé : {vlayer.name()}")
-        else:
-            QgsMessageLog.logMessage(
-                f"StatutsPivot: Erreur création pivot pour groupe '{group_name}'",
-                "Biblizou",
-                level=Qgis.Warning
-            )
+        # if vlayer.isValid():
+        #     existing = QgsProject.instance().mapLayersByName(vlayer.name())
+        #     for ex in existing:
+        #         QgsProject.instance().removeMapLayer(ex.id())
+        #     QgsProject.instance().addMapLayer(vlayer)
+        #     created += 1
+        #     log(f"Pivot créé : {vlayer.name()}")
+        # else:
+        #     QgsMessageLog.logMessage(
+        #         f"StatutsPivot: Erreur création pivot pour groupe '{group_name}'",
+        #         "Biblizou",
+        #         level=Qgis.Warning
+        #     )
 
     if created == 0:
         return False, "Aucune couche pivot n'a pu être créée."
