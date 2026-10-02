@@ -71,6 +71,7 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
     )
     return query
 
+
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                        layer_id: str) -> QgsVectorLayer:
     """Construit la couche virtuelle pivot d'un groupe de statuts."""
@@ -79,7 +80,8 @@ def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                           f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
                           "virtual")
 
-def run(gpkg_path: str, layer_name: str = "layer_joined",
+
+def run(gpkg_path: str, layer_name: str = "status_data_joined",
         log_callback=None) -> tuple:
     """
     Charge layer_joined depuis le GeoPackage, crée une
