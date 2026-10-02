@@ -135,7 +135,7 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
         feat.setAttributes([row[f.name()] for f in status_data.fields()])
         status_data.dataProvider().addFeature(feat)
 
-    success, err_msg = LayerUtils.save_to_gpkg(temp_layer, gpkg_path)
+    success, err_msg = LayerUtils.save_to_gpkg(status_data, gpkg_path)
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
