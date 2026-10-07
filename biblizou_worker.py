@@ -248,6 +248,7 @@ class FsdProcessingThread(QThread):
         return success
 
     def process_znieff_desc(self):
+        """Traite les données de descriptions des znieff"""
         self.log.emit("Analyse des descriptions ZNIEFF...")
         if not self.working_folder:
             self.log.emit(
