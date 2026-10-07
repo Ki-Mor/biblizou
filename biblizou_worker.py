@@ -291,6 +291,7 @@ class FsdProcessingThread(QThread):
         return result
 
     def pivot_znieff_esp(self):
+        """Créé la table pivot des espèces pour les znieff"""
         if not self._has_znieff_esp:
             self.log.emit(
                 "Pivot espèces ZNIEFF ignoré : aucune donnée disponible")
