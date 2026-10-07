@@ -395,6 +395,7 @@ class TaxrefProcessingThread(QThread):
         self.iface = iface
 
     def run(self):
+        """Fonction d'entrée du thread"""
         try:
             self.log.emit("=== Démarrage de la consolidation TaxRef ===")
 
