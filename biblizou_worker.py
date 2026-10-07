@@ -309,6 +309,7 @@ class FsdProcessingThread(QThread):
         return znieff_pivot_hab(self.gpkg_path)
 
     def download_natura(self):
+        """Télécharge les fichiers xml pour les sites natura 2000"""
         self.log.emit(
             "Téléchargement des FSD des sites Natura 2000 au format xml...")
         if not self.working_folder:
