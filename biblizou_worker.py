@@ -200,7 +200,7 @@ class FsdProcessingThread(QThread):
         if self.all_steps_ok and self.params.get('clean_xml_after_run',
                                                  False):
             self.log.emit("--- Nettoyage des fichiers XML téléchargés ---")
-            success, nb_deleted, = clean_xml_files(self.working_folder)
+            success, nb_deleted = clean_xml_files(self.working_folder)
             if success:
                 self.log.emit(
                     f"{nb_deleted} fichier(s) XML supprimé(s) du dossier de travail")
