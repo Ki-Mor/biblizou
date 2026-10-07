@@ -334,6 +334,7 @@ class FsdProcessingThread(QThread):
         return success
 
     def process_natura_esp(self):
+        """Traite les données d'espèces pour les sites natura 2000"""
         self.log.emit("Analyse des espèces Natura 2000...")
         if not self.working_folder:
             self.log.emit(
