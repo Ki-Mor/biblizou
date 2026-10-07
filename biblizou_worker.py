@@ -236,6 +236,7 @@ class FsdProcessingThread(QThread):
             return False
 
     def download_znieff(self):
+        """Télécharge les fichiers xml des znieff"""
         self.log.emit("Téléchargement des FSD des ZNIEFF au format xml...")
         if not self.working_folder:
             self.log.emit("ERREUR: Dossier de travail non défini")
