@@ -427,7 +427,6 @@ class TaxrefProcessingThread(QThread):
             self.error.emit(
                 f"Erreur critique dans la consolidation TaxRef : {str(e)}")
 
-
 class BdStatutsProcessingThread(QThread):
     """Thread gérant le workflow BD Statuts : API -> status_data -> jointure -> pivots."""
     progress = pyqtSignal(int, int, str)
