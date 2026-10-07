@@ -77,7 +77,7 @@ class FsdProcessingThread(QThread):
         self.natura_layer = None
 
     def run(self):
-        """Fonction d'entrée du thread"""
+        """Fonction d'entrée du thread : workflow complet fsd"""
         try:
             self.log.emit("=== Démarrage du workflow FSD ===")
             self.log.emit(f"Params reçus: {list(self.params.keys())}")
