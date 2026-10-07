@@ -261,6 +261,7 @@ class FsdProcessingThread(QThread):
         return success
 
     def process_znieff_esp(self):
+        """Traite les données espèces des znieff"""
         self.log.emit("Analyse des espèces ZNIEFF...")
         if not self.working_folder:
             self.log.emit(
