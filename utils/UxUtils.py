@@ -8,7 +8,7 @@ Description : Utilitaires pour l'Ux
 import os
 from typing import List
 
-from qgis.PyQt import QtGui, QtCore
+from qgis.PyQt import QtGui, QtCore, QtWidgets
 from qgis.PyQt.QtWidgets import QPushButton
 from qgis.core import QgsMapLayerProxyModel, QgsVectorLayer, QgsProject
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
