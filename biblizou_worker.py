@@ -440,6 +440,7 @@ class BdStatutsProcessingThread(QThread):
         self.iface = iface
 
     def run(self):
+        """Fonction d'entrée du thread : workflow complet statuts"""
         try:
             self.log.emit("=== Démarrage du workflow BD Statuts ===")
             gpkg_path = self.params.get("gpkg_path")
