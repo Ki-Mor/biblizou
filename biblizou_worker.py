@@ -373,6 +373,7 @@ class FsdProcessingThread(QThread):
         return natura_pivot_esp(self.gpkg_path)
 
     def pivot_natura_hab(self):
+        """Créé la table pivot des habitats pour les sites natura 2000"""
         if not self._has_natura_hab:
             self.log.emit(
                 "Pivot habitats Natura 2000 ignoré : aucune donnée disponible")
