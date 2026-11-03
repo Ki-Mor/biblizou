@@ -145,7 +145,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # le bouton patri ouvre biblizou_dialog_patri
         self.btnPatri.clicked.connect(self.open_patri_dialog)
-        # Le bouton patri est dépendant de l'état de la checkbox patri
         self.cBPatri.toggled.connect(self.btnPatri.setEnabled)
 
         # Variables pour stocker les threads
