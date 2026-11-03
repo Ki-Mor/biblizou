@@ -31,6 +31,9 @@ from . import resources
 from .biblizou_dockwidget import BiblizouDockWidget
 import os.path
 
+import shutil
+from qgis.core import QgsApplication, QgsMessageLog, Qgis
+
 
 class Biblizou:
     """QGIS Plugin Implementation."""
