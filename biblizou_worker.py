@@ -575,3 +575,138 @@ class BdStatutsProcessingThread(QThread):
             self.finished.emit("Workflow BD Statuts terminé avec succès.")
         except Exception as e:
             self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
+
+
+class BotazouProcessingThread(QThread):
+    """Thread gérant le workflow d'analyse écologique via le script R JulveDfToMembershipDf."""
+    progress = pyqtSignal(int, int, str)
+    log      = pyqtSignal(str)
+    finished = pyqtSignal(str)
+    error    = pyqtSignal(str)
+
+    def __init__(self, params, iface):
+        super().__init__()
+        self.params = params
+        self.iface  = iface
+
+    def run(self):
+        try:
+            self.log.emit("=== Démarrage du workflow Botazou (Julve → Membership) ===")
+
+            working_folder = self.params.get("working_folder")
+            input_file     = self.params.get("input_file")
+
+            # Vérifications des paramètres
+            if not working_folder or not os.path.isdir(working_folder):
+                self.error.emit("Paramètre 'working_folder' manquant ou dossier introuvable.")
+                return
+            if not input_file:
+                self.error.emit("Paramètre 'input_file' manquant (nom du fichier CSV à analyser).")
+                return
+
+            steps = [
+                ("Vérification du fournisseur R", self.check_r_provider),
+                ("Construction du tableau Julve", self.build_julve_csv),
+                ("Lancement de l'analyse Julve / Membership", self.run_julve_algorithm),
+            ]
+
+            total = len(steps)
+            for i, (step_name, step_fn) in enumerate(steps, 1):
+                self.progress.emit(i, total, step_name)
+                self.log.emit(f"--- Début : {step_name} ---")
+                step_fn()
+                self.log.emit(f"--- Terminé : {step_name} ---")
+
+            self.finished.emit("Analyse Botazou terminée avec succès !")
+
+        except Exception as e:
+            self.error.emit(f"Erreur critique dans le workflow Botazou : {str(e)}")
+
+    def check_r_provider(self):
+        """Vérifie que le Processing R Provider est configuré et que le script est disponible."""
+        from qgis.core import QgsApplication
+
+        try:
+            from processing_r.processing.utils import RUtils
+        except ImportError:
+            raise RuntimeError(
+                "Le fournisseur R (Processing R Provider) n'est pas disponible. "
+                "Installez et activez l'extension « Processing R Provider »."
+            )
+
+        provider = QgsApplication.processingRegistry().providerById("r")
+        if not provider:
+            raise RuntimeError(
+                "Le fournisseur R n'est pas chargé. "
+                "Vérifiez que l'extension « Processing R Provider » est activée."
+            )
+
+        r_folder = RUtils.r_binary_folder()
+        if not r_folder or not os.path.isdir(r_folder):
+            raise RuntimeError(
+                "Dossier R non configuré. Allez dans Traitement → Options → Fournisseurs → R."
+            )
+
+        algorithm_id = "r:JulveDfToMembershipDf"
+        if not QgsApplication.processingRegistry().algorithmById(algorithm_id):
+            script_dirs = ", ".join(RUtils.script_folders())
+            raise RuntimeError(
+                "Script R « JulveDfToMembershipDf » introuvable. "
+                f"Dossiers de scripts consultés : {script_dirs}. "
+                "Réinstallez le plugin Biblizou ou vérifiez le dossier de scripts R."
+            )
+
+        self.log.emit(f"Fournisseur R OK — {r_folder}")
+
+    def build_julve_csv(self):
+        """Génère JulveDf.csv depuis les couches sélectionnées + baseflor."""
+        layer_config = self.params.get("consolidation_config", [])
+        if not layer_config:
+            raise RuntimeError("Aucune couche source configurée dans l'onglet Botazou.")
+
+        working_folder = self.params["working_folder"]
+        builder = BuildJulveDf(working_folder)
+        builder.status_changed.connect(self.log)
+
+        success, msg = builder.run(layer_config)
+        self.log.emit(msg)
+
+        if not success:
+            raise RuntimeError(f"Échec de la construction du tableau Julve : {msg}")
+
+    def run_julve_algorithm(self):
+        """Lance JulveDfToMembershipDf via le Processing R Provider de QGIS."""
+        from qgis import processing
+        from qgis.core import QgsProcessingContext, QgsProcessingFeedback
+
+        plugin_dir = os.path.dirname(__file__)
+        julve_labels = os.path.join(plugin_dir, "data", "julve_labels.json")
+
+        if not os.path.isfile(julve_labels):
+            raise RuntimeError(f"Fichier julve_labels.json introuvable : {julve_labels}")
+
+        # Normalisation des chemins Windows pour R
+        working_folder = self.params["working_folder"].replace("\\", "/")
+        julve_labels = julve_labels.replace("\\", "/")
+
+        feedback = QgsProcessingFeedback()
+        context = QgsProcessingContext()
+
+        params = {
+            "folder_path": working_folder,
+            "input_file": self.params.get("input_file", "julve_df.csv"),
+            "julve_labels": julve_labels,
+        }
+
+        result = processing.run(
+            "r:JulveDfToMembershipDf",
+            params,
+            context=context,
+            feedback=feedback,
+        )
+
+        console_output = result.get("R_CONSOLE_OUTPUT", "")
+        if console_output:
+            self.log.emit(console_output)
+
+        self.log.emit("Analyse Julve / Membership exécutée avec succès.")
