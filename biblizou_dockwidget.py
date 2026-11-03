@@ -154,6 +154,37 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread = None
         self.patri_conditions = []
 
+        # ----------
+
+        # Configuration onglet Botazou
+
+        # Connexions des boutons et contrôles
+        self.btnAddLayerRowBotazou.clicked.connect(self.add_botazou_row)
+        self.btnRunBotazou.clicked.connect(self.run_botazou_process)
+        self.rBPatriBotazou.toggled.connect(self.open_patri_dialog)
+        self.pBPatriBotazou.clicked.connect(self.open_patri_dialog)
+        ## Connexion du bouton 'Auto' Statuts
+        self.btn_autofillBotazou.clicked.connect(self.run_autofill_botazou)
+
+        # État initial du bouton patrimonialité
+        self.pBPatriBotazou.setEnabled(self.rBPatriBotazou.isChecked())
+
+        # Configuration de la SpinBox (flou)
+        self.spinBoxFuzzyBotazou.setMinimum(0)
+        self.spinBoxFuzzyBotazou.setMaximum(10)
+        self.spinBoxFuzzyBotazou.setValue(2)
+        self.spinBoxFuzzyBotazou.setSpecialValueText("")
+        self.spinBoxFuzzyBotazou.setPrefix("auto (")
+        self.spinBoxFuzzyBotazou.setSuffix(")")
+
+        # Configuration du tableau Botazou
+        header_botazou = self.tableBotazou.horizontalHeader()
+        if header_botazou:
+            header_botazou.setSectionResizeMode(0, QHeaderView.Stretch)
+            header_botazou.setSectionResizeMode(1, QHeaderView.Stretch)
+            header_botazou.setSectionResizeMode(2,
+                                                QHeaderView.ResizeToContents)
+
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
         # Filtrer pour ne montrer que les couches polygonales
