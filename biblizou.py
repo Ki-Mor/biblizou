@@ -210,3 +210,51 @@ class Biblizou:
                 else:
                     self.dockwidget.show()
                     self.pluginIsActive = True
+
+    # --------------------------------------------------------------------------
+
+    def install_r_scripts(self):
+        """Copie les scripts .rsx du plugin vers le dossier R configuré dans QGIS."""
+        source = os.path.join(self.plugin_dir, "modules", "botazou",
+                              "exploration", "JulveDfToMembershipDf.rsx")
+        if not os.path.isfile(source):
+            QgsMessageLog.logMessage(
+                f"Biblizou : script R introuvable : {source}",
+                "Biblizou",
+                level=Qgis.Warning,
+            )
+            return
+
+        try:
+            from processing.core.ProcessingConfig import ProcessingConfig
+            from processing_r.processing.utils import RUtils
+
+            scripts_folders = ProcessingConfig.getSetting(RUtils.RSCRIPTS_FOLDER)
+            if scripts_folders:
+                folders = [f.strip() for f in scripts_folders.split(";") if f.strip()]
+            else:
+                folders = [RUtils.default_scripts_folder()]
+        except ImportError:
+            QgsMessageLog.logMessage(
+                "Biblizou : Processing R Provider absent, script R non installé.",
+                "Biblizou",
+                level=Qgis.Warning,
+            )
+            return
+
+        for folder in folders:
+            folder = folder.strip()
+            if not folder:
+                continue
+            os.makedirs(folder, exist_ok=True)
+            dest = os.path.join(folder, "JulveDfToMembershipDf.rsx")
+            shutil.copy2(source, dest)
+            QgsMessageLog.logMessage(
+                f"Biblizou : script R installé dans {dest}",
+                "Biblizou",
+                level=Qgis.Info,
+            )
+
+        provider = QgsApplication.processingRegistry().providerById("r")
+        if provider:
+            provider.refreshAlgorithms()
