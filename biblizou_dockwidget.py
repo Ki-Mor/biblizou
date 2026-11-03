@@ -323,24 +323,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         add_row(self.tableStat)
 
     def add_botazou_row(self):
-        """Ajoute une ligne au tableau Botazou (couche + champ CD_Nom/Ref)."""
-        row = self.tableBotazou.rowCount()
-        self.tableBotazou.insertRow(row)
-        lyr_cb = QgsMapLayerComboBox()
-        lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        fld_cb = QgsFieldComboBox()
-        fld_cb.setLayer(lyr_cb.currentLayer())
-        lyr_cb.layerChanged.connect(fld_cb.setLayer)
-        btn_del = QPushButton()
-        icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
-        btn_del.setIcon(QtGui.QIcon(icon_path))
-        btn_del.setIconSize(QtCore.QSize(16, 16))
-        btn_del.setMaximumWidth(30)
-        btn_del.clicked.connect(lambda: self.tableBotazou.removeRow(
-            self.tableBotazou.indexAt(btn_del.pos()).row()))
-        self.tableBotazou.setCellWidget(row, 0, lyr_cb)
-        self.tableBotazou.setCellWidget(row, 1, fld_cb)
-        self.tableBotazou.setCellWidget(row, 2, btn_del)
+        """Ajoute une ligne au tableau Botazou via UxUtils."""
+        add_row(self.tableBotazou)
 
     def run_autofill_taxref(self):
         """Lance l'autofill TaxRef via UxUtils."""
