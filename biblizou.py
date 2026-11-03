@@ -70,6 +70,7 @@ class Biblizou:
         #print ("** INITIALIZING Biblizou")
 
         self.pluginIsActive = False
+
         self.dockwidget = None
         try:
             self.install_r_scripts()
