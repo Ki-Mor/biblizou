@@ -37,10 +37,10 @@ from .utils.styles import apply_stylesheet
 # Importation du thread de traitement depuis le script biblizou.py
 try:
     from .biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, \
-        BdStatutsProcessingThread
+        BdStatutsProcessingThread, BotazouProcessingThread
 except ImportError:
     from biblizou_worker import FsdProcessingThread, TaxrefProcessingThread, \
-        BdStatutsProcessingThread
+        BdStatutsProcessingThread, BotazouProcessingThread
 
 import sys
 from . import resources as resources_rc
@@ -269,6 +269,20 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
+    def validate_botazou(self):
+        """Valide la saisie avant exécution du workflow Botazou."""
+        errors = []
+
+        working_folder = self.mQgsFileWidget.filePath()
+        if not working_folder or not os.path.isdir(working_folder):
+            errors.append("Dossier de travail invalide.")
+        if not self.get_botazou_config():
+            errors.append("Ajoutez au moins une couche source dans l'onglet Botazou.")
+        if errors:
+            QtWidgets.QMessageBox.warning(self, "Validation Botazou", "\n".join(errors))
+            return False
+        return True
+
     def add_taxref_row(self):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
         add_row(self.tableTaxref)
@@ -277,6 +291,26 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Ajoute une ligne au tableau BD Statuts via UxUtils."""
         add_row(self.tableStat)
 
+    def add_botazou_row(self):
+        """Ajoute une ligne au tableau Botazou (couche + champ CD_Nom/Ref)."""
+        row = self.tableBotazou.rowCount()
+        self.tableBotazou.insertRow(row)
+        lyr_cb = QgsMapLayerComboBox()
+        lyr_cb.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        fld_cb = QgsFieldComboBox()
+        fld_cb.setLayer(lyr_cb.currentLayer())
+        lyr_cb.layerChanged.connect(fld_cb.setLayer)
+        btn_del = QPushButton()
+        icon_path = os.path.join(os.path.dirname(__file__), 'misc', 'cross.png')
+        btn_del.setIcon(QtGui.QIcon(icon_path))
+        btn_del.setIconSize(QtCore.QSize(16, 16))
+        btn_del.setMaximumWidth(30)
+        btn_del.clicked.connect(lambda: self.tableBotazou.removeRow(
+            self.tableBotazou.indexAt(btn_del.pos()).row()))
+        self.tableBotazou.setCellWidget(row, 0, lyr_cb)
+        self.tableBotazou.setCellWidget(row, 1, fld_cb)
+        self.tableBotazou.setCellWidget(row, 2, btn_del)
+
     def run_autofill_taxref(self):
         """Lance l'autofill TaxRef via UxUtils."""
         run_auto_fill(self.tableTaxref, self.iface, self.log_to_qgis)
@@ -284,6 +318,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def run_autofill_stat(self):
         """Lance l'autofill Statuts via UxUtils."""
         run_auto_fill(self.tableStat, self.iface, self.log_to_qgis)
+
+    def run_autofill_botazou(self):
+        """Lance l'autofill Statuts via UxUtils."""
+        run_auto_fill(self.tableBotazou, self.iface, self.log_to_qgis)
 
     def get_taxref_data(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
@@ -415,6 +453,46 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
                                             "Workflow BD Statuts démarré...",
                                             level=Qgis.Info)
 
+    def run_botazou_process(self):
+        """Lance le workflow Botazou (DCA → Membership) via le thread."""
+        if not self.validate_botazou():
+            return
+
+        working_folder = self.mQgsFileWidget.filePath()
+        only_patrimonial = self.rBPatriBotazou.isChecked()
+        fuzzy_value = self.spinBoxFuzzyBotazou.value()
+
+        params = {
+            "working_folder": working_folder,
+            "input_file": "julve_df.csv",
+            "only_patrimonial": only_patrimonial,
+            "fuzzy_threshold": fuzzy_value,
+            "consolidation_config": self.get_botazou_config()
+        }
+
+        msg = (
+            f"Lancer l'analyse Botazou ?\n\n"
+            f"Dossier : {working_folder}\n"
+            f"Couches : {len(params['consolidation_config'])}\n"
+            f"Espèces patrimoniales uniquement : {'Oui' if only_patrimonial else 'Non'}\n"
+            f"Réglage du flou : auto ({fuzzy_value})"
+        )
+        reply = QtWidgets.QMessageBox.question(
+            self, "Confirmation", msg,
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+        )
+        if reply != QtWidgets.QMessageBox.Yes:
+            return
+
+        self.btnRunBotazou.setEnabled(False)
+        self.botazou_thread = BotazouProcessingThread(params, self.iface)
+        self.botazou_thread.progress.connect(self.update_status_bar)
+        self.botazou_thread.log.connect(self.log_to_qgis)
+        self.botazou_thread.finished.connect(self.on_botazou_finished)
+        self.botazou_thread.error.connect(self.on_error_botazou)
+        self.botazou_thread.start()
+        self.iface.messageBar().pushMessage("Biblizou", "Analyse Botazou démarrée...", level=Qgis.Info)
+
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
         self.iface.mainWindow().statusBar().showMessage(
@@ -436,12 +514,31 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_stat_finished(self, message):
         _on_process_finished(self, message, self.btnRunStat)
 
+    def on_botazou_finished(self, message):
+        """Action à la fin du workflow Botazou."""
+        self.btnRunBotazou.setEnabled(True)
+        QtWidgets.QMessageBox.information(self, "Succès", message)
+        self.iface.mainWindow().statusBar().clearMessage()
+
     def on_error(self, error_message, button=None):
         """Action générique en cas d'erreur d'un thread de traitement."""
         if button is not None:
             button.setEnabled(True)
         self._hide_progress()
         QtWidgets.QMessageBox.critical(self, "Erreur", error_message)
+
+    def get_botazou_config(self):
+        """Extrait les couches et champs du tableau Botazou."""
+        data = []
+        for row in range(self.tableBotazou.rowCount()):
+            lyr_widget = self.tableBotazou.cellWidget(row, 0)
+            fld_widget = self.tableBotazou.cellWidget(row, 1)
+            if lyr_widget and lyr_widget.currentLayer():
+                data.append({
+                    "layer_id": lyr_widget.currentLayer().id(),
+                    "column": fld_widget.currentField()
+                })
+        return data
 
     def _setup_layer_lock(self):
         """Miroir strict entre les combos ZNIEFF et Natura 2000."""
