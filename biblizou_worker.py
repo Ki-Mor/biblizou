@@ -58,6 +58,7 @@ from .modules.fsd.ZnieffXmlToLayerHab import \
 from .modules.taxref.TaxrefApiToTable import TaxrefApiToTable
 # Settings
 from .settings.biblizou_settings import get_gpkg_filename
+from .modules.botazou.BuildJulveDf import BuildJulveDf
 
 
 class FsdProcessingThread(QThread):
