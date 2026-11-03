@@ -71,6 +71,14 @@ class Biblizou:
 
         self.pluginIsActive = False
         self.dockwidget = None
+        try:
+            self.install_r_scripts()
+        except Exception as e:
+            QgsMessageLog.logMessage(
+                f"Biblizou : erreur lors de l'installation des scripts R : {e}",
+                "Biblizou",
+                level=Qgis.Warning
+            )
 
 
     # noinspection PyMethodMayBeStatic
