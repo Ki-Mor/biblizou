@@ -607,8 +607,8 @@ class BotazouProcessingThread(QThread):
 
             steps = [
                 ("Vérification du fournisseur R", self.check_r_provider),
-                ("Construction du tableau Julve", self.build_julve_csv),
-                ("Lancement de l'analyse Julve / Membership", self.run_julve_algorithm),
+                ("Construction du tableau Julve", self.build_julve_csv)#,
+                #("Lancement de l'analyse Julve / Membership", self.run_julve_algorithm),
             ]
 
             total = len(steps)
