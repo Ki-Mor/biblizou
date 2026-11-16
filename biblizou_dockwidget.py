@@ -503,7 +503,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.botazou_thread.progress.connect(self.update_status_bar)
         self.botazou_thread.log.connect(self.log_to_qgis)
         self.botazou_thread.finished.connect(self.on_botazou_finished)
-        self.botazou_thread.error.connect(self.on_error_botazou)
+        self.botazou_thread.error.connect(self.on_error)
         self.botazou_thread.start()
         self.iface.messageBar().pushMessage("Biblizou", "Analyse Botazou démarrée...", level=Qgis.Info)
 

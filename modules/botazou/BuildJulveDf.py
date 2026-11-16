@@ -7,14 +7,15 @@ Description : Collecte les codes CD_NOM uniques depuis les couches sélectionné
               jointure avec baseflor.csv (indices Julve),
               export dans le dossier de travail sous julve_df.csv
 """
-import os
 import csv
+import os
+
+from qgis.PyQt.QtCore import pyqtSignal, QObject
 from qgis.core import (
     QgsProject,
     QgsMessageLog,
     Qgis
 )
-from qgis.PyQt.QtCore import pyqtSignal, QObject
 
 
 class BuildJulveDf(QObject):
@@ -22,7 +23,7 @@ class BuildJulveDf(QObject):
     status_changed = pyqtSignal(str)
 
     BASEFLOR_PATH = os.path.join(
-        os.path.dirname(__file__), "..", "..", "..", "data", "baseflor.csv"
+        os.path.dirname(__file__), "..", "..", "data", "baseflor.csv"
     )
 
     def __init__(self, working_folder):
@@ -64,7 +65,8 @@ class BuildJulveDf(QObject):
         if not unique_codes:
             return False, "Aucun code CD_NOM trouvé dans les couches sélectionnées."
 
-        self.status_changed.emit(f"{len(unique_codes)} codes uniques collectés.")
+        self.status_changed.emit(
+            f"{len(unique_codes)} codes uniques collectés.")
 
         # 2. Chargement baseflor
         self.status_changed.emit("Chargement de baseflor.csv...")
