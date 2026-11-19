@@ -264,7 +264,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Lance l'autofill TaxRef via UxUtils."""
         run_auto_fill(self.tableINPN, self.iface, self.log_to_qgis)
 
-    def get_taxref_data(self):
+    def get_data_inpn(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
         return get_table_data(self.tableINPN)
 
