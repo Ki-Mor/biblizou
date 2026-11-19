@@ -256,7 +256,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
-    def add_taxref_row(self):
+    def add_row_inpn(self):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
         add_row(self.tableINPN)
 
