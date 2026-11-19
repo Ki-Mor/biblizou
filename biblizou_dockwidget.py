@@ -242,25 +242,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
-    def validate_stat(self):
-        """Valide la saisie avant exécution du workflow BD Statuts."""
-        errors = []
-        working_folder = self.mQgsFileWidget.filePath()
-        if not working_folder or not os.path.isdir(working_folder):
-            errors.append("Dossier de travail invalide.")
-        code_insee = self.comboBoxDpt.currentData()
-        if not code_insee:
-            errors.append(
-                "Veuillez sélectionner un département (liste filtrable sur le nom).")
-        if not self.get_stat_data():
-            errors.append(
-                "Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
-        if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts",
-                                          "\n".join(errors))
-            return False
-        return True
-
     def add_row_inpn(self):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
         add_row(self.tableINPN)
