@@ -112,7 +112,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         ## Connexion du bouton run
         self.btnRunINPN.clicked.connect(self.run_taxref_process)
         ## Connexion du bouton d'ajout de ligne pour INPN
-        self.btnAddLayerRowINPN.clicked.connect(self.add_taxref_row)
+        self.btnAddLayerRowINPN.clicked.connect(self.add_row_inpn)
         ## Connexion du bouton 'Auto' INPN
         self.btn_autofillINPN.clicked.connect(self.run_autofill_taxref)
 
