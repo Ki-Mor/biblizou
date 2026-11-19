@@ -226,6 +226,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
+        code_insee = self.comboBoxDpt.currentData()
+
+        if not code_insee:
+            errors.append(
+                "Veuillez sélectionner un département (liste filtrable sur le nom).")
 
         consolidation_data = self.get_data_inpn()
         if not consolidation_data:
