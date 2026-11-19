@@ -107,13 +107,13 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # ----------
 
-        # Configuration onglet TaxRef
+        # Configuration onglet INPN
 
         ## Connexion du bouton run
         self.btnRunINPN.clicked.connect(self.run_taxref_process)
-        ## Connexion du bouton d'ajout de ligne pour TaxRef
+        ## Connexion du bouton d'ajout de ligne pour INPN
         self.btnAddLayerRowINPN.clicked.connect(self.add_taxref_row)
-        ## Connexion du bouton 'Auto' TaxRef
+        ## Connexion du bouton 'Auto' INPN
         self.btn_autofillINPN.clicked.connect(self.run_autofill_taxref)
 
         ## Configuration du tableau TaxRef
@@ -123,25 +123,12 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
             header_taxref.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
-        # ----------
-
-        # Configuration onglet BDC
-
-        ## Connexion du bouton run
-        self.btnRunStat.clicked.connect(self.run_stat_process)
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
         # Tableau BD Statuts (même principe que TaxRef)
         self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
         ## Connexion du bouton 'Auto' Statuts
         self.btn_autofillStat.clicked.connect(self.run_autofill_stat)
-
-        ## Configuration du tableau Statuts
-        header_stat = self.tableStat.horizontalHeader()
-        if header_stat:
-            header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
-            header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
-            header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
         # le bouton patri ouvre biblizou_dialog_patri
         self.btnPatri.clicked.connect(self.open_patri_dialog)
@@ -273,25 +260,13 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
         add_row(self.tableINPN)
 
-    def add_stat_row(self):
-        """Ajoute une ligne au tableau BD Statuts via UxUtils."""
-        add_row(self.tableStat)
-
     def run_autofill_taxref(self):
         """Lance l'autofill TaxRef via UxUtils."""
         run_auto_fill(self.tableINPN, self.iface, self.log_to_qgis)
 
-    def run_autofill_stat(self):
-        """Lance l'autofill Statuts via UxUtils."""
-        run_auto_fill(self.tableStat, self.iface, self.log_to_qgis)
-
     def get_taxref_data(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
         return get_table_data(self.tableINPN)
-
-    def get_stat_data(self):
-        """Extrait les données du tableau BD Statuts via UxUtils."""
-        return get_table_data(self.tableStat)
 
     def run_fsd_process(self):
         """Lance le traitement FSD via le thread."""
