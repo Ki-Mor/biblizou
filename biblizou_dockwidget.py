@@ -227,7 +227,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
 
-        consolidation_data = self.get_taxref_data()
+        consolidation_data = self.get_data_inpn()
         if not consolidation_data:
             errors.append("Aucune couche à consolider avec TaxRef.")
 
