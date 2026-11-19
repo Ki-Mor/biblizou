@@ -260,7 +260,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
         add_row(self.tableINPN)
 
-    def run_autofill_taxref(self):
+    def run_autofill_inpn(self):
         """Lance l'autofill TaxRef via UxUtils."""
         run_auto_fill(self.tableINPN, self.iface, self.log_to_qgis)
 
