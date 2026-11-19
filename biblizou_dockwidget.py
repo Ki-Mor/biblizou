@@ -223,7 +223,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         """Valide la saisie avant exécution de la consolidation INPN."""
         errors = []
         working_folder = self.mQgsFileWidget.filePath()
-        errors = []
 
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
