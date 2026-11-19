@@ -575,7 +575,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="TabTaxref">
+      <widget class="QWidget" name="TabINPN">
        <attribute name="title">
         <string>INPN</string>
        </attribute>
@@ -944,12 +944,6 @@
          </layout>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="TabStat">
-       <attribute name="title">
-        <string>Statuts</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_4"/>
       </widget>
      </widget>
     </item>
