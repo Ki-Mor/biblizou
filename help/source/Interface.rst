@@ -143,7 +143,7 @@ Les colonnes 0 et 1 sont extensibles ; la colonne 2 s'ajuste au contenu.
 - Le dossier de travail doit être valide.
 - Au moins une ligne doit être configurée dans ``tableTaxref``.
 
-**Bouton** ``btnRunTaxref`` — *Lancer la consolidation TaxRef* :
+**Bouton** ``btnRunINPN`` — *Lancer la consolidation TaxRef* :
 
 1. Appel de ``validate_taxref()``.
 2. Extraction des paires ``{layer_id, column}`` depuis ``tableTaxref``

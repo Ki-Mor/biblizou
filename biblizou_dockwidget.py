@@ -110,11 +110,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # Configuration onglet TaxRef
 
         ## Connexion du bouton run
-        self.btnRunTaxref.clicked.connect(self.run_taxref_process)
+        self.btnRunINPN.clicked.connect(self.run_taxref_process)
         ## Connexion du bouton d'ajout de ligne pour TaxRef
         self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
         ## Connexion du bouton 'Auto' TaxRef
-        self.btn_autofillTaxref.clicked.connect(self.run_autofill_taxref)
+        self.btn_autofillINPN.clicked.connect(self.run_autofill_taxref)
 
         ## Configuration du tableau TaxRef
         header_taxref = self.tableTaxref.horizontalHeader()
@@ -356,7 +356,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
 
         if reply == QtWidgets.QMessageBox.Yes:
-            self.btnRunTaxref.setEnabled(False)
+            self.btnRunINPN.setEnabled(False)
 
             # Initialisation du thread TaxRef
             self.taxref_thread = TaxrefProcessingThread(params, self.iface)
@@ -366,7 +366,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.taxref_thread.log.connect(self.log_to_qgis)
             self.taxref_thread.finished.connect(self.on_taxref_finished)
             self.taxref_thread.error.connect(
-                lambda msg: self.on_error(msg, self.btnRunTaxref))
+                lambda msg: self.on_error(msg, self.btnRunINPN))
 
             self._show_progress(1)
 
@@ -431,7 +431,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         _on_process_finished(self, message, self.btnRunFsd)
 
     def on_taxref_finished(self, message):
-        _on_process_finished(self, message, self.btnRunTaxref)
+        _on_process_finished(self, message, self.btnRunINPN)
 
     def on_stat_finished(self, message):
         _on_process_finished(self, message, self.btnRunStat)
