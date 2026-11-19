@@ -220,7 +220,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         return True
 
     def validate_taxref(self):
-        """Valide la saisie avant exécution de la consolidation TaxRef."""
+        """Valide la saisie avant exécution de la consolidation INPN."""
+        errors = []
         working_folder = self.mQgsFileWidget.filePath()
         errors = []
 
