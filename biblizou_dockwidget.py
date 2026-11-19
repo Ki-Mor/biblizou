@@ -112,12 +112,12 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         ## Connexion du bouton run
         self.btnRunINPN.clicked.connect(self.run_taxref_process)
         ## Connexion du bouton d'ajout de ligne pour TaxRef
-        self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
+        self.btnAddLayerRowINPN.clicked.connect(self.add_taxref_row)
         ## Connexion du bouton 'Auto' TaxRef
         self.btn_autofillINPN.clicked.connect(self.run_autofill_taxref)
 
         ## Configuration du tableau TaxRef
-        header_taxref = self.tableTaxref.horizontalHeader()
+        header_taxref = self.tableINPN.horizontalHeader()
         if header_taxref:
             header_taxref.setSectionResizeMode(0, QHeaderView.Stretch)
             header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
@@ -271,7 +271,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     def add_taxref_row(self):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
-        add_row(self.tableTaxref)
+        add_row(self.tableINPN)
 
     def add_stat_row(self):
         """Ajoute une ligne au tableau BD Statuts via UxUtils."""
@@ -279,7 +279,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     def run_autofill_taxref(self):
         """Lance l'autofill TaxRef via UxUtils."""
-        run_auto_fill(self.tableTaxref, self.iface, self.log_to_qgis)
+        run_auto_fill(self.tableINPN, self.iface, self.log_to_qgis)
 
     def run_autofill_stat(self):
         """Lance l'autofill Statuts via UxUtils."""
@@ -287,7 +287,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     def get_taxref_data(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
-        return get_table_data(self.tableTaxref)
+        return get_table_data(self.tableINPN)
 
     def get_stat_data(self):
         """Extrait les données du tableau BD Statuts via UxUtils."""

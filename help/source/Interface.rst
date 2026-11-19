@@ -108,14 +108,14 @@ avec le référentiel national TaxRef via l'API INPN
    * - Widget (nom objet)
      - Type
      - Rôle
-   * - ``tableTaxref``
+   * - ``tableINPN``
      - ``QTableWidget`` (3 colonnes)
      - Table de configuration des sources de ``cd_nom``
-   * - ``btnAddLayerRowTaxtef``
+   * - ``btnAddLayerRowINPN``
      - ``QPushButton``
-     - Ajoute une ligne dans ``tableTaxref``
+     - Ajoute une ligne dans ``tableINPN``
 
-**Structure du tableau ``tableTaxref``** :
+**Structure du tableau ``tableINPN``** :
 
 Chaque ligne correspond à une source de codes taxons :
 
@@ -141,12 +141,12 @@ Les colonnes 0 et 1 sont extensibles ; la colonne 2 s'ajuste au contenu.
 **Validation** (``validate_taxref()``) :
 
 - Le dossier de travail doit être valide.
-- Au moins une ligne doit être configurée dans ``tableTaxref``.
+- Au moins une ligne doit être configurée dans ``tableINPN``.
 
 **Bouton** ``btnRunINPN`` — *Lancer la consolidation TaxRef* :
 
 1. Appel de ``validate_taxref()``.
-2. Extraction des paires ``{layer_id, column}`` depuis ``tableTaxref``
+2. Extraction des paires ``{layer_id, column}`` depuis ``tableINPN``
    via ``get_taxref_consolidation_data()``.
 3. Confirmation indiquant le nombre de couches à traiter.
 4. Instanciation de ``TaxrefProcessingThread`` avec les paramètres
@@ -188,7 +188,7 @@ La liste est rendue éditable et dotée d'un ``QCompleter`` en mode ``MatchConta
 n'importe quelle partie du nom.
 La **valeur stockée** (``currentData()``) est le ``code_insee``, transmis à l'API.
 
-**Structure du tableau ``tableStat``** : identique à ``tableTaxref`` (couche + champ + supprimer).
+**Structure du tableau ``tableStat``** : identique à ``tableINPN`` (couche + champ + supprimer).
 
 **Validation** (``validate_stat()``) :
 

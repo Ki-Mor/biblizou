@@ -55,7 +55,7 @@ Le thread émet les signaux ``progress(int, int, str)``, ``log(str)``,
    * - ``gpkg_path``
      - ``{working_folder}/biblizou.gpkg``
    * - ``consolidation_config``
-     - Liste de dicts ``[{'layer_id': '...', 'column': '...'}]`` extraite du tableau ``tableTaxref``
+     - Liste de dicts ``[{'layer_id': '...', 'column': '...'}]`` extraite du tableau ``tableINPN``
 
 
 Classes et utilitaires
