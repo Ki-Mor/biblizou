@@ -773,7 +773,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBoxDpt_2">
+           <widget class="QComboBox" name="comboBoxDpt">
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -784,7 +784,7 @@
         <item row="6" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_19">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="labelFiltrerTaxons">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -822,7 +822,7 @@
         <item row="7" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QCheckBox" name="cBPatri_3">
+           <widget class="QCheckBox" name="cBPatri">
             <property name="text">
              <string/>
             </property>
@@ -831,7 +831,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_20">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="labelAjouterColPatri">
               <property name="font">
                <font>
                 <pointsize>8</pointsize>
