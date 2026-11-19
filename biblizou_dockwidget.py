@@ -320,7 +320,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         params = {
             'working_folder': self.mQgsFileWidget.filePath(),
-            'consolidation_config': self.get_taxref_data(),
+            'consolidation_config': self.get_data_inpn(),
             'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(),
                                       get_gpkg_filename())
         }
