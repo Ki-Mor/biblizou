@@ -343,12 +343,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.taxref_thread.error.connect(
             lambda msg: self.on_error(msg, self.btnRunINPN))
 
-            self._show_progress(1)
-
-            self.taxref_thread.start()
-            self.iface.messageBar().pushMessage("Biblizou",
-                                                "Consolidation TaxRef démarrée...",
-                                                level=Qgis.Info)
+        self._show_progress(1)
+        self.taxref_thread.start()
+        self.iface.messageBar().pushMessage("Biblizou",
+                                            "Consolidation TaxRef démarrée...",
+                                            level=Qgis.Info)
 
     def run_stat_process(self):
         """Lance le workflow BD Statuts (API -> status_data -> jointure -> pivots)."""
