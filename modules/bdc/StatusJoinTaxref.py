@@ -107,9 +107,11 @@ def run(gpkg_path: str, layer_name: str,
     if not cdnoms:
         return False, f"Aucun cdnom dans {layer_name}."
 
-    log(f"Enrichissement via API TaxRef pour {len(cdnoms)} taxons (nom vern, groupe)...")
-    session = requests.Session()
-    session.headers.update({"accept": "application/hal+json;version=1"})
+    log(f"Jointure locale sur {TAXREF_LAYER} pour {len(cdnoms)} taxons...")
+    lookup = _build_taxon_lookup(gpkg_path)
+    if lookup is None:
+        return False, (f"Couche {TAXREF_LAYER} ou champs id / "
+                       "frenchVernacularName / vernacularGroup2 introuvables.")
     taxon_info = {}
     for i, cdnom in enumerate(sorted(cdnoms)):
         if progress_callback and len(cdnoms) > 0:
