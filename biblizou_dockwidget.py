@@ -365,6 +365,17 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
                                             "Workflow BD Statuts démarré...",
                                             level=Qgis.Info)
 
+    def on_taxref_finished(self, message):
+        """Fin de l'étape TaxRef : on enchaîne sur BD Statuts (pas de popup)."""
+        self.log_to_qgis(message)
+        self.iface.messageBar().pushMessage("Biblizou", message,
+                                            level=Qgis.Info)
+        self._start_stat_thread()
+
+    def on_stat_finished(self, message):
+        """Fin du workflow INPN : réactive le bouton et affiche le succès."""
+        _on_process_finished(self, message, self.btnRunINPN)
+
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
         self.iface.mainWindow().statusBar().showMessage(
