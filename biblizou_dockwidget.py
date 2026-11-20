@@ -335,18 +335,13 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if reply != QtWidgets.QMessageBox.Yes:
             return
 
-        if reply == QtWidgets.QMessageBox.Yes:
-            self.btnRunINPN.setEnabled(False)
-
-            # Initialisation du thread TaxRef
-            self.taxref_thread = TaxrefProcessingThread(params, self.iface)
-
-            # Connexion des signaux du thread
-            self.taxref_thread.progress.connect(self.update_status_bar)
-            self.taxref_thread.log.connect(self.log_to_qgis)
-            self.taxref_thread.finished.connect(self.on_taxref_finished)
-            self.taxref_thread.error.connect(
-                lambda msg: self.on_error(msg, self.btnRunINPN))
+        self.btnRunINPN.setEnabled(False)
+        self.taxref_thread = TaxrefProcessingThread(taxref_params, self.iface)
+        self.taxref_thread.progress.connect(self.update_status_bar)
+        self.taxref_thread.log.connect(self.log_to_qgis)
+        self.taxref_thread.finished.connect(self.on_taxref_finished)
+        self.taxref_thread.error.connect(
+            lambda msg: self.on_error(msg, self.btnRunINPN))
 
             self._show_progress(1)
 
