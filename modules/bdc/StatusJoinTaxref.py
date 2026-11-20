@@ -3,9 +3,12 @@
 Auteur : François Botcazou
 Nom : StatusJoinTaxref.py
 Groupe : bdc
-Description : Enrichit la table layer_name avec nom vernaculaire et groupe taxonomique
-              obtenus par requête API TaxRef (GET taxa/{cd_nom}), comme TaxrefApiToTable.
-              Enregistre le résultat dans biblizou.gpkg|output_name.
+Description : Enrichit la table layer_name avec nom vernaculaire (frenchVernacularName)
+              et groupe taxonomique (vernacularGroup2) par jointure locale sur la
+              couche data_taxref du GeoPackage, sans appel API. La clé est cd_nom
+              (champ id), avec repli sur cd_ref (referenceId) pour les synonymes.
+              Les taxons absents de data_taxref restent vides et sont comptés dans
+              le log. Enregistre le résultat dans biblizou.gpkg|output_name.
 """
 
 from qgis.PyQt.QtCore import QVariant
@@ -77,7 +80,7 @@ def run(gpkg_path: str, layer_name: str,
         output_name: str | None = None) -> tuple[bool, str]:
     """
     Charge la couche layer_name depuis gpkg_path.
-    Pour chaque cdnom distinct appelle l'API TaxRef pour récupérer nom vernaculaire et groupe,
+    Pour chaque cdnom distinct, cherche nom vernaculaire et groupe dans data_taxref,
     puis ajoute les colonnes nom_vern et groupe à layer_name
     Résultat enregistré dans une nouvelle couche "status_joined_taxref".
         Args:
