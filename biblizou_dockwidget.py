@@ -310,8 +310,15 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         taxref_params = {
             'working_folder': working_folder,
             'consolidation_config': self.get_data_inpn(),
-            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(),
-                                      get_gpkg_filename())
+            'gpkg_path': gpkg_path
+        }
+        # Paramètres Statuts figés au clic, utilisés à la fin de TaxRef
+        self._stat_params = {
+            "working_folder": working_folder,
+            "gpkg_path": gpkg_path,
+            "code_insee": self.comboBoxDpt.currentData(),
+            "consolidation_config": self.get_data_inpn(),
+            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
         }
 
         # Confirmation
