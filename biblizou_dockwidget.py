@@ -299,9 +299,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
                                                 "Traitement FSD démarré...",
                                                 level=Qgis.Info)
 
-    def run_taxref_process(self):
-        """Lance la consolidation TaxRef via le thread."""
-        if not self.validate_taxref():
+    def run_inpn_process(self):
+        """Lance le workflow INPN : consolidation TaxRef puis BD Statuts."""
+        if not self.validate_inpn():
             return
 
         params = {
