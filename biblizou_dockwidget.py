@@ -356,7 +356,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
         self.stat_thread.error.connect(
-            lambda msg: self.on_error(msg, self.btnRunStat))
+            lambda msg: self.on_error(msg, self.btnRunINPN))
 
         self._show_progress(5)
 
