@@ -349,33 +349,9 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
                                             "Consolidation TaxRef démarrée...",
                                             level=Qgis.Info)
 
-    def run_stat_process(self):
-        """Lance le workflow BD Statuts (API -> status_data -> jointure -> pivots)."""
-        if not self.validate_stat():
-            return
-        working_folder = self.mQgsFileWidget.filePath()
-        params = {
-            "working_folder": working_folder,
-            "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
-            "code_insee": self.comboBoxDpt.currentData(),
-            "consolidation_config": self.get_stat_data(),
-            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
-        }
-
-        msg = (
-            f"Lancer le workflow BD Statuts ?\n\n"
-            f"Département : {self.comboBoxDpt.currentText()} (code {params['code_insee']})\n"
-            f"Couches : {len(params['consolidation_config'])}\n"
-            f"GeoPackage : {params['gpkg_path']}"
-        )
-        reply = QtWidgets.QMessageBox.question(
-            self, "Confirmation", msg,
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
-        )
-        if reply != QtWidgets.QMessageBox.Yes:
-            return
-        self.btnRunStat.setEnabled(False)
-        self.stat_thread = BdStatutsProcessingThread(params, self.iface)
+    def _start_stat_thread(self):
+        """Démarre l'étape BD Statuts avec les paramètres figés au clic."""
+        self.stat_thread = BdStatutsProcessingThread(self._stat_params, self.iface)
         self.stat_thread.progress.connect(self.update_status_bar)
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
