@@ -144,4 +144,4 @@ def run(gpkg_path: str, layer_name: str,
 
     if created == 0:
         return False, "Aucune couche pivot n'a pu être créée."
-    return True, f"{created} table(s) pivot créée(s) par groupe de statuts."
+    return True, f"{created} table(s) pivot créée(s) par groupe taxonomique."
