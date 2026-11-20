@@ -359,7 +359,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             lambda msg: self.on_error(msg, self.btnRunINPN))
 
         self._show_progress(5)
-
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou",
                                             "Workflow BD Statuts démarré...",
