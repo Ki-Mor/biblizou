@@ -34,29 +34,18 @@ def _get_vernacular_field(fields):
             return cand
     return "scientificName"
 
-
-def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
-                     layer_id: str) -> str:
-    """Construire la requête SQL d'un groupe"""
-    case_parts = []
-    for st in sorted(type_names):
-        safe_alias = st.replace('"', '""')
-        st_esc = st.replace("'", "''")
-        case_parts.append(
-            f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
-        )
-    cols = ", ".join(case_parts)
-    safe_vern = vern_fld.replace('"', '""')
-    group_esc = group_name.replace("'", "''")
-    query = (
-        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
-        f'FROM "{layer_id}" '
-        f"WHERE statusTypeGroup = '{group_esc}' "
-        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
-        f'ORDER BY scientificName'
-    )
-    return query
-
+def _collect_groups(layer: QgsVectorLayer) -> dict:
+    """Regroupe les statuts par groupe taxonomique (champ groupe).
+    Renvoie {groupe: {(statusTypeGroup, statusTypeName), ...}}."""
+    groups = {}
+    for feat in layer.getFeatures():
+        grp = str(feat[GROUP_FIELD] or "").strip() or UNCLASSIFIED
+        stg = str(feat["statusTypeGroup"] or "").strip()
+        stn = str(feat["statusTypeName"] or "").strip()
+        if not stg or not stn:
+            continue
+        groups.setdefault(grp, set()).add((stg, stn))
+    return groups
 
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                        layer_id: str) -> QgsVectorLayer:
