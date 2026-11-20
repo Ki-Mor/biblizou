@@ -126,7 +126,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
         # Tableau BD Statuts (même principe que TaxRef)
-        self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
+        self.btnAddLayerRowINPN.clicked.connect(self.add_row_inpn)
         ## Connexion du bouton 'Auto' Statuts
         self.btn_autofillStat.clicked.connect(self.run_autofill_stat)
 
