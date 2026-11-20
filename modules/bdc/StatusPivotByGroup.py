@@ -35,20 +35,6 @@ def _get_vernacular_field(fields):
     return "scientificName"
 
 
-def _collect_groups(layer: QgsVectorLayer) -> dict:
-    """Collecter les groupes et types d'une couche"""
-    groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
-    for feat in layer.getFeatures():
-        g = feat["statusTypeGroup"] or ""
-        t = feat["statusTypeName"] or ""
-        if not g:
-            continue
-        if g not in groups_types:
-            groups_types[g] = set()
-        groups_types[g].add(t)
-    return groups_types
-
-
 def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
                      layer_id: str) -> str:
     """Construire la requête SQL d'un groupe"""
