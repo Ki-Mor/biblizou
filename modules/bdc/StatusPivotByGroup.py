@@ -3,8 +3,9 @@
 Auteur : François Botcazou
 Nom : StatusPivotByGroup.py
 Groupe : bdc
-Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom latin,
-              nom vernaculaire ; en colonnes statusTypeName ; en valeur statusCode.
+Description : Crée une table pivot par groupe taxonomique (champ groupe, repli
+              « Non classé ») : en lignes cdnom, nom latin, nom vernaculaire ;
+              en colonnes statusTypeGroup - statusTypeName ; en valeur statusCode.
               Utilise la table status_joined_taxref du GeoPackage.
 """
 
