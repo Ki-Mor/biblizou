@@ -863,7 +863,7 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="btnPatri_4">
+               <widget class="QPushButton" name="btnPatri">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
