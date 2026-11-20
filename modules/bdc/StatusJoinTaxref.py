@@ -112,14 +112,13 @@ def run(gpkg_path: str, layer_name: str,
     if lookup is None:
         return False, (f"Couche {TAXREF_LAYER} ou champs id / "
                        "frenchVernacularName / vernacularGroup2 introuvables.")
-    taxon_info = {}
-    for i, cdnom in enumerate(sorted(cdnoms)):
-        if progress_callback and len(cdnoms) > 0:
-            progress_callback(i + 1, len(cdnoms), f"API TaxRef {cdnom}")
-        info = _fetch_taxon_info(cdnom, session)
-        taxon_info[cdnom] = info or {"nom_vern": "", "groupe": ""}
-        time.sleep(0.15)
-
+    taxon_info = {c: lookup[c] for c in cdnoms if c in lookup}
+    n_ok, n_all = len(taxon_info), len(cdnoms)
+    log(f"Appariements : {n_ok}/{n_all} taxons "
+        f"({n_all - n_ok} absents de {TAXREF_LAYER}).")
+    if n_ok == 0:
+        return False, f"Aucun taxon de {layer_name} trouvé dans {TAXREF_LAYER}."
+    
     def compute_fn(feat):
         cdnom = feat.attributes()[idx_cdnom]
         key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
