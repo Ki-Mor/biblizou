@@ -17,10 +17,6 @@ from qgis.core import (
 
 from ..base.LayerUtils import LayerUtils
 
-API_TAXA = "https://taxref.mnhn.fr/api/taxa"
-MAX_RETRIES = 2
-
-
 def _fetch_taxon_info(cdnom, session):
     """Récupère vernacularName1 et groupe (classe ou ordre) via l'API TaxRef."""
     try:
