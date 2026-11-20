@@ -234,7 +234,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         consolidation_data = self.get_data_inpn()
         if not consolidation_data:
-            errors.append("Aucune couche à consolider avec TaxRef.")
+            errors.append("Aucune couche à consolider avec l'INPN.")
 
         if errors:
             QtWidgets.QMessageBox.warning(self, "Validation",
