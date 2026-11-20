@@ -304,8 +304,11 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         if not self.validate_inpn():
             return
 
-        params = {
-            'working_folder': self.mQgsFileWidget.filePath(),
+        working_folder = self.mQgsFileWidget.filePath()
+        gpkg_path = os.path.join(working_folder, get_gpkg_filename())
+
+        taxref_params = {
+            'working_folder': working_folder,
             'consolidation_config': self.get_data_inpn(),
             'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(),
                                       get_gpkg_filename())
