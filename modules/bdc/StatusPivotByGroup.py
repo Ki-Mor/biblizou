@@ -19,6 +19,8 @@ from qgis.core import (
 
 from ..base.LayerUtils import LayerUtils
 
+GROUP_FIELD = "groupe"
+UNCLASSIFIED = "Non classé"
 
 def _sanitize_layer_name(name):
     """Retourne un nom de couche sans caractères problématiques."""
