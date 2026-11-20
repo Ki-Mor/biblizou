@@ -390,12 +390,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def on_fsd_finished(self, message):
         _on_process_finished(self, message, self.btnRunFsd)
 
-    def on_taxref_finished(self, message):
-        _on_process_finished(self, message, self.btnRunINPN)
-
-    def on_stat_finished(self, message):
-        _on_process_finished(self, message, self.btnRunStat)
-
     def on_error(self, error_message, button=None):
         """Action générique en cas d'erreur d'un thread de traitement."""
         if button is not None:
