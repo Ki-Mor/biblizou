@@ -47,6 +47,34 @@ def _collect_groups(layer: QgsVectorLayer) -> dict:
         groups.setdefault(grp, set()).add((stg, stn))
     return groups
 
+def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
+                     layer_id: str) -> str:
+    """Construire la requête SQL pivot d'un groupe taxonomique."""
+    case_parts = []
+    for stg, stn in sorted(type_names):
+        alias = f"{stg} - {stn}".replace('"', '""')
+        stg_esc = stg.replace("'", "''")
+        stn_esc = stn.replace("'", "''")
+        case_parts.append(
+            f"MAX(CASE WHEN statusTypeGroup = '{stg_esc}' "
+            f"AND statusTypeName = '{stn_esc}' THEN statusCode END) "
+            f'AS "{alias}"'
+        )
+    cols = ", ".join(case_parts)
+    safe_vern = vern_fld.replace('"', '""')
+    if group_name == UNCLASSIFIED:
+        where = f"COALESCE(TRIM({GROUP_FIELD}), '') = ''"
+    else:
+        group_esc = group_name.replace("'", "''")
+        where = f"TRIM({GROUP_FIELD}) = '{group_esc}'"
+    return (
+        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
+        f'FROM "{layer_id}" '
+        f"WHERE {where} "
+        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
+        f'ORDER BY scientificName'
+    )
+
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                        layer_id: str) -> QgsVectorLayer:
     """Construit la couche virtuelle pivot d'un groupe de statuts."""
