@@ -15,7 +15,6 @@ from qgis.core import (
     Qgis
 )
 
-
 from ..base.LayerUtils import LayerUtils
 
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
