@@ -17,6 +17,11 @@ from qgis.core import (
 
 TAXREF_LAYER = "data_taxref"
 
+def _clean_key(value):
+    """Normalise un identifiant en texte sans '.0' (3723.0 -> '3723')."""
+    return str(value).split(".")[0].strip() if value is not None else ""
+
+
 from ..base.LayerUtils import LayerUtils
 
 def _fetch_taxon_info(cdnom, session):
