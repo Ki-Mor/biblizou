@@ -321,10 +321,19 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
         }
 
-        # Confirmation
-        msg = f"Lancer la consolidation avec TaxRef ?\n\n{len(params['consolidation_config'])} couche(s) à traiter"
-        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg,
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        msg = (
+            f"Lancer le workflow INPN (TaxRef puis Statuts) ?\n\n"
+            f"Département : {self.comboBoxDpt.currentText()} "
+            f"(code {self._stat_params['code_insee']})\n"
+            f"Couches : {len(taxref_params['consolidation_config'])}\n"
+            f"GeoPackage : {gpkg_path}"
+        )
+        reply = QtWidgets.QMessageBox.question(
+            self, "Confirmation", msg,
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+        )
+        if reply != QtWidgets.QMessageBox.Yes:
+            return
 
         if reply == QtWidgets.QMessageBox.Yes:
             self.btnRunINPN.setEnabled(False)
