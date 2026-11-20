@@ -15,6 +15,8 @@ from qgis.core import (
     Qgis
 )
 
+TAXREF_LAYER = "data_taxref"
+
 from ..base.LayerUtils import LayerUtils
 
 def _fetch_taxon_info(cdnom, session):
