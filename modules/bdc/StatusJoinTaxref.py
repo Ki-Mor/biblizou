@@ -118,7 +118,7 @@ def run(gpkg_path: str, layer_name: str,
         f"({n_all - n_ok} absents de {TAXREF_LAYER}).")
     if n_ok == 0:
         return False, f"Aucun taxon de {layer_name} trouvé dans {TAXREF_LAYER}."
-    
+
     def compute_fn(feat):
         cdnom = feat.attributes()[idx_cdnom]
         key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
