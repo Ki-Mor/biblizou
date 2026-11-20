@@ -574,4 +574,4 @@ class BdStatutsProcessingThread(QThread):
             self.progress.emit(5, 5, "Terminé")
             self.finished.emit("Workflow INPN terminé avec succès.")
         except Exception as e:
-            self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
+            self.error.emit(f"Erreur critique INPN : {str(e)}")
