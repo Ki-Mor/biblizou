@@ -112,6 +112,10 @@ def run(gpkg_path: str, layer_name: str,
 
     vern_fld = _get_vernacular_field(layer_status.fields())
 
+    if layer_status.fields().indexOf(GROUP_FIELD) == -1:
+        return False, (f"Champ {GROUP_FIELD} absent de {layer_name} "
+                       "(jointure TaxRef manquante ?).")
+
     groups_types = _collect_groups(layer_status)
     if not groups_types:
         return False, "Aucun statut exploitable dans la table."
