@@ -433,7 +433,7 @@ class TaxrefProcessingThread(QThread):
             self.log.emit("=== Démarrage de la consolidation TaxRef ===")
 
             # Étape unique : consolidation
-            self.progress.emit(1, 1, "Consolidation avec TaxRef")
+            self.progress.emit(1, 1, "Consolidation avec l'INPN")
 
             if not self.params.get('consolidation_config'):
                 self.log.emit("Aucune couche externe à consolider.")
