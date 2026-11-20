@@ -21,7 +21,35 @@ def _clean_key(value):
     """Normalise un identifiant en texte sans '.0' (3723.0 -> '3723')."""
     return str(value).split(".")[0].strip() if value is not None else ""
 
-
+def _build_taxon_lookup(gpkg_path):
+    """Lit data_taxref. Renvoie {cdnom: {"nom_vern": ..., "groupe": ...}}.
+    Clé = id (cd_nom) en priorité, sinon referenceId (cd_ref, synonymes)."""
+    layer_taxref = LayerUtils.load_from_gpkg(gpkg_path, TAXREF_LAYER)
+    if layer_taxref is None:
+        return None
+    fields = layer_taxref.fields()
+    idx_id = fields.indexOf("id")
+    idx_ref = fields.indexOf("referenceId")
+    idx_vern = fields.indexOf("frenchVernacularName")
+    idx_grp = fields.indexOf("vernacularGroup2")
+    if -1 in (idx_id, idx_ref, idx_vern, idx_grp):
+        return None
+    by_id = {}
+    by_ref = {}
+    for feat in layer_taxref.getFeatures():
+        attrs = feat.attributes()
+        info = {"nom_vern": str(attrs[idx_vern] or ""),
+                "groupe": str(attrs[idx_grp] or "")}
+        key = _clean_key(attrs[idx_id])
+        if key:
+            by_id[key] = info
+        ref = _clean_key(attrs[idx_ref])
+        if ref:
+            cur = by_ref.setdefault(ref, {"nom_vern": "", "groupe": ""})
+            for k, v in info.items():
+                if not cur[k]:
+                    cur[k] = v
+    return {**by_ref, **by_id}
 
 from ..base.LayerUtils import LayerUtils
 
