@@ -199,7 +199,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/plugins/biblizou/iconUi.png</pixmap>
+          <pixmap resource="resources.qrc">:/plugins/biblizou/iconUi.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -242,7 +242,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="resources.qrc">
           <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png</iconset>
         </property>
        </widget>
@@ -302,7 +302,7 @@
          <string>Aide</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="resources.qrc">
           <normaloff>:/plugins/biblizou/misc/help.svg</normaloff>:/plugins/biblizou/misc/help.svg</iconset>
         </property>
        </widget>
@@ -560,7 +560,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="resources.qrc">
               <normaloff>:/plugins/biblizou/misc/arrowRight.png</normaloff>:/plugins/biblizou/misc/arrowRight.png</iconset>
             </property>
             <property name="iconSize">
@@ -871,7 +871,7 @@
                  <string/>
                 </property>
                 <property name="icon">
-                 <iconset>
+                 <iconset resource="resources.qrc">
                   <normaloff>:/plugins/biblizou/misc/gear.png</normaloff>:/plugins/biblizou/misc/gear.png</iconset>
                 </property>
                </widget>
@@ -919,7 +919,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="resources.qrc">
               <normaloff>:/plugins/biblizou/misc/arrowRight.png</normaloff>:/plugins/biblizou/misc/arrowRight.png</iconset>
             </property>
            </widget>
@@ -951,7 +951,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/biblizou/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>
