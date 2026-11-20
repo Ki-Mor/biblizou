@@ -71,11 +71,14 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
         group_esc = group_name.replace("'", "''")
         where = f"TRIM({GROUP_FIELD}) = '{group_esc}'"
     return (
-        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
+        'SELECT cd_ref, '
+        'COALESCE(MAX(CASE WHEN cdnom = cd_ref THEN scientificName END), '
+        'MAX(scientificName)) AS nom_latin, '
+        f'MAX("{safe_vern}") AS nom_vernaculaire, {cols} '
         f'FROM "{layer_id}" '
         f"WHERE {where} "
-        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
-        f'ORDER BY scientificName'
+        'GROUP BY cd_ref '
+        'ORDER BY nom_latin'
     )
 
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
@@ -115,9 +118,10 @@ def run(gpkg_path: str, layer_name: str,
 
     vern_fld = _get_vernacular_field(layer_status.fields())
 
-    if layer_status.fields().indexOf(GROUP_FIELD) == -1:
-        return False, (f"Champ {GROUP_FIELD} absent de {layer_name} "
-                       "(jointure TaxRef manquante ?).")
+    for needed in (GROUP_FIELD, "cd_ref"):
+        if layer_status.fields().indexOf(needed) == -1:
+            return False, (f"Champ {needed} absent de {layer_name} "
+                           "(jointure TaxRef manquante ?).")
 
     groups_types = _collect_groups(layer_status)
     if not groups_types:

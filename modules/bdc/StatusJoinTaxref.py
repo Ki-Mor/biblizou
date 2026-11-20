@@ -25,7 +25,7 @@ def _clean_key(value):
     return str(value).split(".")[0].strip() if value is not None else ""
 
 def _build_taxon_lookup(gpkg_path):
-    """Lit data_taxref. Renvoie {cdnom: {"nom_vern": ..., "groupe": ...}}.
+    """Lit data_taxref. Renvoie {cdnom: {"nom_vern", "groupe", "cd_ref"}}.
     Clé = id (cd_nom) en priorité, sinon referenceId (cd_ref, synonymes)."""
     layer_taxref = LayerUtils.load_from_gpkg(gpkg_path, TAXREF_LAYER)
     if layer_taxref is None:
@@ -41,17 +41,19 @@ def _build_taxon_lookup(gpkg_path):
     by_ref = {}
     for feat in layer_taxref.getFeatures():
         attrs = feat.attributes()
-        info = {"nom_vern": str(attrs[idx_vern] or ""),
-                "groupe": str(attrs[idx_grp] or "")}
         key = _clean_key(attrs[idx_id])
+        ref = _clean_key(attrs[idx_ref]) or key
+        info = {"nom_vern": str(attrs[idx_vern] or ""),
+                "groupe": str(attrs[idx_grp] or ""),
+                "cd_ref": ref}
         if key:
             by_id[key] = info
-        ref = _clean_key(attrs[idx_ref])
         if ref:
-            cur = by_ref.setdefault(ref, {"nom_vern": "", "groupe": ""})
-            for k, v in info.items():
+            cur = by_ref.setdefault(
+                ref, {"nom_vern": "", "groupe": "", "cd_ref": ref})
+            for k in ("nom_vern", "groupe"):
                 if not cur[k]:
-                    cur[k] = v
+                    cur[k] = info[k]
     return {**by_ref, **by_id}
 
 from ..base.LayerUtils import LayerUtils
@@ -135,11 +137,12 @@ def run(gpkg_path: str, layer_name: str,
     def compute_fn(feat):
         cdnom = feat.attributes()[idx_cdnom]
         key = str(cdnom).split(".")[0].strip() if cdnom is not None else ""
-        info = taxon_info.get(key, {"nom_vern": "", "groupe": ""})
-        return [info["nom_vern"], info["groupe"]]
+        info = taxon_info.get(key, {"nom_vern": "", "groupe": "", "cd_ref": key})
+        return [info["nom_vern"], info["groupe"], info["cd_ref"]]
 
     new_fields = [QgsField("nom_vern", QVariant.String),
-                  QgsField("groupe", QVariant.String)]
+                  QgsField("groupe", QVariant.String),
+                  QgsField("cd_ref", QVariant.String)]
 
     layer_joined = LayerUtils.add_computed_fields(
         layer_status, new_fields, compute_fn,
