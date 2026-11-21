@@ -19,7 +19,9 @@ from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
 from ..base.LayerUtils import LayerUtils
 
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
-BATCH_SIZE = 50  # hypothèse médiane, taille max à mesurer (ticket dédié)
+BATCH_SIZE = 200
+MAX_FAILURES = 6  # échecs de suite avant d'abandonner l'API
+
 
 class TaxrefApiToTable(QObject):
     progress_changed = pyqtSignal(int)
@@ -51,6 +53,20 @@ class TaxrefApiToTable(QObject):
                 "Biblizou", Qgis.Warning)
             return None
 
+    def _fetch_with_split(self, batch, state):
+        """Requête un paquet. En cas d'échec, le coupe en deux et recommence.
+        Un taxon seul en échec est abandonné. Trop d'échecs de suite : stop."""
+        taxa = self._fetch_batch(batch)
+        if taxa is not None:
+            state["fails"] = 0
+            return taxa
+        state["fails"] += 1
+        if len(batch) == 1 or state["fails"] >= MAX_FAILURES:
+            return []
+        mid = len(batch) // 2
+        return (self._fetch_with_split(batch[:mid], state)
+                + self._fetch_with_split(batch[mid:], state))
+
     def run(self, layer_config):
         """
         Args:
@@ -74,8 +90,11 @@ class TaxrefApiToTable(QObject):
 
         self.status_changed.emit(
             f"Requêtage API TAXREF ({total} taxons, {len(batches)} paquets)...")
+        state = {"fails": 0}
         for n, batch in enumerate(batches):
-            taxa = self._fetch_batch(batch)
+            if state["fails"] >= MAX_FAILURES:
+                continue  # API injoignable : on n'insiste pas
+            taxa = self._fetch_with_split(batch, state)
             if taxa:
                 for data in taxa:
                     flat_data = {k: str(v) for k, v in data.items()
@@ -117,5 +136,8 @@ class TaxrefApiToTable(QObject):
             if missing:
                 msg += (f" {len(missing)} cd_nom non résolus : "
                         f"{', '.join(missing[:20])}")
-            return True, msg        else:
-            return False, f"Erreur de sauvegarde : {err_msg}"
+            if state["fails"] >= MAX_FAILURES:
+                msg += " Arrêt anticipé : l'API ne répond plus."
+            return True, msg
+        else:
+            return False, f"Erreu²r de sauvegarde : {err_msg}"
