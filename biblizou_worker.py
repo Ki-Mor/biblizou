@@ -445,7 +445,8 @@ class TaxrefProcessingThread(QThread):
 
             consolidator = TaxrefApiToTable(self.params['gpkg_path'])
             success, msg = consolidator.run(
-                self.params['consolidation_config'])
+                self.params['consolidation_config'],
+                self.params.get('taxref_mode', 'overwrite'))
 
             self.log.emit(msg)
 

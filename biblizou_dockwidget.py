@@ -29,7 +29,7 @@ from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtCore import pyqtSignal, Qt
 from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtWidgets import QStyleFactory
-from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
+from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel, QgsVectorLayer
 from qgis.gui import QgsFileWidget
 
 from .utils.styles import apply_stylesheet
@@ -298,6 +298,36 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.iface.messageBar().pushMessage("Biblizou",
                                                 "Traitement FSD démarré...",
                                                 level=Qgis.Info)
+    def _ask_taxref_mode(self, gpkg_path, summary):
+        """Choix utilisateur si data_taxref existe déjà.
+        Renvoie 'overwrite', 'append' ou None (annulation)."""
+        existing = QgsVectorLayer(f"{gpkg_path}|layername=data_taxref",
+                                  "data_taxref", "ogr")
+        if not existing.isValid() or existing.featureCount() == 0:
+            reply = QtWidgets.QMessageBox.question(
+                self, "Confirmation", summary,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            return "overwrite" if reply == QtWidgets.QMessageBox.Yes else None
+
+        box = QtWidgets.QMessageBox(self)
+        box.setIcon(QtWidgets.QMessageBox.Question)
+        box.setWindowTitle("Table data_taxref existante")
+        box.setText(f"{summary}\n\nLa table data_taxref existe déjà "
+                    f"({existing.featureCount()} taxons). Que faire ?")
+        btn_over = box.addButton("Écraser les données",
+                                 QtWidgets.QMessageBox.DestructiveRole)
+        btn_add = box.addButton(
+            "Ajouter aux données existantes (sans doublons)",
+            QtWidgets.QMessageBox.AcceptRole)
+        box.addButton("Annuler", QtWidgets.QMessageBox.RejectRole)
+        box.setDefaultButton(btn_add)
+        box.exec_()
+        clicked = box.clickedButton()
+        if clicked == btn_over:
+            return "overwrite"
+        if clicked == btn_add:
+            return "append"
+        return None
 
     def run_inpn_process(self):
         """Lance le workflow INPN : consolidation TaxRef puis BD Statuts."""
@@ -328,11 +358,8 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             f"Couches : {len(taxref_params['consolidation_config'])}\n"
             f"GeoPackage : {gpkg_path}"
         )
-        reply = QtWidgets.QMessageBox.question(
-            self, "Confirmation", msg,
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
-        )
-        if reply != QtWidgets.QMessageBox.Yes:
+        taxref_params["taxref_mode"] = self._ask_taxref_mode(gpkg_path, msg)
+        if taxref_params["taxref_mode"] is None:
             return
 
         self.btnRunINPN.setEnabled(False)
