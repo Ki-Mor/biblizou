@@ -445,7 +445,8 @@ class TaxrefProcessingThread(QThread):
 
             consolidator = TaxrefApiToTable(self.params['gpkg_path'])
             success, msg = consolidator.run(
-                self.params['consolidation_config'])
+                self.params['consolidation_config'],
+                self.params.get('taxref_mode', 'overwrite'))
 
             self.log.emit(msg)
 
@@ -536,7 +537,8 @@ class BdStatutsProcessingThread(QThread):
                     current_layer = "status_joined_patri"
                     self.log.emit(msg)
             else:
-                self.log.emit("Étape ignorée")
+                self.log.emit(
+                    "Étape patrimonialité ignorée (aucune condition cochée).")
 
             ###############################################################
             # 3. Jointure status_data + data_taxref -> status_data_joined #
