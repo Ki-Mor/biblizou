@@ -97,10 +97,11 @@ def run(gpkg_path: str, layer_name: str,
         """
 
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusJoinTaxRef]: {msg}", "Biblizou",
-                                 Qgis.Info)  # mis à jour aujourd'hui précédemment QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
+        full = f"[StatusJoinTaxRef]: {msg}"
         if log_callback:
-            log_callback(msg)
+            log_callback(full)
+        else:
+            QgsMessageLog.logMessage(full, "Biblizou", Qgis.Info)
 
     layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
     if layer_status is None:
@@ -155,5 +156,4 @@ def run(gpkg_path: str, layer_name: str,
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
-    log(f"Colonnes Taxref ajoutées à {layer_name}.")
     return True, f"Colonnes Taxref ajoutées à {layer_name}."

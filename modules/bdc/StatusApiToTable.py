@@ -70,10 +70,11 @@ def run(gpkg_path, code_insee_dept, layer_config, progress_callback=None,
     """
 
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusApiToTable]: {msg}", "Biblizou",
-                                 Qgis.Info)
+        full = f"[StatusApiToTable]: {msg}"
         if log_callback:
-            log_callback(msg)
+            log_callback(full)
+        else:
+            QgsMessageLog.logMessage(full, "Biblizou", Qgis.Info)
 
     log("Collecte des cd_nom depuis les couches...")
     cd_nom_list = collect_cdnom_from_config(layer_config)
