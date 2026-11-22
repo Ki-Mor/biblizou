@@ -73,6 +73,11 @@ class TaxrefApiToTable(QObject):
         return (self._fetch_with_split(batch[:mid], state)
                 + self._fetch_with_split(batch[mid:], state))
 
+    def _load_in_project(self):
+        """Charge data_taxref depuis le GeoPackage dans le projet."""
+        layer = LayerUtils.load_from_gpkg(self.gpkg_path, "data_taxref")
+        return layer is not None and LayerUtils.replace_layer_in_project(layer)
+
     def run(self, layer_config, mode="overwrite"):
         """
         Args:
@@ -106,6 +111,7 @@ class TaxrefApiToTable(QObject):
                     existing_keys.add(_clean_id(row.get("id")))
             codes = [c for c in codes if c not in existing_keys]
             if not codes:
+                self._load_in_project()
                 return True, ("Aucun nouveau taxon : data_taxref inchangée "
                               f"({len(existing_rows)} taxons).")
 
@@ -182,6 +188,8 @@ class TaxrefApiToTable(QObject):
                     f"{', '.join(missing[:20])}")
             if state["fails"] >= MAX_FAILURES:
                 msg += " Arrêt anticipé : l'API ne répond plus."
-            return True, msg
+            if self._load_in_project():
+                msg += " Couche data_taxref chargée dans le projet."
+                return True, msg
         else:
-            return False, f"Erreu²r de sauvegarde : {err_msg}"
+            return False, f"Erreur de sauvegarde : {err_msg}"
