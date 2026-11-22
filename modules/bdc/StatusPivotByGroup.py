@@ -104,9 +104,11 @@ def run(gpkg_path: str, layer_name: str,
     """
 
     def log(msg):
-        QgsMessageLog.logMessage(msg, "Biblizou", level=Qgis.Info)
+        full = f"[StatusPivotByGroup]: {msg}"
         if log_callback:
-            log_callback(msg)
+            log_callback(full)
+        else:
+            QgsMessageLog.logMessage(full, "Biblizou", Qgis.Info)
 
     # Charger layer_name depuis le gpkg
     layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)

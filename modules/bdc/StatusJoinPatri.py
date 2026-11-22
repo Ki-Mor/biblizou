@@ -48,10 +48,11 @@ def run(gpkg_path: str, conditions, layer_name: str,
         """
 
     def log(msg):
-        QgsMessageLog.logMessage(f"[StatusJoinPatri]: {msg}", "Biblizou",
-                                 Qgis.Info)
+        full = f"[StatusJoinPatri]: {msg}"
         if log_callback:
-            log_callback(msg)
+            log_callback(full)
+        else:
+            QgsMessageLog.logMessage(full, "Biblizou", Qgis.Info)
 
     layer_status = LayerUtils.load_from_gpkg(gpkg_path, layer_name)
     if layer_status is None:

@@ -125,10 +125,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
-        # Tableau BD Statuts (même principe que TaxRef)
-        self.btnAddLayerRowINPN.clicked.connect(self.add_row_inpn)
-        ## Connexion du bouton 'Auto' Statuts
-        self.btn_autofillINPN.clicked.connect(self.run_autofill_inpn)
 
         # le bouton patri ouvre biblizou_dialog_patri
         self.btnPatri.clicked.connect(self.open_patri_dialog)
