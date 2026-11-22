@@ -3,8 +3,9 @@
 Auteur : François Botcazou
 Nom : StatusPivotByGroup.py
 Groupe : bdc
-Description : Crée une table pivot par statusTypeGroup : en lignes cdnom, nom latin,
-              nom vernaculaire ; en colonnes statusTypeName ; en valeur statusCode.
+Description : Crée une table pivot par groupe taxonomique (champ groupe, repli
+              « Non classé ») : en lignes cdnom, nom latin, nom vernaculaire ;
+              en colonnes statusTypeGroup - statusTypeName ; en valeur statusCode.
               Utilise la table status_joined_taxref du GeoPackage.
 """
 
@@ -19,6 +20,8 @@ from qgis.core import (
 
 from ..base.LayerUtils import LayerUtils
 
+GROUP_FIELD = "groupe"
+UNCLASSIFIED = "Non classé"
 
 def _sanitize_layer_name(name):
     """Retourne un nom de couche sans caractères problématiques."""
@@ -34,43 +37,49 @@ def _get_vernacular_field(fields):
             return cand
     return "scientificName"
 
-
 def _collect_groups(layer: QgsVectorLayer) -> dict:
-    """Collecter les groupes et types d'une couche"""
-    groups_types = {}  # statusTypeGroup -> [statusTypeName, ...]
+    """Regroupe les statuts par groupe taxonomique (champ groupe).
+    Renvoie {groupe: {(statusTypeGroup, statusTypeName), ...}}."""
+    groups = {}
     for feat in layer.getFeatures():
-        g = feat["statusTypeGroup"] or ""
-        t = feat["statusTypeName"] or ""
-        if not g:
+        grp = str(feat[GROUP_FIELD] or "").strip() or UNCLASSIFIED
+        stg = str(feat["statusTypeGroup"] or "").strip()
+        stn = str(feat["statusTypeName"] or "").strip()
+        if not stg or not stn:
             continue
-        if g not in groups_types:
-            groups_types[g] = set()
-        groups_types[g].add(t)
-    return groups_types
-
+        groups.setdefault(grp, set()).add((stg, stn))
+    return groups
 
 def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
                      layer_id: str) -> str:
-    """Construire la requête SQL d'un groupe"""
+    """Construire la requête SQL pivot d'un groupe taxonomique."""
     case_parts = []
-    for st in sorted(type_names):
-        safe_alias = st.replace('"', '""')
-        st_esc = st.replace("'", "''")
+    for stg, stn in sorted(type_names):
+        alias = f"{stg} - {stn}".replace('"', '""')
+        stg_esc = stg.replace("'", "''")
+        stn_esc = stn.replace("'", "''")
         case_parts.append(
-            f"MAX(CASE WHEN statusTypeName = '{st_esc}' THEN statusCode END) AS \"{safe_alias}\""
+            f"MAX(CASE WHEN statusTypeGroup = '{stg_esc}' "
+            f"AND statusTypeName = '{stn_esc}' THEN statusCode END) "
+            f'AS "{alias}"'
         )
     cols = ", ".join(case_parts)
     safe_vern = vern_fld.replace('"', '""')
-    group_esc = group_name.replace("'", "''")
-    query = (
-        f'SELECT cdnom, scientificName AS nom_latin, "{safe_vern}" AS nom_vernaculaire, {cols} '
+    if group_name == UNCLASSIFIED:
+        where = f"COALESCE(TRIM({GROUP_FIELD}), '') = ''"
+    else:
+        group_esc = group_name.replace("'", "''")
+        where = f"TRIM({GROUP_FIELD}) = '{group_esc}'"
+    return (
+        'SELECT cd_ref, '
+        'COALESCE(MAX(CASE WHEN cdnom = cd_ref THEN scientificName END), '
+        'MAX(scientificName)) AS nom_latin, '
+        f'MAX("{safe_vern}") AS nom_vernaculaire, {cols} '
         f'FROM "{layer_id}" '
-        f"WHERE statusTypeGroup = '{group_esc}' "
-        f'GROUP BY cdnom, scientificName, "{safe_vern}" '
-        f'ORDER BY scientificName'
+        f"WHERE {where} "
+        'GROUP BY cd_ref '
+        'ORDER BY nom_latin'
     )
-    return query
-
 
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
                        layer_id: str) -> QgsVectorLayer:
@@ -109,9 +118,14 @@ def run(gpkg_path: str, layer_name: str,
 
     vern_fld = _get_vernacular_field(layer_status.fields())
 
+    for needed in (GROUP_FIELD, "cd_ref"):
+        if layer_status.fields().indexOf(needed) == -1:
+            return False, (f"Champ {needed} absent de {layer_name} "
+                           "(jointure TaxRef manquante ?).")
+
     groups_types = _collect_groups(layer_status)
     if not groups_types:
-        return False, "Aucun statusTypeGroup trouvé dans la table."
+        return False, "Aucun statut exploitable dans la table."
 
     created = 0
 
@@ -141,4 +155,4 @@ def run(gpkg_path: str, layer_name: str,
 
     if created == 0:
         return False, "Aucune couche pivot n'a pu être créée."
-    return True, f"{created} table(s) pivot créée(s) par groupe de statuts."
+    return True, f"{created} table(s) pivot créée(s) par groupe taxonomique."
