@@ -137,6 +137,11 @@ class TaxrefApiToTable(QObject):
         missing = [c for c in codes if c not in got]
 
         if not results:
+            if mode == "append":
+                self._load_in_project()
+                return True, ("Aucun nouveau taxon résolu par l'API "
+                              f"({len(codes)} cd_nom non résolus : "
+                              f"{', '.join(codes[:20])}).")
             return False, "Aucune donnée récupérée depuis l'API."
 
         if mode == "append":
