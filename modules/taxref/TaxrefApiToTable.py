@@ -110,10 +110,7 @@ class TaxrefApiToTable(QObject):
                     existing_rows.append(row)
                     existing_keys.add(_clean_id(row.get("id")))
             codes = [c for c in codes if c not in existing_keys]
-            if not codes:
-                self._load_in_project()
-                return True, ("Aucun nouveau taxon : data_taxref inchangée "
-                              f"({len(existing_rows)} taxons).")
+
 
         batches = [codes[i:i + BATCH_SIZE]
                    for i in range(0, len(codes), BATCH_SIZE)]
