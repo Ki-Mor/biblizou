@@ -135,7 +135,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
-        self.patri_conditions = []
 
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
@@ -193,8 +192,17 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_patri_dialog(self):
         """Ouvre la fenêtre des réglages patri du plugin (onglet status)."""
         dialog = BiblizouDialogPatri(parent=self)
-        if dialog.exec_():
-            self.patri_conditions = dialog.get_filter_conditions()
+        dialog.exec_()
+
+    def get_patri_conditions(self):
+        """Conditions de patrimonialité : cases enregistrées de la fenêtre
+        (QgsSettings) ou valeurs par défaut. Liste vide si la case est décochée."""
+        if not self.cBPatri.isChecked():
+            return []
+        dialog = BiblizouDialogPatri()
+        conditions = dialog.get_filter_conditions()
+        dialog.deleteLater()
+        return conditions
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
@@ -231,6 +239,10 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         consolidation_data = self.get_data_inpn()
         if not consolidation_data:
             errors.append("Aucune couche à consolider avec l'INPN.")
+
+        if self.cBPatri.isChecked() and not self.get_patri_conditions():
+            errors.append("Espèce patrimoniale cochée mais aucune condition "
+                          "choisie (roue dentée).")
 
         if errors:
             QtWidgets.QMessageBox.warning(self, "Validation",
@@ -344,8 +356,7 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             "gpkg_path": gpkg_path,
             "code_insee": self.comboBoxDpt.currentData(),
             "consolidation_config": self.get_data_inpn(),
-            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
-        }
+            "conditions": self.get_patri_conditions()        }
 
         msg = (
             f"Lancer le workflow INPN (TaxRef puis Statuts) ?\n\n"

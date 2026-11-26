@@ -109,82 +109,42 @@ class BiblizouDialogPatri(QtWidgets.QDialog, FORM_CLASS):
         conditions = []
 
         # 1. Conventions internationales
-        if self.gBConventionsInternationales.isChecked():
-            mapping = {
-                self.chbBerne: "Convention de Berne",
-                self.chbCites: "CITES",
-                self.chbBonn: "Convention de Bonn",
-            }
-            for checkbox, type_name in mapping.items():
-                if checkbox.isChecked():
-                    conditions.append({"statusTypeName": type_name})
+        for checkbox, type_name in (
+                (self.chbBerne, "Convention de Berne"),
+                (self.chbCites, "CITES"),
+                (self.chbBonn, "Convention de Bonn")):
+            if checkbox.isChecked():
+                conditions.append({"statusTypeName": type_name})
 
         # 2. Directives européennes
-        if self.gBDirEuro.isChecked():
-            if self.gBDH.isChecked():
-                STATUS_TYPE_DIR_HAB = "Directive Habitats, Faune, Flore"
-                dh_mapping = {
-                    self.chbDH2: "CDH2",
-                    self.chbDH4: "CDH4",
-                }
-                for checkbox, code in dh_mapping.items():
-                    if checkbox.isChecked():
-                        conditions.append({
-                            "statusTypeName": STATUS_TYPE_DIR_HAB,
-                            "statusCode": code,
-                        })
-
-            if self.gBDO.isChecked():
-                STATUS_TYPE_DIR_OIS = "Directive Oiseaux"
-                do_mapping = {
-                    self.chbDO1: "CDO1",
-                    self.chbDO4: "CDO4",
-                }
-                for checkbox, code in do_mapping.items():
-                    if checkbox.isChecked():
-                        conditions.append({
-                            "statusTypeName": STATUS_TYPE_DIR_OIS,
-                            "statusCode": code,
-                        })
+        for checkbox, type_name, code in (
+                (self.chbDH2, "Directive Habitat", "CDH2"),
+                (self.chbDH4, "Directive Habitat", "CDH4"),
+                (self.chbDO1, "Directive Oiseaux", "CDO1"),
+                (self.chbDO4, "Directive Oiseaux", "CDO4")):
+            if checkbox.isChecked():
+                conditions.append({"statusTypeName": type_name,
+                                   "statusCode": code})
 
         # 3. Protection
-        if self.gBProtection.isChecked():
-            mapping = {
-                self.chbPN: "Protection nationale",
-                self.chbPR: "Protection régionale",
-            }
-            for checkbox, type_name in mapping.items():
-                if checkbox.isChecked():
-                    conditions.append({"statusTypeName": type_name})
+        for checkbox, type_name in (
+                (self.chbPN, "Protection nationale"),
+                (self.chbPR, "Protection régionale")):
+            if checkbox.isChecked():
+                conditions.append({"statusTypeName": type_name})
 
         # 4. ZNIEFF
-        if self.gBZnieff.isChecked():
-            mapping = {
-                self.chbZDet: "ZNIEFF Déterminantes",
-            }
-            for checkbox, type_name in mapping.items():
-                if checkbox.isChecked():
-                    conditions.append({"statusTypeName": type_name})
+        if self.chbZDet.isChecked():
+            conditions.append({"statusTypeName": "ZNIEFF Déterminantes"})
 
-        # 5. Listes rouges
-        if self.gBListesRouges.isChecked():
-            lr_groups = [
-                (self.cBListeRougeMond, self.gBListeRougeMond,
-                 "Liste rouge mondiale"),
-                (self.cBListeRougeEuro, self.gBListeRougeEuro,
-                 "Liste rouge européenne"),
-                (self.cBListeRougeNat, self.gBListeRougeNat,
-                 "Liste rouge nationale"),
-                (self.cBListeRougeReg, self.gBListeRougeReg,
-                 "Liste rouge régionale"),
-            ]
-
-            for master_cb, groupbox, type_name in lr_groups:
-                if master_cb.isChecked():
-                    for code in groupbox.statuts_coches():
-                        conditions.append({
-                            "statusTypeName": type_name,
-                            "statusCode": code,
-                        })
+        # 5. Listes rouges (un code par case cochée)
+        for groupbox, type_name in (
+                (self.gBListeRougeMond, "Liste rouge mondiale"),
+                (self.gBListeRougeEuro, "Liste rouge européenne"),
+                (self.gBListeRougeNat, "Liste rouge nationale"),
+                (self.gBListeRougeReg, "Liste rouge régionale")):
+            for code in groupbox.statuts_coches():
+                conditions.append({"statusTypeName": type_name,
+                                   "statusCode": code})
 
         return conditions
