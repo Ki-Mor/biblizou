@@ -16,7 +16,8 @@ from qgis.core import (
     NULL
 )
 
-from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from ..base.ApiUtils import (collect_cdnom_from_config, collect_cdnom_sources,
+                             create_taxref_session)
 from ..base.LayerUtils import LayerUtils
 
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
