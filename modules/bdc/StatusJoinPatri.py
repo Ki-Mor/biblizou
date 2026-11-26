@@ -73,9 +73,14 @@ def run(gpkg_path: str, conditions, layer_name: str,
     if layer_joined is None:
         return False, "Avertissement : aucune correspondance patrimoniale calculée."
 
+    n_true = sum(1 for f in layer_joined.getFeatures() if f["patri"])
+    log(f"patri : {n_true} lignes à vrai sur {layer_joined.featureCount()}.")
+    if n_true == 0:
+        log("Attention : aucune ligne ne correspond aux conditions "
+            "(vérifier les noms de statuts).")
+
     success, err_msg = LayerUtils.save_to_gpkg(layer_joined, gpkg_path)
     if not success:
         return False, f"Erreur sauvegarde GPKG : {err_msg}"
 
-    log(f"Colonne patri ajoutée à {layer_name}.")
     return True, f"Colonne patri ajoutée à {layer_name}."

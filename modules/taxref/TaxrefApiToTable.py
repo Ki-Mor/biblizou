@@ -16,7 +16,8 @@ from qgis.core import (
     NULL
 )
 
-from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from ..base.ApiUtils import (collect_cdnom_from_config, collect_cdnom_sources,
+                             create_taxref_session)
 from ..base.LayerUtils import LayerUtils
 
 API_TAXA = "https://taxref.mnhn.fr/api/taxa"
@@ -110,10 +111,6 @@ class TaxrefApiToTable(QObject):
                     existing_rows.append(row)
                     existing_keys.add(_clean_id(row.get("id")))
             codes = [c for c in codes if c not in existing_keys]
-            if not codes:
-                self._load_in_project()
-                return True, ("Aucun nouveau taxon : data_taxref inchangée "
-                              f"({len(existing_rows)} taxons).")
 
         batches = [codes[i:i + BATCH_SIZE]
                    for i in range(0, len(codes), BATCH_SIZE)]
@@ -136,12 +133,7 @@ class TaxrefApiToTable(QObject):
         got = {r.get("id") for r in results}
         missing = [c for c in codes if c not in got]
 
-        if not results:
-            if mode == "append":
-                self._load_in_project()
-                return True, ("Aucun nouveau taxon résolu par l'API "
-                              f"({len(codes)} cd_nom non résolus : "
-                              f"{', '.join(codes[:20])}).")
+        if not results and not (mode == "append" and existing_rows):
             return False, "Aucune donnée récupérée depuis l'API."
 
         if mode == "append":
@@ -159,7 +151,15 @@ class TaxrefApiToTable(QObject):
         else:
             results_final = results
             n_new = len(results)
-        sorted_keys = sorted(all_keys)
+
+        sources = collect_cdnom_sources(layer_config)
+        all_keys.update(sources)
+        for res in results_final:
+            key = _clean_id(res.get("id"))
+            for col, codes_src in sources.items():
+                res[col] = "1" if key in codes_src else ""
+        sorted_keys = (sorted(k for k in all_keys if not k.startswith("src_"))
+                       + sorted(k for k in all_keys if k.startswith("src_")))
 
         if 'cdNom' in sorted_keys:
             sorted_keys.insert(0, sorted_keys.pop(sorted_keys.index('cdNom')))
@@ -188,13 +188,13 @@ class TaxrefApiToTable(QObject):
                        f"({len(results_final)} au total).")
             else:
                 msg = f"{len(results)} taxons consolidés dans le GeoPackage."
-                if missing:
-                    msg += (f" {len(missing)} cd_nom non résolus : "
-                    f"{', '.join(missing[:20])}")
+            if missing:
+                msg += (f" {len(missing)} cd_nom non résolus : "
+                        f"{', '.join(missing[:20])}")
             if state["fails"] >= MAX_FAILURES:
                 msg += " Arrêt anticipé : l'API ne répond plus."
             if self._load_in_project():
                 msg += " Couche data_taxref chargée dans le projet."
-                return True, msg
+            return True, msg
         else:
             return False, f"Erreur de sauvegarde : {err_msg}"

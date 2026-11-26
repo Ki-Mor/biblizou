@@ -51,7 +51,7 @@ def _collect_groups(layer: QgsVectorLayer) -> dict:
     return groups
 
 def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
-                     layer_id: str) -> str:
+                     layer_id: str, has_patri: bool = False) -> str:
     """Construire la requête SQL pivot d'un groupe taxonomique."""
     case_parts = []
     for stg, stn in sorted(type_names):
@@ -70,11 +70,12 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
     else:
         group_esc = group_name.replace("'", "''")
         where = f"TRIM({GROUP_FIELD}) = '{group_esc}'"
+    patri_sql = "MAX(patri) AS patri, " if has_patri else ""
     return (
         'SELECT cd_ref, '
         'COALESCE(MAX(CASE WHEN cdnom = cd_ref THEN scientificName END), '
         'MAX(scientificName)) AS nom_latin, '
-        f'MAX("{safe_vern}") AS nom_vernaculaire, {cols} '
+        f'MAX("{safe_vern}") AS nom_vernaculaire, {patri_sql}{cols} '
         f'FROM "{layer_id}" '
         f"WHERE {where} "
         'GROUP BY cd_ref '
@@ -82,9 +83,10 @@ def _build_sql_query(group_name: str, type_names: set, vern_fld: str,
     )
 
 def _build_pivot_layer(group_name: str, type_names: set, vern_fld: str,
-                       layer_id: str) -> QgsVectorLayer:
+                       layer_id: str, has_patri: bool = False) -> QgsVectorLayer:
     """Construit la couche virtuelle pivot d'un groupe de statuts."""
-    query = _build_sql_query(group_name, type_names, vern_fld, layer_id)
+    query = _build_sql_query(group_name, type_names, vern_fld, layer_id,
+                             has_patri)
     return QgsVectorLayer(f"?query={quote(query)}",
                           f"Statuts_Pivot_{_sanitize_layer_name(group_name)}",
                           "virtual")
@@ -119,6 +121,7 @@ def run(gpkg_path: str, layer_name: str,
     LayerUtils.replace_layer_in_project(layer_status)
 
     vern_fld = _get_vernacular_field(layer_status.fields())
+    has_patri = layer_status.fields().indexOf("patri") != -1
 
     for needed in (GROUP_FIELD, "cd_ref"):
         if layer_status.fields().indexOf(needed) == -1:
@@ -133,7 +136,7 @@ def run(gpkg_path: str, layer_name: str,
 
     for group_name, type_names in groups_types.items():
         vlayer = _build_pivot_layer(group_name, type_names, vern_fld,
-                                    layer_status.id())
+                                    layer_status.id(), has_patri)
 
         if not vlayer.isValid():
             log(f"StatutsPivot : requête pivot invalide pour le groupe '{group_name}'")
