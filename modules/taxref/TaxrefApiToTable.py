@@ -157,7 +157,15 @@ class TaxrefApiToTable(QObject):
         else:
             results_final = results
             n_new = len(results)
-        sorted_keys = sorted(all_keys)
+            
+        sources = collect_cdnom_sources(layer_config)
+        all_keys.update(sources)
+        for res in results_final:
+            key = _clean_id(res.get("id"))
+            for col, codes_src in sources.items():
+                res[col] = "1" if key in codes_src else ""
+        sorted_keys = (sorted(k for k in all_keys if not k.startswith("src_"))
+                       + sorted(k for k in all_keys if k.startswith("src_")))
 
         if 'cdNom' in sorted_keys:
             sorted_keys.insert(0, sorted_keys.pop(sorted_keys.index('cdNom')))
