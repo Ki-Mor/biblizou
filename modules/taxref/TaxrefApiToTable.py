@@ -12,12 +12,23 @@ from qgis.core import (
     QgsFeature,
     QgsField,
     QgsMessageLog,
-    Qgis
+    Qgis,
+    NULL
 )
 
-from ..base.ApiUtils import collect_cdnom_from_config, create_taxref_session
+from ..base.ApiUtils import (collect_cdnom_from_config, collect_cdnom_sources,
+                             create_taxref_session)
 from ..base.LayerUtils import LayerUtils
 
+API_TAXA = "https://taxref.mnhn.fr/api/taxa"
+BATCH_SIZE = 200
+MAX_FAILURES = 6  # échecs de suite avant d'abandonner l'API
+
+def _clean_id(value):
+    """Normalise un identifiant (3723.0 -> '3723')."""
+    if value is None or value == NULL:
+        return ""
+    return str(value).split(".")[0].strip()
 
 class TaxrefApiToTable(QObject):
     progress_changed = pyqtSignal(int)
@@ -28,7 +39,47 @@ class TaxrefApiToTable(QObject):
         self.gpkg_path = gpkg_path
         self.session = create_taxref_session()
 
-    def run(self, layer_config):
+    def _fetch_batch(self, batch):
+        """Requête un paquet de cd_nom. Renvoie la liste des taxons
+        (dicts), ou None si la requête a échoué."""
+        try:
+            response = self.session.get(
+                API_TAXA,
+                params={"taxrefIds": ",".join(batch), "size": len(batch)},
+                timeout=30)
+            if response.status_code != 200:
+                return None
+            embedded = response.json().get("_embedded", {})
+            for value in embedded.values():
+                if isinstance(value, list):
+                    return value
+            return []
+        except Exception as e:
+            QgsMessageLog.logMessage(
+                f"[TaxrefApiToTable]: Erreur API paquet de {len(batch)} : {e}",
+                "Biblizou", Qgis.Warning)
+            return None
+
+    def _fetch_with_split(self, batch, state):
+        """Requête un paquet. En cas d'échec, le coupe en deux et recommence.
+        Un taxon seul en échec est abandonné. Trop d'échecs de suite : stop."""
+        taxa = self._fetch_batch(batch)
+        if taxa is not None:
+            state["fails"] = 0
+            return taxa
+        state["fails"] += 1
+        if len(batch) == 1 or state["fails"] >= MAX_FAILURES:
+            return []
+        mid = len(batch) // 2
+        return (self._fetch_with_split(batch[:mid], state)
+                + self._fetch_with_split(batch[mid:], state))
+
+    def _load_in_project(self):
+        """Charge data_taxref depuis le GeoPackage dans le projet."""
+        layer = LayerUtils.load_from_gpkg(self.gpkg_path, "data_taxref")
+        return layer is not None and LayerUtils.replace_layer_in_project(layer)
+
+    def run(self, layer_config, mode="overwrite"):
         """
         Args:
             layer_config: list of dicts [{'layer_id': '...', 'column': '...'}]
@@ -45,31 +96,71 @@ class TaxrefApiToTable(QObject):
         results = []
         all_keys = set()
 
-        self.status_changed.emit(f"Requêtage API TAXREF ({total} taxons)...")
-        for i, cd_nom in enumerate(unique_codes):
-            try:
-                response = self.session.get(
-                    f"https://taxref.mnhn.fr/api/taxa/{cd_nom}", timeout=10
-                )
-                if response.status_code == 200:
-                    data = response.json()
-                    flat_data = {k: str(v) for k, v in data.items() if
-                                 not k.startswith('_')}
+        codes = sorted(str(c) for c in unique_codes)
+
+        existing_rows, existing_keys, old_names = [], set(), []
+        if mode == "append":
+            old_layer = LayerUtils.load_from_gpkg(self.gpkg_path,
+                                                  "data_taxref")
+            if old_layer is not None:
+                old_names = [f.name() for f in old_layer.fields()
+                             if f.name() != "fid"]
+                for feat in old_layer.getFeatures():
+                    row = {n: ("" if feat[n] is None or feat[n] == NULL
+                               else str(feat[n])) for n in old_names}
+                    existing_rows.append(row)
+                    existing_keys.add(_clean_id(row.get("id")))
+            codes = [c for c in codes if c not in existing_keys]
+
+        batches = [codes[i:i + BATCH_SIZE]
+                   for i in range(0, len(codes), BATCH_SIZE)]
+
+        self.status_changed.emit(
+            f"Requêtage API TAXREF ({len(codes)} taxons, {len(batches)} paquets)...")
+        state = {"fails": 0}
+        for n, batch in enumerate(batches):
+            if state["fails"] >= MAX_FAILURES:
+                continue  # API injoignable : on n'insiste pas
+            taxa = self._fetch_with_split(batch, state)
+            if taxa:
+                for data in taxa:
+                    flat_data = {k: str(v) for k, v in data.items()
+                                 if not k.startswith('_')}
                     results.append(flat_data)
                     all_keys.update(flat_data.keys())
+            self.progress_changed.emit(int(((n + 1) / len(batches)) * 100))
 
-                self.progress_changed.emit(int((i / total) * 100))
+        got = {r.get("id") for r in results}
+        missing = [c for c in codes if c not in got]
 
-            except Exception as e:
-                QgsMessageLog.logMessage(
-                    f"[TaxrefApiToTable]: Erreur API pour {cd_nom}: {e}",
-                    "Biblizou", Qgis.Warning
-                )
-
-        if not results:
+        if not results and not (mode == "append" and existing_rows):
             return False, "Aucune donnée récupérée depuis l'API."
 
-        sorted_keys = sorted(all_keys)
+        if mode == "append":
+            seen = set(existing_keys)
+            fresh = []
+            for res in results:
+                key = _clean_id(res.get("id"))
+                if key and key in seen:
+                    continue
+                seen.add(key)
+                fresh.append(res)
+            all_keys.update(old_names)
+            results_final = existing_rows + fresh
+            n_new = len(fresh)
+        else:
+            results_final = results
+            n_new = len(results)
+
+        sources = collect_cdnom_sources(layer_config)
+        all_keys.update(sources)
+        for res in results_final:
+            key = _clean_id(res.get("id"))
+            for col, codes_src in sources.items():
+                res[col] = "1" if key in codes_src else ""
+        sorted_keys = (sorted(k for k in all_keys if not k.startswith("src_"))
+                       + sorted(k for k in all_keys if k.startswith("src_")))
+
         if 'cdNom' in sorted_keys:
             sorted_keys.insert(0, sorted_keys.pop(sorted_keys.index('cdNom')))
 
@@ -81,7 +172,7 @@ class TaxrefApiToTable(QObject):
         temp_layer.updateFields()
 
         features = []
-        for res in results:
+        for res in results_final:
             feat = QgsFeature(temp_layer.fields())
             feat.setAttributes([res.get(key, "") for key in sorted_keys])
             features.append(feat)
@@ -92,6 +183,18 @@ class TaxrefApiToTable(QObject):
         if success:
             self.status_changed.emit(
                 "Table data_taxref enregistrée avec succès.")
-            return True, f"{len(results)} taxons consolidés dans le GeoPackage."
+            if mode == "append":
+                msg = (f"{n_new} nouveaux taxons ajoutés à data_taxref "
+                       f"({len(results_final)} au total).")
+            else:
+                msg = f"{len(results)} taxons consolidés dans le GeoPackage."
+            if missing:
+                msg += (f" {len(missing)} cd_nom non résolus : "
+                        f"{', '.join(missing[:20])}")
+            if state["fails"] >= MAX_FAILURES:
+                msg += " Arrêt anticipé : l'API ne répond plus."
+            if self._load_in_project():
+                msg += " Couche data_taxref chargée dans le projet."
+            return True, msg
         else:
             return False, f"Erreur de sauvegarde : {err_msg}"

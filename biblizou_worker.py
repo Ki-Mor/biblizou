@@ -433,7 +433,7 @@ class TaxrefProcessingThread(QThread):
             self.log.emit("=== Démarrage de la consolidation TaxRef ===")
 
             # Étape unique : consolidation
-            self.progress.emit(1, 1, "Consolidation avec TaxRef")
+            self.progress.emit(1, 1, "Consolidation avec l'INPN")
 
             if not self.params.get('consolidation_config'):
                 self.log.emit("Aucune couche externe à consolider.")
@@ -445,7 +445,8 @@ class TaxrefProcessingThread(QThread):
 
             consolidator = TaxrefApiToTable(self.params['gpkg_path'])
             success, msg = consolidator.run(
-                self.params['consolidation_config'])
+                self.params['consolidation_config'],
+                self.params.get('taxref_mode', 'overwrite'))
 
             self.log.emit(msg)
 
@@ -536,7 +537,8 @@ class BdStatutsProcessingThread(QThread):
                     current_layer = "status_joined_patri"
                     self.log.emit(msg)
             else:
-                self.log.emit("Étape ignorée")
+                self.log.emit(
+                    "Étape patrimonialité ignorée (aucune condition cochée).")
 
             ###############################################################
             # 3. Jointure status_data + data_taxref -> status_data_joined #
@@ -572,6 +574,6 @@ class BdStatutsProcessingThread(QThread):
             ##########
 
             self.progress.emit(5, 5, "Terminé")
-            self.finished.emit("Workflow BD Statuts terminé avec succès.")
+            self.finished.emit("Workflow INPN terminé avec succès.")
         except Exception as e:
-            self.error.emit(f"Erreur critique BD Statuts : {str(e)}")
+            self.error.emit(f"Erreur critique INPN : {str(e)}")

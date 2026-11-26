@@ -29,7 +29,7 @@ from qgis.PyQt.QtCore import QUrl
 from qgis.PyQt.QtCore import pyqtSignal, Qt
 from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtWidgets import QStyleFactory
-from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel
+from qgis.core import Qgis, QgsMessageLog, QgsMapLayerProxyModel, QgsVectorLayer
 from qgis.gui import QgsFileWidget
 
 from .utils.styles import apply_stylesheet
@@ -107,41 +107,24 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
         # ----------
 
-        # Configuration onglet TaxRef
+        # Configuration onglet INPN
 
         ## Connexion du bouton run
-        self.btnRunTaxref.clicked.connect(self.run_taxref_process)
-        ## Connexion du bouton d'ajout de ligne pour TaxRef
-        self.btnAddLayerRowTaxtef.clicked.connect(self.add_taxref_row)
-        ## Connexion du bouton 'Auto' TaxRef
-        self.btn_autofillTaxref.clicked.connect(self.run_autofill_taxref)
+        self.btnRunINPN.clicked.connect(self.run_inpn_process)
+        ## Connexion du bouton d'ajout de ligne pour INPN
+        self.btnAddLayerRowINPN.clicked.connect(self.add_row_inpn)
+        ## Connexion du bouton 'Auto' INPN
+        self.btn_autofillINPN.clicked.connect(self.run_autofill_inpn)
 
         ## Configuration du tableau TaxRef
-        header_taxref = self.tableTaxref.horizontalHeader()
+        header_taxref = self.tableINPN.horizontalHeader()
         if header_taxref:
             header_taxref.setSectionResizeMode(0, QHeaderView.Stretch)
             header_taxref.setSectionResizeMode(1, QHeaderView.Stretch)
             header_taxref.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
-        # ----------
-
-        # Configuration onglet BDC
-
-        ## Connexion du bouton run
-        self.btnRunStat.clicked.connect(self.run_stat_process)
         # Liste déroulante département (filtrable, stocke code_insee)
         self.setup_department_combo()
-        # Tableau BD Statuts (même principe que TaxRef)
-        self.btnAddLayerRowStat.clicked.connect(self.add_stat_row)
-        ## Connexion du bouton 'Auto' Statuts
-        self.btn_autofillStat.clicked.connect(self.run_autofill_stat)
-
-        ## Configuration du tableau Statuts
-        header_stat = self.tableStat.horizontalHeader()
-        if header_stat:
-            header_stat.setSectionResizeMode(0, QHeaderView.Stretch)
-            header_stat.setSectionResizeMode(1, QHeaderView.Stretch)
-            header_stat.setSectionResizeMode(2, QHeaderView.ResizeToContents)
 
         # le bouton patri ouvre biblizou_dialog_patri
         self.btnPatri.clicked.connect(self.open_patri_dialog)
@@ -152,7 +135,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.fsd_thread = None
         self.taxref_thread = None
         self.stat_thread = None
-        self.patri_conditions = []
 
     def setup_custom_widgets(self):
         """Configure les filtres et modes des widgets QGIS."""
@@ -210,8 +192,17 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
     def open_patri_dialog(self):
         """Ouvre la fenêtre des réglages patri du plugin (onglet status)."""
         dialog = BiblizouDialogPatri(parent=self)
-        if dialog.exec_():
-            self.patri_conditions = dialog.get_filter_conditions()
+        dialog.exec_()
+
+    def get_patri_conditions(self):
+        """Conditions de patrimonialité : cases enregistrées de la fenêtre
+        (QgsSettings) ou valeurs par défaut. Liste vide si la case est décochée."""
+        if not self.cBPatri.isChecked():
+            return []
+        dialog = BiblizouDialogPatri()
+        conditions = dialog.get_filter_conditions()
+        dialog.deleteLater()
+        return conditions
 
     def validate_fsd(self):
         """Valide la saisie avant exécution du workflow FSD."""
@@ -232,17 +223,26 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
-    def validate_taxref(self):
-        """Valide la saisie avant exécution de la consolidation TaxRef."""
-        working_folder = self.mQgsFileWidget.filePath()
+    def validate_inpn(self):
+        """Valide la saisie avant exécution de la consolidation INPN."""
         errors = []
+        working_folder = self.mQgsFileWidget.filePath()
 
         if not working_folder or not os.path.isdir(working_folder):
             errors.append("Dossier de travail invalide.")
+        code_insee = self.comboBoxDpt.currentData()
 
-        consolidation_data = self.get_taxref_data()
+        if not code_insee:
+            errors.append(
+                "Veuillez sélectionner un département (liste filtrable sur le nom).")
+
+        consolidation_data = self.get_data_inpn()
         if not consolidation_data:
-            errors.append("Aucune couche à consolider avec TaxRef.")
+            errors.append("Aucune couche à consolider avec l'INPN.")
+
+        if self.cBPatri.isChecked() and not self.get_patri_conditions():
+            errors.append("Espèce patrimoniale cochée mais aucune condition "
+                          "choisie (roue dentée).")
 
         if errors:
             QtWidgets.QMessageBox.warning(self, "Validation",
@@ -250,48 +250,17 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             return False
         return True
 
-    def validate_stat(self):
-        """Valide la saisie avant exécution du workflow BD Statuts."""
-        errors = []
-        working_folder = self.mQgsFileWidget.filePath()
-        if not working_folder or not os.path.isdir(working_folder):
-            errors.append("Dossier de travail invalide.")
-        code_insee = self.comboBoxDpt.currentData()
-        if not code_insee:
-            errors.append(
-                "Veuillez sélectionner un département (liste filtrable sur le nom).")
-        if not self.get_stat_data():
-            errors.append(
-                "Ajoutez au moins une couche avec un attribut CD_Nom pour les statuts.")
-        if errors:
-            QtWidgets.QMessageBox.warning(self, "Validation BD Statuts",
-                                          "\n".join(errors))
-            return False
-        return True
-
-    def add_taxref_row(self):
+    def add_row_inpn(self):
         """Ajoute une ligne au tableau TaxRef via UxUtils."""
-        add_row(self.tableTaxref)
+        add_row(self.tableINPN)
 
-    def add_stat_row(self):
-        """Ajoute une ligne au tableau BD Statuts via UxUtils."""
-        add_row(self.tableStat)
-
-    def run_autofill_taxref(self):
+    def run_autofill_inpn(self):
         """Lance l'autofill TaxRef via UxUtils."""
-        run_auto_fill(self.tableTaxref, self.iface, self.log_to_qgis)
+        run_auto_fill(self.tableINPN, self.iface, self.log_to_qgis)
 
-    def run_autofill_stat(self):
-        """Lance l'autofill Statuts via UxUtils."""
-        run_auto_fill(self.tableStat, self.iface, self.log_to_qgis)
-
-    def get_taxref_data(self):
+    def get_data_inpn(self):
         """Extrait les données du tableau TaxRef via UxUtils."""
-        return get_table_data(self.tableTaxref)
-
-    def get_stat_data(self):
-        """Extrait les données du tableau BD Statuts via UxUtils."""
-        return get_table_data(self.tableStat)
+        return get_table_data(self.tableINPN)
 
     def run_fsd_process(self):
         """Lance le traitement FSD via le thread."""
@@ -337,83 +306,108 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
             self.iface.messageBar().pushMessage("Biblizou",
                                                 "Traitement FSD démarré...",
                                                 level=Qgis.Info)
+    def _ask_taxref_mode(self, gpkg_path, summary):
+        """Choix utilisateur si data_taxref existe déjà.
+        Renvoie 'overwrite', 'append' ou None (annulation)."""
+        existing = QgsVectorLayer(f"{gpkg_path}|layername=data_taxref",
+                                  "data_taxref", "ogr")
+        if not existing.isValid() or existing.featureCount() == 0:
+            reply = QtWidgets.QMessageBox.question(
+                self, "Confirmation", summary,
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            return "overwrite" if reply == QtWidgets.QMessageBox.Yes else None
 
-    def run_taxref_process(self):
-        """Lance la consolidation TaxRef via le thread."""
-        if not self.validate_taxref():
+        box = QtWidgets.QMessageBox(self)
+        box.setIcon(QtWidgets.QMessageBox.Question)
+        box.setWindowTitle("Table data_taxref existante")
+        box.setText(f"{summary}\n\nLa table data_taxref existe déjà "
+                    f"({existing.featureCount()} taxons). Que faire ?")
+        btn_over = box.addButton("Écraser les données",
+                                 QtWidgets.QMessageBox.DestructiveRole)
+        btn_add = box.addButton(
+            "Ajouter aux données existantes (sans doublons)",
+            QtWidgets.QMessageBox.AcceptRole)
+        box.addButton("Annuler", QtWidgets.QMessageBox.RejectRole)
+        box.setDefaultButton(btn_add)
+        box.exec_()
+        clicked = box.clickedButton()
+        if clicked == btn_over:
+            return "overwrite"
+        if clicked == btn_add:
+            return "append"
+        return None
+
+    def run_inpn_process(self):
+        """Lance le workflow INPN : consolidation TaxRef puis BD Statuts."""
+        if not self.validate_inpn():
             return
 
-        params = {
-            'working_folder': self.mQgsFileWidget.filePath(),
-            'consolidation_config': self.get_taxref_data(),
-            'gpkg_path': os.path.join(self.mQgsFileWidget.filePath(),
-                                      get_gpkg_filename())
-        }
-
-        # Confirmation
-        msg = f"Lancer la consolidation avec TaxRef ?\n\n{len(params['consolidation_config'])} couche(s) à traiter"
-        reply = QtWidgets.QMessageBox.question(self, "Confirmation", msg,
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-
-        if reply == QtWidgets.QMessageBox.Yes:
-            self.btnRunTaxref.setEnabled(False)
-
-            # Initialisation du thread TaxRef
-            self.taxref_thread = TaxrefProcessingThread(params, self.iface)
-
-            # Connexion des signaux du thread
-            self.taxref_thread.progress.connect(self.update_status_bar)
-            self.taxref_thread.log.connect(self.log_to_qgis)
-            self.taxref_thread.finished.connect(self.on_taxref_finished)
-            self.taxref_thread.error.connect(
-                lambda msg: self.on_error(msg, self.btnRunTaxref))
-
-            self._show_progress(1)
-
-            self.taxref_thread.start()
-            self.iface.messageBar().pushMessage("Biblizou",
-                                                "Consolidation TaxRef démarrée...",
-                                                level=Qgis.Info)
-
-    def run_stat_process(self):
-        """Lance le workflow BD Statuts (API -> status_data -> jointure -> pivots)."""
-        if not self.validate_stat():
-            return
         working_folder = self.mQgsFileWidget.filePath()
-        params = {
-            "working_folder": working_folder,
-            "gpkg_path": os.path.join(working_folder, get_gpkg_filename()),
-            "code_insee": self.comboBoxDpt.currentData(),
-            "consolidation_config": self.get_stat_data(),
-            "conditions": self.patri_conditions if self.cBPatri.isChecked() else []
+        gpkg_path = os.path.join(working_folder, get_gpkg_filename())
+
+        taxref_params = {
+            'working_folder': working_folder,
+            'consolidation_config': self.get_data_inpn(),
+            'gpkg_path': gpkg_path
         }
+        # Paramètres Statuts figés au clic, utilisés à la fin de TaxRef
+        self._stat_params = {
+            "working_folder": working_folder,
+            "gpkg_path": gpkg_path,
+            "code_insee": self.comboBoxDpt.currentData(),
+            "consolidation_config": self.get_data_inpn(),
+            "conditions": self.get_patri_conditions()        }
 
         msg = (
-            f"Lancer le workflow BD Statuts ?\n\n"
-            f"Département : {self.comboBoxDpt.currentText()} (code {params['code_insee']})\n"
-            f"Couches : {len(params['consolidation_config'])}\n"
-            f"GeoPackage : {params['gpkg_path']}"
+            f"Lancer le workflow INPN (TaxRef puis Statuts) ?\n\n"
+            f"Département : {self.comboBoxDpt.currentText()} "
+            f"(code {self._stat_params['code_insee']})\n"
+            f"Couches : {len(taxref_params['consolidation_config'])}\n"
+            f"GeoPackage : {gpkg_path}"
         )
-        reply = QtWidgets.QMessageBox.question(
-            self, "Confirmation", msg,
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
-        )
-        if reply != QtWidgets.QMessageBox.Yes:
+        taxref_params["taxref_mode"] = self._ask_taxref_mode(gpkg_path, msg)
+        if taxref_params["taxref_mode"] is None:
             return
-        self.btnRunStat.setEnabled(False)
-        self.stat_thread = BdStatutsProcessingThread(params, self.iface)
+
+        self.btnRunINPN.setEnabled(False)
+        self.taxref_thread = TaxrefProcessingThread(taxref_params, self.iface)
+        self.taxref_thread.progress.connect(self.update_status_bar)
+        self.taxref_thread.log.connect(self.log_to_qgis)
+        self.taxref_thread.finished.connect(self.on_taxref_finished)
+        self.taxref_thread.error.connect(
+            lambda msg: self.on_error(msg, self.btnRunINPN))
+
+        self._show_progress(1)
+        self.taxref_thread.start()
+        self.iface.messageBar().pushMessage("Biblizou",
+                                            "Consolidation TaxRef démarrée...",
+                                            level=Qgis.Info)
+
+    def _start_stat_thread(self):
+        """Démarre l'étape BD Statuts avec les paramètres figés au clic."""
+        self.stat_thread = BdStatutsProcessingThread(self._stat_params, self.iface)
         self.stat_thread.progress.connect(self.update_status_bar)
         self.stat_thread.log.connect(self.log_to_qgis)
         self.stat_thread.finished.connect(self.on_stat_finished)
         self.stat_thread.error.connect(
-            lambda msg: self.on_error(msg, self.btnRunStat))
+            lambda msg: self.on_error(msg, self.btnRunINPN))
 
         self._show_progress(5)
-
         self.stat_thread.start()
         self.iface.messageBar().pushMessage("Biblizou",
                                             "Workflow BD Statuts démarré...",
                                             level=Qgis.Info)
+
+    def on_taxref_finished(self, message):
+        """Fin de l'étape TaxRef : on enchaîne sur BD Statuts (pas de popup)."""
+        self.log_to_qgis(message)
+        self.iface.messageBar().pushMessage("Biblizou", message,
+                                            level=Qgis.Info)
+        self._start_stat_thread()
+
+    def on_stat_finished(self, message):
+        """Fin du workflow INPN : réactive le bouton et affiche le succès."""
+        _on_process_finished(self, message, self.btnRunINPN)
 
     def update_status_bar(self, step, total, message):
         """Affiche la progression dans la barre de message de QGIS et dans le dock."""
@@ -429,12 +423,6 @@ class BiblizouDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
 
     def on_fsd_finished(self, message):
         _on_process_finished(self, message, self.btnRunFsd)
-
-    def on_taxref_finished(self, message):
-        _on_process_finished(self, message, self.btnRunTaxref)
-
-    def on_stat_finished(self, message):
-        _on_process_finished(self, message, self.btnRunStat)
 
     def on_error(self, error_message, button=None):
         """Action générique en cas d'erreur d'un thread de traitement."""
